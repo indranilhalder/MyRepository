@@ -11,6 +11,7 @@ export const ERROR = "error";
 export const FAILURE = "Failure";
 export const FAILURE_UPPERCASE = "FAILURE";
 export const FAILURE_LOWERCASE = "failure";
+export const WRONG_FAILURE = "faliure";
 export const JUS_PAY_PENDING = "PENDING_VBV";
 export const JUS_PAY_CHARGED = "CHARGED";
 export const JUS_PAY_SUCCESS = "S";
@@ -82,6 +83,7 @@ export const SHORT_URL_ORDER_DETAIL = "/trackOrder/beforeTrack/:orderCode";
 export const ORDER_PREFIX = "/my-account/order/(.*)";
 export const ORDER_CODE = "orderCode";
 export const ORDER = "/order";
+export const RETURN_SUCCESS_MESSAGE = "Return has been initiated";
 // MyAccount Routes
 export const MY_ACCOUNT_PAGE_ROOT = "/my-account/.*";
 export const MY_ACCOUNT_PAGE = "/my-account";
@@ -107,7 +109,8 @@ export const RETURNS_NEW_ADDRESS = "/addDeliveryLocation";
 export const RETURN_CLIQ_PIQ = "/cliqpiq";
 export const RETURN_CLIQ_PIQ_ADDRESS = "/address";
 export const RETURN_CLIQ_PIQ_DATE = "/dateTime";
-
+export const SUCCESS_MESSAGE_IN_CANCELING_ORDER =
+  "Your order cancelled successfully";
 export const RETURN_CLIQ_PIQ_RETURN_SUMMARY = "/returnSummary";
 
 export const RETURN_TO_STORE = "/store";
@@ -190,9 +193,9 @@ export const CANCEL_PREFIX = "/cancel/(.*)";
 export const WALLET = "WALLET";
 
 //header name
-export const SAVED_PAYMENTS = "Saved Payments";
-export const MY_CLIQ = "My Cliq";
-export const SAVED_LIST = "Saved list";
+export const SAVED_PAYMENTS = "Saved Cards";
+export const MY_CLIQ = "My Account";
+export const SAVED_LIST = "My Wish List";
 export const ALERTS_COUPON = "Alerts & Coupons";
 export const BRANDS = "Brands";
 export const ADDRESS_BOOK = "Address Book";
@@ -205,6 +208,7 @@ export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
+export const HELP = "Help";
 
 // COPY
 //STATIC PAGE
@@ -214,6 +218,15 @@ export const REVIEW_SUBMIT_TOAST_TEXT =
 
 export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
+export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
+
+export const TERMS_AND_CONDITION_URL = "/tncPayment";
+export const ABOUT_US_URL = "/aboutus";
+export const PRIVACY_POLICY_URL = "/privacy-policy";
+export const CANCEL_URL = "/cancellation";
+export const RETURN_URL = "/returns";
+export const FAQ_URL = "/faq";
+export const HELP_URL = "/help";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
@@ -225,7 +238,7 @@ export const STANDARD_EMI = "Standard Emi";
 export const CREDIT_CARD = "Credit Card";
 export const DEBIT_CARD = "Debit Card";
 export const E_WALLET = "E - Wallet";
-export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash On Delivery";
+export const CASH_ON_DELIVERY_PAYMENT_MODE = "Cash on Delivery";
 export const RUPEE_SYMBOL = "₹";
 
 // META TAGS CONSTANTS
@@ -249,3 +262,33 @@ export const MESTRO_CARD = "MAESTRO";
 export const DINERS_CARD = "DINERS";
 export const DISCOVER_CARD = "DISCOVER";
 export const JCB_CARD = "JCB";
+
+export const INVALID_USER_COUPON_TYPE = "COUPON";
+export const INVALID_BANK_OFFER_TYPE = "BANKOFFER";
+export const INVALID_NO_COST_EMI_TYPE = "NOCOSTEMI";
+
+export const SELECTED_BANK_NAME = "selectedBankName";
+//add address Constants
+
+export const SAVE_TEXT = "Save Address";
+export const PINCODE_TEXT = "Please enter pincode";
+export const NAME_TEXT = "Please enter first name";
+export const LAST_NAME_TEXT = "plese enter last name";
+export const ADDRESS_TEXT = "Please enter address";
+export const EMAIL_TEXT = "Please enter email id";
+export const LANDMARK_TEXT = "Please select landmark";
+export const LANDMARK_ENTER_TEXT = "Please enter landmark";
+export const MOBILE_TEXT = "Please enter mobile number";
+export const PINCODE_VALID_TEXT = "Please enter valid pincode";
+export const EMAIL_VALID_TEXT = "Please enter valid emailId";
+export const PHONE_VALID_TEXT = "Please fill valid mobile number";
+export const PHONE_TEXT = "Please enter mobile number";
+export const CITY_TEXT = "please enter city";
+export const STATE_TEXT = "please enter state";
+export const SELECT_ADDRESS_TYPE = "please select address type";
+export const ISO_CODE = "IN";
+export const OTHER_LANDMARK = "other";
+export const OTP_VERIFICATION_REQUIRED_CODE = "NU0002";
+export const RESET_PASSWORD_SUCCESS_MESSAGE =
+  "Password reset successfully. Kindly login with your new password";
+export const OTP_VERIFICATION_REQUIRED_TEXT = "OTP VERIFICATION REQUIRED";

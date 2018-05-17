@@ -10,6 +10,10 @@ export default class ProductDetailsCard extends React.Component {
       this.props.onClickImage();
     }
   }
+
+  handleLinkClick = e => {
+    e.preventDefault();
+  };
   render() {
     return (
       <div className={styles.base}>
@@ -24,16 +28,34 @@ export default class ProductDetailsCard extends React.Component {
           />
         </div>
         <div className={styles.productDescriptionHolder}>
-          {this.props.productName && (
-            <div className={styles.productName}>{this.props.productName}</div>
-          )}
-          <div className={styles.producMaterial}>
-            {this.props.productMaterial}
+          <div
+            itemProp="brand"
+            itemScope=""
+            itemType="http://schema.org/Organization"
+          >
+            {this.props.brandName && (
+              <h1 className={styles.brandName}>
+                <span itemProp="name">{this.props.brandName}</span>
+              </h1>
+            )}
           </div>
-
-          <div className={styles.productPrice}>
+          <a
+            itemProp="url"
+            href={window.location.href}
+            onClick={this.handleLinkClick}
+          >
+            <div itemProp="name">
+              <h1 className={styles.productName}>{this.props.productName}</h1>
+            </div>
+          </a>
+          <div
+            className={styles.productPrice}
+            itemProp="offers"
+            itemScope=""
+            itemType="http://schema.org/Offer"
+          >
             {this.props.price && (
-              <span className={styles.onPrice}>
+              <span itemType="price" className={styles.onPrice}>
                 {this.props.price.toString().includes(RUPEE_SYMBOL)
                   ? this.props.price
                   : `${RUPEE_SYMBOL}${this.props.price}`}
@@ -73,8 +95,8 @@ export default class ProductDetailsCard extends React.Component {
 }
 ProductDetailsCard.propTypes = {
   productImage: PropTypes.string,
+  brandName: PropTypes.string,
   productName: PropTypes.string,
-  productMaterial: PropTypes.string,
   price: PropTypes.string,
   discountPrice: PropTypes.string,
   averageRating: PropTypes.number,

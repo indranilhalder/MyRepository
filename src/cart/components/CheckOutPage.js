@@ -20,6 +20,7 @@ import queryString, { parse } from "query-string";
 import PiqPage from "./PiqPage";
 import size from "lodash.size";
 import TransactionFailed from "./TransactionFailed.js";
+import cardValidator from "simple-card-validator";
 import * as Cookies from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -58,8 +59,30 @@ import {
   STANDARD_EMI,
   CASH_ON_DELIVERY,
   YES,
-  NO
+  NO,
+  SAVE_TEXT,
+  PINCODE_TEXT,
+  NAME_TEXT,
+  LAST_NAME_TEXT,
+  ADDRESS_TEXT,
+  EMAIL_TEXT,
+  LANDMARK_TEXT,
+  LANDMARK_ENTER_TEXT,
+  MOBILE_TEXT,
+  PINCODE_VALID_TEXT,
+  EMAIL_VALID_TEXT,
+  PHONE_VALID_TEXT,
+  PHONE_TEXT,
+  CITY_TEXT,
+  STATE_TEXT,
+  SELECT_ADDRESS_TYPE,
+  ISO_CODE,
+  OTHER_LANDMARK
 } from "../../lib/constants";
+import {
+  EMAIL_REGULAR_EXPRESSION,
+  MOBILE_PATTERN
+} from "../../auth/components/Login";
 import { HOME_ROUTER, SUCCESS, CHECKOUT } from "../../lib/constants";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
 import {
@@ -146,7 +169,8 @@ class CheckOutPage extends React.Component {
       egvCartGuid: null,
       noCostEmiBankName: null,
       isCliqCashApplied: false,
-      cliqCashPaidAmount: "0.00"
+      cliqCashPaidAmount: "0.00",
+      showCartDetails: false
     };
   }
 
@@ -158,7 +182,7 @@ class CheckOutPage extends React.Component {
   navigateToLogin() {
     const url = this.props.location.pathname;
     this.props.setUrlToRedirectToAfterAuth(url);
-    this.props.history.push(LOGIN_PATH);
+    this.props.history.replace(LOGIN_PATH);
   }
   navigateUserToMyBagAfter15MinOfpaymentFailure() {
     this.props.displayToast(INVALID_CART_ERROR_MESSAGE);
@@ -175,7 +199,11 @@ class CheckOutPage extends React.Component {
   };
   onChangePaymentMode = val => {
     let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
-    if (val.currentPaymentMode !== EMI && noCostEmiCouponCode) {
+    if (
+      val.currentPaymentMode !== EMI &&
+      val.currentPaymentMode !== null &&
+      noCostEmiCouponCode
+    ) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
 
@@ -242,7 +270,7 @@ class CheckOutPage extends React.Component {
     }
     if (
       this.props.cart.orderConfirmationDetails ||
-      this.props.cart.cliqCashPaymentDetails
+      this.props.cart.cliqCashJusPayDetails
     ) {
       this.props.setHeaderText(THANK_YOU);
     } else {
@@ -376,11 +404,14 @@ class CheckOutPage extends React.Component {
       </div>
     );
   };
+  onFocusInput() {
+    this.setState({ showCartDetails: false });
+  }
   renderDeliverModes = () => {
     return (
       <div className={styles.products}>
         <div className={styles.header}>
-          <CheckOutHeader indexNumber="2" confirmTitle="Choose delivery mode" />
+          <CheckOutHeader indexNumber="2" confirmTitle="Choose Delivery Mode" />
         </div>
         {this.props.cart.cartDetailsCNC.products &&
           this.props.cart.cartDetailsCNC.products.map((val, i) => {
@@ -533,7 +564,11 @@ class CheckOutPage extends React.Component {
           resetAutoPopulateDataForPinCode={() =>
             this.props.resetAutoPopulateDataForPinCode()
           }
+          onFocusInput={() => this.onFocusInput()}
           getPincodeStatus={this.props.getPincodeStatus}
+          resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+          getUserDetails={()=>this.props.getUserDetails()}
+          userDetails={this.props.userDetails}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -754,6 +789,7 @@ class CheckOutPage extends React.Component {
         this.state.isRemainingAmount &&
         !this.state.isPaymentFailed
       ) {
+
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&
@@ -1031,18 +1067,25 @@ class CheckOutPage extends React.Component {
       this.props.getEmiTermsAndConditionsForBank(bankCode, bankName);
     }
   };
-  applyNoCostEmi = (couponCode, bankName) => {
-    this.setState({
-      isNoCostEmiApplied: true,
-      isNoCostEmiProceeded: false,
-      noCostEmiBankName: bankName
-    });
+  applyNoCostEmi = async (couponCode, bankName) => {
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
       const cartId = localStorage.getItem(OLD_CART_CART_ID);
       if (this.props.applyNoCostEmi) {
-        this.props.applyNoCostEmi(couponCode, cartGuId, cartId);
+        const applyNoCostEmiResponse = await this.props.applyNoCostEmi(
+          couponCode,
+          cartGuId,
+          cartId
+        );
+        if (applyNoCostEmiResponse.status === SUCCESS) {
+          this.setState({
+            isNoCostEmiApplied: true,
+            isNoCostEmiProceeded: false,
+            noCostEmiBankName: bankName
+          });
+        }
+        return applyNoCostEmiResponse;
       }
     } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
@@ -1052,19 +1095,26 @@ class CheckOutPage extends React.Component {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
         if (this.props.applyNoCostEmi) {
-          this.props.applyNoCostEmi(couponCode, carGuId, cartId);
+          let applyNoCostEmiResponse = await this.props.applyNoCostEmi(
+            couponCode,
+            carGuId,
+            cartId
+          );
+          if (applyNoCostEmiResponse.status === SUCCESS) {
+            this.setState({
+              isNoCostEmiApplied: true,
+              isNoCostEmiProceeded: false,
+              noCostEmiBankName: bankName
+            });
+          }
+          return applyNoCostEmiResponse;
         }
       }
     }
   };
 
-  removeNoCostEmi = couponCode => {
-    this.setState({
-      isNoCostEmiApplied: true,
-      isNoCostEmiProceeded: false,
-      noCostEmiBankName: null,
-      noCostEmiDiscount: "0.00"
-    });
+  removeNoCostEmi = async couponCode => {
+
     if (this.state.isPaymentFailed) {
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
@@ -1080,7 +1130,17 @@ class CheckOutPage extends React.Component {
       if (this.props.removeNoCostEmi) {
         let carGuId = JSON.parse(cartDetailsLoggedInUser).guid;
         let cartId = JSON.parse(cartDetailsLoggedInUser).code;
-        this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        const removeNoCostEmiResponse = await this.props.removeNoCostEmi(couponCode, carGuId, cartId);
+        if(removeNoCostEmiResponse.status === SUCCESS)
+        {
+          this.setState({
+            isNoCostEmiApplied: false,
+            isNoCostEmiProceeded: false,
+            noCostEmiBankName: null,
+            noCostEmiDiscount: "0.00"
+          });
+        }
+        return removeNoCostEmiResponse;
       }
     }
   };
@@ -1287,22 +1347,19 @@ class CheckOutPage extends React.Component {
         JSON.parse(localStorage.getItem(CART_ITEM_COOKIE)),
         JSON.parse(localStorage.getItem(ADDRESS_FOR_PLACE_ORDER)),
         this.state.cardDetails,
-        this.state.paymentModeSelected,
-        this.state.noCostEmiBankName
+        this.state.paymentModeSelected
       );
     }
     if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
       if (this.state.isGiftCard) {
         if (this.props.createJusPayOrderForGiftCardNetBanking) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.state.egvCartGuid
           );
         }
       } else {
         this.props.createJusPayOrderForNetBanking(
           NET_BANKING,
-          this.state.bankCodeForNetBanking,
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
           JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
@@ -1312,14 +1369,12 @@ class CheckOutPage extends React.Component {
       if (this.state.isGiftCard) {
         if (this.props.createJusPayOrderForGiftCardNetBanking) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.state.egvCartGuid
           );
         }
       } else {
         this.props.createJusPayOrderForNetBanking(
           WALLET,
-          PAYTM,
           localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
           JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
         );
@@ -1423,10 +1478,7 @@ class CheckOutPage extends React.Component {
             this.props.location.state.egvCartGuid
           );
         } else {
-          this.softReservationForPayment(
-            this.state.cardDetails,
-            this.state.noCostEmiBankName
-          );
+          this.softReservationForPayment(this.state.cardDetails);
         }
         this.onChangePaymentMode({ currentPaymentMode: null });
       }
@@ -1434,7 +1486,6 @@ class CheckOutPage extends React.Component {
       if (this.state.currentPaymentMode === NET_BANKING_PAYMENT_MODE) {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.props.location.state.egvCartGuid
           );
         } else {
@@ -1456,7 +1507,6 @@ class CheckOutPage extends React.Component {
       if (this.state.paymentModeSelected === PAYTM) {
         if (this.state.isGiftCard) {
           this.props.createJusPayOrderForGiftCardNetBanking(
-            this.state.bankCodeForNetBanking,
             this.props.location.state.egvCartGuid
           );
         } else {
@@ -1470,22 +1520,85 @@ class CheckOutPage extends React.Component {
   };
 
   addAddress = address => {
-    if (this.props.addUserAddress) {
-      let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-      let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-      let cartDetailsLoggedInUser = Cookie.getCookie(
-        CART_DETAILS_FOR_LOGGED_IN_USER
-      );
-      let getCartDetailCNCObj = {
-        userId: JSON.parse(userDetails).userName,
-        accessToken: JSON.parse(customerCookie).access_token,
-        cartId: JSON.parse(cartDetailsLoggedInUser).code,
-        pinCode: address.postalCode,
-        isSoftReservation: false
-      };
-      this.props.addUserAddress(address, getCartDetailCNCObj);
+    if (!address) {
+      this.props.displayToast("Please enter the valid details");
+      return false;
+    }
+    if (address && !address.postalCode) {
+      this.props.displayToast(PINCODE_TEXT);
+      return false;
+    }
+    if (address && address.postalCode && address.postalCode.length < 6) {
+      this.props.displayToast(PINCODE_VALID_TEXT);
+      return false;
+    }
+    if (address && !address.firstName) {
+      this.props.displayToast(NAME_TEXT);
+      return false;
+    }
+    if (address && !address.lastName) {
+      this.props.displayToast(LAST_NAME_TEXT);
+      return false;
+    }
+    if (address && !address.line1) {
+      this.props.displayToast(ADDRESS_TEXT);
+      return false;
+    }
 
-      this.setState({ addNewAddress: false });
+
+    if (address && !address.town) {
+      this.props.displayToast(CITY_TEXT);
+      return false;
+    }
+    if (address && !address.state) {
+      this.props.displayToast(STATE_TEXT);
+      return false;
+    }
+    if (address && !address.phone) {
+      this.props.displayToast(PHONE_TEXT);
+      return false;
+    }
+    if (address && !MOBILE_PATTERN.test(address.phone)) {
+      this.props.displayToast(PHONE_VALID_TEXT);
+      return false;
+    }
+    if (address && !address.addressType) {
+      this.props.displayToast(SELECT_ADDRESS_TYPE);
+      return false;
+    }
+    if (
+      !address.userEmailId &&
+      !address.emailId &&
+      address.emailId === ""
+    ) {
+      this.props.displayToast("Please enter the EmailId");
+      return false;
+    }
+    if (
+      address.emailId &&
+      address.emailId !== "" &&
+      !EMAIL_REGULAR_EXPRESSION.test(address.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
+      return false;
+    }
+     else {
+      if (this.props.addUserAddress) {
+        let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+        let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+        let cartDetailsLoggedInUser = Cookie.getCookie(
+          CART_DETAILS_FOR_LOGGED_IN_USER
+        );
+        let getCartDetailCNCObj = {
+          userId: JSON.parse(userDetails).userName,
+          accessToken: JSON.parse(customerCookie).access_token,
+          cartId: JSON.parse(cartDetailsLoggedInUser).code,
+          pinCode: address && address.postalCode,
+          isSoftReservation: false
+        };
+        this.props.addUserAddress(address, getCartDetailCNCObj);
+        this.setState({ addNewAddress: false });
+      }
     }
   };
 
@@ -1526,8 +1639,20 @@ class CheckOutPage extends React.Component {
   };
 
   applyCliqCash = () => {
-    this.setState({ isCliqCashApplied: true });
-    this.props.applyCliqCash();
+    if (this.state.isNoCostEmiApplied) {
+      const doCallForApplyCliqCash = () => {
+        this.setState({
+          isCliqCashApplied: true,
+          currentPaymentMode: null,
+          isNoCostEmiApplied: false
+        });
+        this.props.applyCliqCash();
+      };
+      this.props.showModalForCliqCashOrNoCostEmi({ doCallForApplyCliqCash });
+    } else {
+      this.setState({ isCliqCashApplied: true });
+      this.props.applyCliqCash();
+    }
   };
 
   removeCliqCash = () => {
@@ -1537,6 +1662,7 @@ class CheckOutPage extends React.Component {
 
   binValidation = (paymentMode, binNo) => {
     if (this.state.isPaymentFailed) {
+      localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
       const parsedQueryString = queryString.parse(this.props.location.search);
       const cartGuId = parsedQueryString.value;
       this.props.binValidation(paymentMode, binNo, cartGuId);
@@ -1582,13 +1708,12 @@ class CheckOutPage extends React.Component {
     }
   };
 
-  softReservationForPayment = (cardDetails, noCostEmiCouponCode) => {
+  softReservationForPayment = cardDetails => {
     cardDetails.pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
     this.props.softReservationForPayment(
       cardDetails,
       this.state.selectedAddress,
-      this.state.paymentModeSelected,
-      noCostEmiCouponCode
+      this.state.paymentModeSelected
     );
   };
 
@@ -1601,10 +1726,9 @@ class CheckOutPage extends React.Component {
     );
   };
 
-  createJusPayOrderForGiftCardNetBanking = bankName => {
+  createJusPayOrderForGiftCardNetBanking = () => {
     if (this.props.createJusPayOrderForGiftCardNetBanking) {
       this.props.createJusPayOrderForGiftCardNetBanking(
-        bankName,
         this.props.location.state.egvCartGuid
       );
     }
@@ -1648,20 +1772,29 @@ class CheckOutPage extends React.Component {
   validateCard() {
     if (
       !this.state.cardDetails.cardNumber ||
-      (this.state.cardDetails.cardNumber &&
-        this.state.cardDetails.cardNumber.length < 14) ||
       (!this.state.cardDetails.cardName ||
         (this.state.cardDetails.cardName &&
           this.state.cardDetails.cardName.length < 3)) ||
       (!this.state.cardDetails.cvvNumber ||
-        (this.state.cardDetails.cvvNumber &&
-          this.state.cardDetails.cvvNumber.length < 3)) ||
+        (this.state.cardDetails.cardName &&
+          this.state.cardDetails.cardName.length < 1)) ||
       !this.state.cardDetails.monthValue ||
       !this.state.cardDetails.yearValue
     ) {
       return true;
     } else {
-      return false;
+      const card = new cardValidator(
+        parseInt(this.state.cardDetails.cardNumber, 10)
+      );
+      if (
+        card.validateCard() &&
+        this.state.cardDetails.cvvNumber.length > 1 &&
+        card.validateCvv(this.state.cardDetails.cvvNumber)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
@@ -1818,6 +1951,10 @@ class CheckOutPage extends React.Component {
             getPinCode={val => this.getPinCodeDetails(val)}
             getPinCodeDetails={this.props.getPinCodeDetails}
             getPincodeStatus={this.props.getPincodeStatus}
+            onFocusInput={() => this.onFocusInput()}
+            resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+            getUserDetails={() => this.props.getUserDetails()}
+            userDetails={this.props.userDetails}
           />
         </div>
       );
@@ -1885,9 +2022,11 @@ class CheckOutPage extends React.Component {
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
                 applyBankCoupons={val => this.applyBankCoupons(val)}
+                isCliqCashApplied={this.state.isCliqCashApplied}
                 isRemainingBalance={this.state.isRemainingAmount}
                 isPaymentFailed={this.state.isPaymentFailed}
                 isFromGiftCard={this.state.isGiftCard}
+                isNoCostEmiApplied={this.state.isNoCostEmiApplied}
                 cart={this.props.cart}
                 paymentModeSelected={this.state.paymentModeSelected}
                 changeSubEmiOption={currentSelectedEMIType =>
@@ -1932,9 +2071,10 @@ class CheckOutPage extends React.Component {
                 binValidationForSavedCard={cardDetails =>
                   this.binValidationForSavedCard(cardDetails)
                 }
-                createJusPayOrderForGiftCardNetBanking={bankName =>
-                  this.createJusPayOrderForGiftCardNetBanking(bankName)
+                createJusPayOrderForGiftCardNetBanking={() =>
+                  this.createJusPayOrderForGiftCardNetBanking()
                 }
+                onFocusInput={() => this.onFocusInput()}
                 addGiftCard={() => this.addGiftCard()}
                 binValidationForPaytm={val => this.binValidationForPaytm(val)}
                 displayToast={message => this.props.displayToast(message)}
@@ -1995,6 +2135,7 @@ class CheckOutPage extends React.Component {
               coupons={this.state.couponDiscount}
               discount={this.state.totalDiscount}
               delivery={this.state.deliveryCharge}
+              showDetails={this.state.showCartDetails}
               onCheckout={
                 this.state.isPaymentFailed
                   ? this.handleSubmitAfterPaymentFailure

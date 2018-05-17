@@ -21,7 +21,11 @@ export default class ConnectWidget extends React.Component {
 
     return (
       <div
-        className={styles.holder}
+        className={
+          this.props.positionInFeed === 1
+            ? styles.firstPositionHolder
+            : styles.holder
+        }
         style={{
           backgroundImage: `linear-gradient(165deg, ${
             this.props.feedComponentData.startHexCode
@@ -40,7 +44,7 @@ export default class ConnectWidget extends React.Component {
                   this.props.feedComponentData.backgroundImageURL
                 }`,
                 backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
+                backgroundSize: "100% 100%",
                 backgroundPosition: "center"
               }}
             >

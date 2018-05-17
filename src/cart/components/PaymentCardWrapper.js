@@ -9,7 +9,7 @@ import CheckoutDebitCard from "./CheckoutDebitCard.js";
 import CheckoutNetbanking from "./CheckoutNetbanking.js";
 import CheckoutSavedCard from "./CheckoutSavedCard.js";
 import CheckoutCOD from "./CheckoutCOD.js";
-import { PAYTM, OLD_CART_GU_ID } from "../../lib/constants";
+import { PAYTM, OLD_CART_GU_ID, BANK_COUPON_COOKIE } from "../../lib/constants";
 import PaytmOption from "./PaytmOption.js";
 import BankOffer from "./BankOffer.js";
 import GridSelect from "../../general/components/GridSelect";
@@ -17,7 +17,6 @@ import GridSelect from "../../general/components/GridSelect";
 import CheckOutHeader from "./CheckOutHeader";
 import { getCookie } from "../../lib/Cookie";
 
-let cliqCashToggleState = false;
 const SEE_ALL_BANK_OFFERS = "See All Bank Offers";
 const keyForCreditCard = "Credit Card";
 const keyForDebitCard = "Debit Card";
@@ -98,6 +97,7 @@ export default class PaymentCardWrapper extends React.Component {
         binValidationForSavedCard={cardDetails =>
           this.binValidationForSavedCard(cardDetails)
         }
+        onFocusInput={this.props.onFocusInput}
         saveCardDetails={
           this.props.cart.paymentModes.savedCardResponse.savedCardDetailsMap
         }
@@ -106,7 +106,6 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   handleClick = toggleState => {
-    cliqCashToggleState = toggleState;
     if (toggleState) {
       this.props.applyCliqCash();
     } else {
@@ -129,13 +128,17 @@ export default class PaymentCardWrapper extends React.Component {
     ) {
       const selectedCoupon = this.props.cart.paymentModes.paymentOffers.coupons.find(
         coupon => {
-          return coupon.offerCode === this.props.selectedBankOfferCode;
+          return coupon.offerCode === localStorage.getItem(BANK_COUPON_COOKIE);
         }
       );
       if (selectedCoupon) {
         offerMinCartValue = selectedCoupon.offerMinCartValue;
         offerTitle = selectedCoupon.offerTitle;
         offerCode = selectedCoupon.offerCode;
+      } else if (localStorage.getItem(BANK_COUPON_COOKIE)) {
+        offerCode = localStorage.getItem(BANK_COUPON_COOKIE);
+        offerMinCartValue = "";
+        offerTitle = "";
       } else {
         offerMinCartValue = this.props.cart.paymentModes.paymentOffers
           .coupons[0].offerMinCartValue;
@@ -165,10 +168,6 @@ export default class PaymentCardWrapper extends React.Component {
     );
   };
 
-  componentWillUnmount() {
-    cliqCashToggleState = false;
-  }
-
   render() {
     if (this.props.cart.paymentModes) {
       return (
@@ -190,7 +189,6 @@ export default class PaymentCardWrapper extends React.Component {
                       ? this.props.userCliqCashAmount
                       : 0
                   }
-                  active={cliqCashToggleState}
                   onToggle={val => this.handleClick(val)}
                   isFromGiftCard={this.props.isFromGiftCard}
                   addGiftCard={() => this.addGiftCard()}

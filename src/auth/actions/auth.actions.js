@@ -10,7 +10,7 @@ export const SET_URL_TO_REDIRECT_TO_AFTER_AUTH =
   "SET_URL_TO_REDIRECT_TO_AFTER_AUTH";
 export const CLEAR_URL_TO_REDIRECT_TO_AFTER_AUTH =
   "CLEAR_URL_TO_REDIRECT_TO_AFTER_AUTH";
-
+export const STOP_LOADING_ON_LOGIN = "STOP_LOADING_ON_LOGIN";
 export function setUrlToRedirectToAfterAuth(url) {
   return {
     type: SET_URL_TO_REDIRECT_TO_AFTER_AUTH,
@@ -49,5 +49,10 @@ export function setIfAllAuthCallsHaveSucceeded() {
 export function setFalseForAllAuthCallHasSucceedFlag() {
   return {
     type: SET_FALSE_ALL_AUTH_CALLS_SUCCESS_FLAG
+  };
+}
+export function stopLoaderOnLoginForOTPVerification() {
+  return {
+    type: STOP_LOADING_ON_LOGIN
   };
 }

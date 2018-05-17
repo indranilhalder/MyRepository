@@ -5,7 +5,12 @@ import {
   SUCCESS_CAMEL_CASE,
   SUCCESS_UPPERCASE,
   JUS_PAY_AUTHENTICATION_FAILED,
-  NO
+  NO,
+  BANK_COUPON_COOKIE,
+  PAYMENT_MODE_TYPE,
+  SELECTED_BANK_NAME,
+  EMI,
+  NO_COST_EMI_COUPON
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import each from "lodash.foreach";
@@ -856,7 +861,7 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.countryIso
         }&addressType=${userAddress.addressType}&phone=${
           userAddress.phone
-        }&emailId=${userAddress.emailId}&firstName=${
+        }&firstName=${
           userAddress.firstName
         }&lastName=${userAddress.lastName}
         &postalCode=${userAddress.postalCode}&line1=${
@@ -865,7 +870,7 @@ export function addUserAddress(userAddress, fromAccount) {
           userAddress.line3
         }&town=${userAddress.town}&landmark=${
           userAddress.landmark ? userAddress.landmark : ""
-        }&defaultFlag=${userAddress.defaultFlag}`
+        }&defaultFlag=${userAddress.defaultFlag}&emailId=${JSON.parse(userDetails).userName}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1729,6 +1734,7 @@ export function applyBankOffer(couponCode) {
         );
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.setItem(BANK_COUPON_COOKIE, couponCode);
       setDataLayerForCheckoutDirectCalls(
         ADOBE_CALL_FOR_APPLY_COUPON_SUCCESS,
         couponCode
@@ -1746,10 +1752,11 @@ export function releaseBankOfferRequest() {
     status: REQUESTING
   };
 }
-export function releaseBankOfferSuccess() {
+export function releaseBankOfferSuccess(bankOffer) {
   return {
     type: RELEASE_BANK_OFFER_SUCCESS,
-    status: SUCCESS
+    status: SUCCESS,
+    bankOffer
   };
 }
 export function releaseBankOfferFailure(error) {
@@ -1780,7 +1787,7 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
           JSON.parse(userDetails).userName
         }/carts/releaseCartCoupons?access_token=${
           JSON.parse(customerCookie).access_token
-        }&paymentMode=${PAYMENT_MODE}&couponCode=${previousCouponCode}&cartGuid=${cartId}`
+        }&paymentMode=${PAYMENT_MODE}&couponCode=${previousCouponCode}&cartGuid=${cartId}&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1788,10 +1795,11 @@ export function releaseBankOffer(previousCouponCode, newCouponCode: null) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.removeItem(BANK_COUPON_COOKIE);
       if (newCouponCode) {
         return dispatch(applyBankOffer(newCouponCode));
       }
-      return dispatch(releaseBankOfferSuccess());
+      return dispatch(releaseBankOfferSuccess(resultJson));
     } catch (e) {
       return dispatch(releaseBankOfferFailure(e.message));
     }
@@ -1958,7 +1966,9 @@ export function binValidation(paymentMode, binNo, cartGuId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      if (resultJson.bankName) {
+        localStorage.setItem(SELECTED_BANK_NAME, resultJson.bankName);
+      }
       dispatch(binValidationSuccess(resultJson));
     } catch (e) {
       dispatch(binValidationFailure(e.message));
@@ -1991,7 +2001,9 @@ export function binValidationForNetBanking(paymentMode, bankName) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      if (resultJson.bankName) {
+        localStorage.setItem(SELECTED_BANK_NAME, resultJson.bankName);
+      }
       dispatch(binValidationSuccess(resultJson));
     } catch (e) {
       dispatch(binValidationFailure(e.message));
@@ -2023,14 +2035,10 @@ export function softReservationForPaymentFailure(error) {
 }
 
 // Action Creator to soft reservation For Payment
-export function softReservationForPayment(
-  cardDetails,
-  address,
-  paymentMode,
-  bankName
-) {
+export function softReservationForPayment(cardDetails, address) {
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const paymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
   const pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
   return async (dispatch, getState, { api }) => {
     let productItems = {};
@@ -2068,7 +2076,9 @@ export function softReservationForPayment(
           JSON.parse(userDetails).userName
         }/carts/softReservationForPayment?access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartId}&pincode=${pinCode}`,
+        }&cartGuid=${cartId}&pincode=${pinCode}&type=payment&paymentMode=${
+          paymentMode ? paymentMode : ""
+        }&isPwa=true`,
         productItems
       );
       const resultJson = await result.json();
@@ -2079,7 +2089,7 @@ export function softReservationForPayment(
       }
       setDataLayerForCheckoutDirectCalls(ADOBE_FINAL_PAYMENT_MODES);
       dispatch(softReservationForPaymentSuccess(resultJson));
-      if (bankName) {
+      if (localStorage.getItem(PAYMENT_MODE_TYPE) === EMI) {
         dispatch(
           createJusPayOrder(
             "",
@@ -2087,8 +2097,7 @@ export function softReservationForPayment(
             address,
             cardDetails,
             paymentMode,
-            false,
-            bankName
+            false
           )
         );
       } else {
@@ -2160,9 +2169,9 @@ export function softReservationPaymentForNetBanking(
       dispatch(
         createJusPayOrderForNetBanking(
           paymentMethodType,
+          productItems,
           bankName,
-          pinCode,
-          productItems
+          pinCode
         )
       );
     } catch (e) {
@@ -2429,8 +2438,7 @@ export function createJusPayOrder(
   address,
   cardDetails,
   paymentMode,
-  isPaymentFailed,
-  bankName
+  isPaymentFailed
 ) {
   const jusPayUrl = `${
     window.location.origin
@@ -2438,14 +2446,17 @@ export function createJusPayOrder(
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartId;
-  if (isPaymentFailed) {
-    let url = queryString.parse(window.location.search);
+  let url = queryString.parse(window.location.search);
+
+  if (url && url.value) {
     cartId = url && url.value;
   } else {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
-
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+  const bankName = localStorage.getItem(SELECTED_BANK_NAME);
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
@@ -2466,7 +2477,7 @@ export function createJusPayOrder(
           address.postalCode
         }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
           bankName ? bankName : ""
-        }`,
+        }&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2493,7 +2504,7 @@ export function createJusPayOrder(
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
               redoCreateJusPayApi,
-              couponCode: resultJson.couponCode
+              result: resultJson
             })
           );
         } else {
@@ -2526,6 +2537,8 @@ export function createJusPayOrderForGiftCard(
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
   let cartId = JSON.parse(cartDetails).guid;
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+  const bankName = localStorage.getItem(SELECTED_BANK_NAME);
   return async (dispatch, getState, { api }) => {
     let orderDetails = getState().cart.cartDetailsCNC;
     dispatch(createJusPayOrderRequest());
@@ -2535,7 +2548,9 @@ export function createJusPayOrderForGiftCard(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?access_token=${
           JSON.parse(customerCookie).access_token
-        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}`
+        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&bankName=${
+          bankName ? bankName : ""
+        }`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2559,9 +2574,9 @@ export function createJusPayOrderForGiftCard(
 
 export function createJusPayOrderForNetBanking(
   paymentMethodType,
+  cartItem,
   bankName,
-  pinCode,
-  cartItem
+  pinCode
 ) {
   const jusPayUrl = `${
     window.location.origin
@@ -2574,8 +2589,10 @@ export function createJusPayOrderForNetBanking(
   if (parsedQueryString.value) {
     cartId = parsedQueryString.value;
   } else {
+    localStorage.setItem(CART_ITEM_COOKIE, JSON.stringify(cartItem));
     cartId = JSON.parse(cartDetails).guid;
   }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2583,9 +2600,9 @@ export function createJusPayOrderForNetBanking(
       const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
-        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankname=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`,
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&isPwa=true`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2600,16 +2617,16 @@ export function createJusPayOrderForNetBanking(
             dispatch(
               createJusPayOrderForNetBanking(
                 paymentMethodType,
+                cartItem,
                 bankName,
-                pinCode,
-                cartItem
+                pinCode
               )
             );
           dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
               redoCreateJusPayApi,
-              couponCode: resultJson.couponCode
+              result: resultJson
             })
           );
         } else {
@@ -2629,13 +2646,14 @@ export function createJusPayOrderForNetBanking(
   };
 }
 
-export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
+export function createJusPayOrderForGiftCardNetBanking(guId) {
   const jusPayUrl = `${
     window.location.origin
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+  const bankName = localStorage.getItem(SELECTED_BANK_NAME);
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2643,9 +2661,9 @@ export function createJusPayOrderForGiftCardNetBanking(bankName, guId) {
       const result = await api.post(
         `${USER_CART_PATH}/${
           JSON.parse(userDetails).userName
-        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=&city=&cartGuid=${guId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
+        }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=&city=&cartGuid=${guId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`
+        }&juspayUrl=${jusPayUrl}$paymentMode=${currentSelectedPaymentMode}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2689,6 +2707,8 @@ export function createJusPayOrderForSavedCards(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+  const bankName = localStorage.getItem(SELECTED_BANK_NAME);
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
@@ -2706,7 +2726,9 @@ export function createJusPayOrderForSavedCards(
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`,
+        }&juspayUrl=${jusPayUrl}$paymentMode=${currentSelectedPaymentMode}$bankName=${
+          bankName ? bankName : ""
+        }`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2722,7 +2744,7 @@ export function createJusPayOrderForSavedCards(
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
               redoCreateJusPayApi,
-              couponCode: resultJson.couponCode
+              result: resultJson
             })
           );
         } else {
@@ -2748,7 +2770,8 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
   }/checkout/payment-method/cardPayment`;
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+  const bankName = localStorage.getItem(SELECTED_BANK_NAME);
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
     try {
@@ -2764,7 +2787,9 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&bankName=${
+          bankName ? bankName : ""
+        }`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2812,6 +2837,8 @@ export function createJusPayOrderForCliqCash(
     let cartDetails = Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER);
     cartId = JSON.parse(cartDetails).guid;
   }
+  const currentSelectedPaymentMode = localStorage.getItem(PAYMENT_MODE_TYPE);
+
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2821,7 +2848,7 @@ export function createJusPayOrderForCliqCash(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}`,
+        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2838,7 +2865,7 @@ export function createJusPayOrderForCliqCash(
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
               redoCreateJusPayApi,
-              couponCode: resultJson.couponCode
+              result: resultJson
             })
           );
         } else {
@@ -2936,7 +2963,7 @@ export function jusPayPaymentMethodTypeForGiftCard(
       cardObject.append("name_on_card", cardDetails.cardName);
       cardObject.append("order_id", juspayOrderId);
       cardObject.append("save_to_locker", true);
-      if (paymentMode === PAYMENT_EMI) {
+      if (localStorage.getItem(NO_COST_EMI_COUPON)) {
         cardObject.append("emi_bank", cardDetails.emi_bank);
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
@@ -2982,7 +3009,7 @@ export function jusPayPaymentMethodType(
       cardObject.append("name_on_card", cardDetails.cardName);
       cardObject.append("order_id", juspayOrderId);
       cardObject.append("save_to_locker", "1");
-      if (paymentMode === PAYMENT_EMI) {
+      if (localStorage.getItem(NO_COST_EMI_COUPON)) {
         cardObject.append("emi_bank", cardDetails.emi_bank);
         cardObject.append("emi_tenure", cardDetails.emi_tenure);
         cardObject.append("is_emi", cardDetails.is_emi);
@@ -3236,7 +3263,7 @@ export function orderConfirmation(orderId) {
           JSON.parse(userDetails).userName
         }/orderConfirmation/${orderId}?access_token=${
           JSON.parse(customerCookie).access_token
-        }&platformNumber=2`
+        }&platformNumber=2&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -3429,6 +3456,7 @@ export function binValidationForCOD(paymentMode) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      localStorage.setItem(SELECTED_BANK_NAME, "");
       dispatch(binValidationForCODSuccess(resultJson));
     } catch (e) {
       dispatch(binValidationForCODFailure(e.message));
@@ -4038,7 +4066,7 @@ export function applyNoCostEmi(couponCode, cartGuId, cartId) {
           JSON.parse(userDetails).userName
         }/carts/${cartId}/applyNoCostEMI?couponCode=${couponCode}&access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartGuId}`
+        }&cartGuid=${cartGuId}&isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -4046,9 +4074,9 @@ export function applyNoCostEmi(couponCode, cartGuId, cartId) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      dispatch(applyNoCostEmiSuccess(resultJson, couponCode));
+      return dispatch(applyNoCostEmiSuccess(resultJson, couponCode));
     } catch (e) {
-      dispatch(applyNoCostEmiFailure(e.message));
+      return dispatch(applyNoCostEmiFailure(e.message));
     }
   };
 }
@@ -4081,7 +4109,22 @@ export function removeNoCostEmi(couponCode, cartGuId, cartId) {
   return async (dispatch, getState, { api }) => {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
+    if (!cartGuId) {
+      const cartDetails = JSON.parse(
+        Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER)
+      );
+      if (cartDetails) {
+        cartGuId = cartDetails.guid;
+      }
+    }
+    if (!cartId) {
+      const cartDetails = JSON.parse(
+        Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER)
+      );
+      if (cartDetails) {
+        cartId = cartDetails.code;
+      }
+    }
     dispatch(removeNoCostEmiRequest());
     try {
       const result = await api.post(
@@ -4089,7 +4132,7 @@ export function removeNoCostEmi(couponCode, cartGuId, cartId) {
           JSON.parse(userDetails).userName
         }/carts/${cartId}/releaseNoCostEMI?couponCode=${couponCode}&access_token=${
           JSON.parse(customerCookie).access_token
-        }&cartGuid=${cartGuId}`
+        }&cartGuid=${cartGuId}&isPwa=true`
       );
       const resultJson = await result.json();
 

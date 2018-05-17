@@ -52,7 +52,8 @@ export default class DeliveryInformations extends React.Component {
     if (this.props.deliveryCharge) {
       if (this.props.showDeliveryCharge) {
         deliveryCharge = "(Free)";
-      } else if (parseInt(this.props.deliveryCharge, 10) !== 0) {
+      }
+      if (parseInt(this.props.deliveryCharge, 10) !== 0) {
         deliveryCharge = `(₹${parseInt(this.props.deliveryCharge, 10)})`;
       }
     }
@@ -100,6 +101,7 @@ export default class DeliveryInformations extends React.Component {
               </div>
             )}
           {this.props.showCliqAndPiqButton &&
+            !this.props.selected &&
             this.props.type === COLLECT && (
               <div
                 className={styles.checkboxHolder}

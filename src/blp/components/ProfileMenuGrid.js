@@ -15,7 +15,7 @@ import {
   SAVE_LIST_PAGE
 } from "../../lib/constants";
 import styles from "./ProfileMenuGrid.css";
-import savedList from "../../general/components/img/savewhite.svg";
+import savedList from "../../general/components/img/downloadWhite.svg";
 import addressBook from "../../general/components/img/addressbookwhite.svg";
 import brands from "../../general/components/img/brandswhite.svg";
 import orderHistory from "../../general/components/img/orderhistorywhite.svg";
@@ -34,7 +34,7 @@ export default class ProfileMenuGrid extends React.Component {
     const data = [
       {
         image: savedList,
-        text: "Saved List",
+        text: "My Wish List",
         url: SAVE_LIST_PAGE
       },
       {
@@ -50,7 +50,7 @@ export default class ProfileMenuGrid extends React.Component {
       },
       {
         image: savedPayments,
-        text: "Saved Payments",
+        text: "Saved Cards",
         url: MY_ACCOUNT_SAVED_CARDS_PAGE
       },
       {

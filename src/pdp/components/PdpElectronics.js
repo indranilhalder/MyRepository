@@ -4,29 +4,10 @@ import find from "lodash.find";
 import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
-import SizeSelector from "./SizeSelector";
-import OfferCard from "./OfferCard";
-import PdpLink from "./PdpLink";
-import ProductDetails from "./ProductDetails";
 import ProductFeatures from "./ProductFeatures";
-import ProductFeature from "./ProductFeature";
-import RatingAndTextLink from "./RatingAndTextLink";
-import OtherSellersLink from "./OtherSellersLink";
-import AllDescription from "./AllDescription";
-import PdpPincode from "./PdpPincode";
-import Overlay from "./Overlay";
-import PdpDeliveryModes from "./PdpDeliveryModes";
-import PdpPaymentInfo from "./PdpPaymentInfo";
-import JewelleryDetailsAndLink from "./JewelleryDetailsAndLink";
 import Accordion from "../../general/components/Accordion.js";
-import Logo from "../../general/components/Logo.js";
-import UnderLinedButton from "../../general/components/UnderLinedButton.js";
-import ProductModule from "../../general/components/ProductModule.js";
-import Button from "../../general/components/Button.js";
 import styles from "./ProductDescriptionPage.css";
 import * as Cookie from "../../lib/Cookie";
-import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
 
 import {
   PRODUCT_SELLER_ROUTER_SUFFIX,
@@ -38,16 +19,100 @@ import {
   ANONYMOUS_USER,
   PRODUCT_CART_ROUTER,
   PRODUCT_REVIEWS_PATH_SUFFIX,
-  YES,
   NO,
   PRODUCT_DESCRIPTION_PRODUCT_CODE,
   PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   COLLECT
 } from "../../lib/constants";
+import LoadableVisibility from "react-loadable-visibility/react-loadable";
 
-const DELIVERY_TEXT = "Delivery Options For";
 const PRODUCT_QUANTITY = "1";
+
+const ProductDetails = LoadableVisibility({
+  loader: () => import("./ProductDetails"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const ColourSelector = LoadableVisibility({
+  loader: () => import("./ColourSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const JewelleryDetailsAndLink = LoadableVisibility({
+  loader: () => import("./JewelleryDetailsAndLink"),
+  loading: () => <div />
+});
+
+const Overlay = LoadableVisibility({
+  loader: () => import("./Overlay"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPincode = LoadableVisibility({
+  loader: () => import("./PdpPincode"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const ProductFeature = LoadableVisibility({
+  loader: () => import("./ProductFeature"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const AllDescription = LoadableVisibility({
+  loader: () => import("./AllDescription"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const RatingAndTextLink = LoadableVisibility({
+  loader: () => import("./RatingAndTextLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPaymentInfo = LoadableVisibility({
+  loader: () => import("./PdpPaymentInfo"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OtherSellersLink = LoadableVisibility({
+  loader: () => import("./OtherSellersLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OfferCard = LoadableVisibility({
+  loader: () => import("./OfferCard"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const SizeSelector = LoadableVisibility({
+  loader: () => import("./SizeSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpDeliveryModes = LoadableVisibility({
+  loader: () => import("./PdpDeliveryModes"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PDPRecommendedSectionsContainer = LoadableVisibility({
+  loader: () => import("../containers/PDPRecommendedSectionsContainer"),
+  loading: () => {
+    return <div />;
+  },
+  delay: 400
+});
 const VIDEO = "Video";
 const IMAGE = "Image";
 export default class PdpElectronics extends React.Component {
@@ -255,7 +320,7 @@ export default class PdpElectronics extends React.Component {
                   price={price}
                   discountPrice={discountPrice}
                   averageRating={productData.averageRating}
-                  onClick={this.goToReviewPage}
+                  goToReviewPage={this.goToReviewPage}
                   discount={productData.discount}
                 />
               )}
@@ -268,6 +333,7 @@ export default class PdpElectronics extends React.Component {
                   price={discountPrice}
                   discountPrice={price}
                   averageRating={productData.averageRating}
+                  goToReviewPage={this.goToReviewPage}
                   discount={productData.discount}
                 />
               )}

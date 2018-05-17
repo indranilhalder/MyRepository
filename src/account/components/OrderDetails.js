@@ -10,7 +10,7 @@ import OrderStatusHorizontal from "./OrderStatusHorizontal";
 import OrderReturn from "./OrderReturn.js";
 import PropTypes from "prop-types";
 import format from "date-fns/format";
-
+import each from "lodash.foreach";
 import queryString from "query-string";
 import { Redirect } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -165,6 +165,26 @@ export default class OrderDetails extends React.Component {
       <div className={styles.base}>
         {orderDetails &&
           orderDetails.products.map((products, i) => {
+            let isOrderReturnable = false;
+            let isReturned = false;
+            isReturned = products.statusDisplayMsg
+              .map(val => {
+                return val.key;
+              })
+              .includes(RETURN);
+            each(products && products.statusDisplayMsg, orderStatus => {
+              each(
+                orderStatus &&
+                  orderStatus.value &&
+                  orderStatus.value.statusList,
+                status => {
+                  if (status.responseCode === "DELIVERED") {
+                    isOrderReturnable = true;
+                  }
+                }
+              );
+            });
+
             return (
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>
@@ -337,29 +357,46 @@ export default class OrderDetails extends React.Component {
                       <div className={styles.row}>
                         {orderDetails.pickupPersonMobile}
                       </div>
+                      {products.statusDisplayMsg
+                        .map(val => {
+                          return val.key;
+                        })
+                        .includes(RETURN) && (
+                        <OrderStatusHorizontal
+                          trackingAWB={products.trackingAWB}
+                          courier={products.reverseLogisticName}
+                          statusMessageList={products.statusDisplayMsg.filter(
+                            val => {
+                              return val.key === RETURN;
+                            }
+                          )}
+                        />
+                      )}
                     </div>
                   )}
+
                 {products.awbPopupLink === AWB_POPUP_FALSE && (
                   <div className={styles.buttonHolder}>
                     <div className={styles.buttonHolderForUpdate}>
                       <div className={styles.replaceHolder}>
-                        {products.isReturned && (
-                          <div
-                            className={styles.review}
-                            onClick={() =>
-                              this.replaceItem(
-                                products.sellerorderno,
-                                orderDetails.paymentMethod,
-                                products.transactionId
-                              )
-                            }
-                          >
-                            <UnderLinedButton
-                              label={PRODUCT_RETURN}
-                              color="#000"
-                            />
-                          </div>
-                        )}
+                        {products.isReturned &&
+                          isOrderReturnable && (
+                            <div
+                              className={styles.review}
+                              onClick={() =>
+                                this.replaceItem(
+                                  products.sellerorderno,
+                                  orderDetails.paymentMethod,
+                                  products.transactionId
+                                )
+                              }
+                            >
+                              <UnderLinedButton
+                                label={PRODUCT_RETURN}
+                                color="#000"
+                              />
+                            </div>
+                          )}
                         {products.cancel && (
                           <div
                             className={styles.review}
@@ -378,19 +415,21 @@ export default class OrderDetails extends React.Component {
                           </div>
                         )}
                       </div>
-                      <div className={styles.reviewHolder}>
-                        <div
-                          className={styles.replace}
-                          onClick={val =>
-                            this.writeReview(products.productcode)
-                          }
-                        >
-                          <UnderLinedButton
-                            label="Write a review"
-                            color="#ff1744"
-                          />
+                      {!isReturned && (
+                        <div className={styles.reviewHolder}>
+                          <div
+                            className={styles.replace}
+                            onClick={val =>
+                              this.writeReview(products.productcode)
+                            }
+                          >
+                            <UnderLinedButton
+                              label="Write a review"
+                              color="#ff1744"
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 )}

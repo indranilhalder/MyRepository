@@ -3,7 +3,17 @@ import styles from "./MyCoupons.css";
 import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
 import couponIcon from "../../general/components/img/coupon-1.svg";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 export default class MyCoupons extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      copied: false
+    };
+  }
+  copyCouponCode() {
+    this.props.displayToast("Coupon code copied");
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -14,9 +24,18 @@ export default class MyCoupons extends React.Component {
           <div className={styles.headingText}>{this.props.heading}</div>
         </div>
         <div className={styles.couponNumber}>{this.props.couponNumber}</div>
-        <div className={styles.lebelText}>
-          (Long press here to copy the coupon code)
-        </div>
+        <CopyToClipboard
+          text={this.props.couponNumber}
+          onCopy={() => this.setState({ copied: true })}
+        >
+          <div
+            className={styles.lebelText}
+            onClick={() => this.copyCouponCode()}
+          >
+            (Click to copy the coupon code)
+          </div>
+        </CopyToClipboard>
+
         <div className={styles.couponFooter}>
           <div className={styles.couponFooterHolder}>
             <div className={styles.couponInformation}>

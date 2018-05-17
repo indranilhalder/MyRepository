@@ -33,11 +33,13 @@ export default class OrderCard extends React.Component {
             )}
             {this.props.productName}
           </div>
-          {this.props.isGiveAway === NO ? (
+          {this.props.isGiveAway === NO || !this.props.isGiveAway ? (
             <div className={styles.priceHolder}>
-              <div className={styles.price}>{`${RUPEE_SYMBOL} ${
-                this.props.price
-              }`}</div>
+              <div className={styles.price}>
+                {this.props.isEgvOrder && this.props.egvCardNumber
+                  ? this.props.egvCardNumber
+                  : `${RUPEE_SYMBOL} ${this.props.price}`}
+              </div>
               {this.props.discountPrice &&
                 this.props.discountPrice !== this.props.price && (
                   <div className={styles.discountPrice}>
@@ -48,6 +50,14 @@ export default class OrderCard extends React.Component {
           ) : (
             <div className={styles.priceHolder}>
               <div className={styles.price}>Free</div>
+            </div>
+          )}
+          {this.props.quantity && (
+            <div className={styles.quantityHolder}>
+              <div className={styles.price}>Qty</div>
+              <div className={styles.quantity}>
+                {this.props.numberOfQuantity}
+              </div>
             </div>
           )}
           {this.props.children && (
@@ -66,4 +76,8 @@ OrderCard.propTypes = {
   price: PropTypes.number,
   discountPrice: PropTypes.string,
   isSelect: PropTypes.bool
+};
+OrderCard.defaultProps = {
+  quantity: false,
+  numberOfQuantity: 1
 };

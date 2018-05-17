@@ -268,6 +268,9 @@ class CartPage extends React.Component {
                 ? `Pincode-${defaultPinCode}`
                 : "Enter Pincode"
             }
+            boxShadow={
+              defaultPinCode && defaultPinCode !== "undefined" ? true : false
+            }
             onClick={() => this.changePinCode()}
             buttonLabel="Change"
           />
@@ -342,6 +345,9 @@ class CartPage extends React.Component {
                   ? defaultPinCode
                   : "Enter Pincode"
               }
+              boxShadow={
+                defaultPinCode && defaultPinCode !== "undefined" ? true : false
+              }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
             />
@@ -404,7 +410,6 @@ class CartPage extends React.Component {
                   </div>
                 );
               })}
-
             {cartDetails.products && (
               <SavedProduct
                 saveProduct={() => this.goToWishList()}
@@ -412,7 +417,6 @@ class CartPage extends React.Component {
                 appliedCouponCode={this.state.appliedCouponCode}
               />
             )}
-
             {cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout

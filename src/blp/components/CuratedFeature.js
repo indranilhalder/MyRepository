@@ -13,7 +13,11 @@ export default class CuratedFeature extends React.Component {
   render() {
     let feedComponentData = this.props.feedComponentData;
     return (
-      <div className={styles.base}>
+      <div
+        className={
+          this.props.positionInFeed === 1 ? styles.firstItemBase : styles.base
+        }
+      >
         <div className={styles.headerText}>{feedComponentData.title}</div>
         <div className={styles.featuresCardHolder}>
           <Grid offset={10} elementWidthMobile={50}>

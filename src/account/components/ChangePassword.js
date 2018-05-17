@@ -21,16 +21,22 @@ class ChangePassword extends Component {
   };
 
   updatePassword = () => {
-    if (this.state.newPassword === this.state.confirmPassword) {
-      if (this.props.updatePassword) {
-        this.props.updatePassword(this.state);
-      }
+    if (this.props.updatePassword) {
+      this.props.updatePassword(this.state);
     }
   };
-
+  componentWillUnmount() {
+    if (this.props.clearChangePasswordDetails) {
+      this.props.clearChangePasswordDetails();
+    }
+  }
   render() {
     return (
-      <AuthFrame {...this.props} showSocialButtons={false}>
+      <AuthFrame
+        {...this.props}
+        showSocialButtons={false}
+        showCrossIcon={false}
+      >
         <div>
           <div>
             <div className={styles.input}>

@@ -120,7 +120,7 @@ class SignUp extends Component {
     }
 
     if (pathName === SIGN_UP_PATH) {
-      footerText = "Already have an account? Login";
+      footerText = "Already have an account? Sign in";
       footerClick = () => this.navigateToLogin();
       showSocialButtons = true;
     }

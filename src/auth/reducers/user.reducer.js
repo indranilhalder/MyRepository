@@ -56,10 +56,20 @@ const user = (
     case userActions.LOGIN_USER_SUCCESS:
       userDetails.userName = action.userName;
       userDetails.customerId = action.user.customerId;
-      userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
-      userDetails.firstName = action.user.customerInfo.firstName;
-      userDetails.gender = action.user.customerInfo.gender;
-      userDetails.lastName = action.user.customerInfo.lastName;
+      if (action.user.customerInfo) {
+        userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
+        userDetails.firstName =
+          action.user.customerInfo.firstName !== undefined &&
+          action.user.customerInfo.firstName !== "undefined"
+            ? action.user.customerInfo.firstName
+            : "";
+        userDetails.gender = action.user.customerInfo.gender;
+        userDetails.lastName =
+          action.user.customerInfo.lastName !== undefined &&
+          action.user.customerInfo.lastName !== "undefined"
+            ? action.user.customerInfo.lastName
+            : "";
+      }
       const EMAIL_REG_EX = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
       if (EMAIL_REG_EX.test(action.userName)) {
         userDetails.loginType = LOGIN_WITH_EMAIL;
@@ -110,11 +120,22 @@ const user = (
     case userActions.OTP_VERIFICATION_SUCCESS:
       userDetails = {};
       userDetails.userName = action.userName;
-      userDetails.customerId = action.user.customerInfo.customerId;
-      userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
-      userDetails.firstName = action.user.customerInfo.firstName;
-      userDetails.gender = action.user.customerInfo.gender;
-      userDetails.lastName = action.user.customerInfo.lastName;
+      if (action.user.customerInfo) {
+        userDetails.customerId = action.user.customerInfo.customerId;
+        userDetails.dateOfBirth = action.user.customerInfo.dateOfBirth;
+
+        userDetails.firstName =
+          action.user.customerInfo.firstName !== undefined &&
+          action.user.customerInfo.firstName !== "undefined"
+            ? action.user.customerInfo.firstName
+            : "";
+        userDetails.gender = action.user.customerInfo.gender;
+        userDetails.lastName =
+          action.user.customerInfo.lastName !== undefined &&
+          action.user.customerInfo.lastName !== "undefined"
+            ? action.user.customerInfo.lastName
+            : "";
+      }
       Cookies.createCookie(LOGGED_IN_USER_DETAILS, JSON.stringify(userDetails));
 
       return Object.assign({}, state, {

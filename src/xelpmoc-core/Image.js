@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./Image.css";
+import VisibilityChild from "../home/components/VisibilityChild";
 
 const LOADING = "loading";
 const LOADED = "loaded";
@@ -18,18 +19,28 @@ export default class Image extends React.Component {
   handleImageErrored() {
     this.setState({ imageStatus: ERROR });
   }
+
+  renderImage = () => {
+    const img = (
+      <img
+        className={this.styles.actual}
+        alt="No Image"
+        src={this.props.image}
+        onLoad={() => this.handleImageLoaded()}
+        onError={() => this.handleImageErrored()}
+      />
+    );
+    if (this.props.lazyLoad) {
+      return <VisibilityChild> {img} </VisibilityChild>;
+    }
+    return img;
+  };
   render() {
     const className = this.styles.base;
     const fit = this.props.fit;
     return (
       <div className={className} style={{ backgroundColor: this.props.color }}>
-        <img
-          className={this.styles.actual}
-          alt="No Image"
-          src={this.props.image}
-          onLoad={() => this.handleImageLoaded()}
-          onError={() => this.handleImageErrored()}
-        />
+        {this.renderImage()}
         {this.state.imageStatus === LOADED && (
           <div
             className={this.styles.actual}
@@ -49,10 +60,12 @@ export default class Image extends React.Component {
 Image.propTypes = {
   image: PropTypes.string.isRequired,
   fit: PropTypes.string,
-  color: PropTypes.string
+  color: PropTypes.string,
+  lazyLoad: PropTypes.bool
 };
 
 Image.defaultProps = {
   fit: "cover",
-  color: "#fff"
+  color: "#fff",
+  lazyLoad: false
 };

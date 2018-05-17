@@ -12,6 +12,12 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 
+  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff2" as="font" crossorigin="anonymous">
+
+  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff" as="font" crossorigin="anonymous">
+  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff" as="font" crossorigin="anonymous">
 
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -33,22 +39,22 @@
 
     @font-face {
       font-family: regular;
-      src: url('./fonts/rubik-v7-latin-regular.woff') format('woff')
+      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff') format('woff'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff') format('woff')
     }
 
     @font-face {
       font-family: semibold;
-      src: url('./fonts/rubik-v7-latin-500.woff2') format('woff2'), url('./fonts/rubik-v7-latin-500.woff') format('woff')
+      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff') format('woff')
     }
 
     @font-face {
       font-family: bolder;
-      src: url('./fonts/rubik-v7-latin-700.woff2') format('woff2'), url('./fonts/rubik-v7-latin-700.woff') format('woff')
+      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff') format('woff')
     }
 
     @font-face {
       font-family: light;
-      src: url('./fonts/rubik-v7-latin-300.woff2') format('woff2'), url('./fonts/rubik-v7-latin-300.woff2') format('woff')
+      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2') format('woff')
     }
 
     #root {
@@ -72,6 +78,7 @@
     h2,
     h3 {
       margin: 0px;
+      font-size: inherit;
       font-weight: normal
     }
   </style>
@@ -96,6 +103,7 @@
       -->
   <% if("%REACT_APP_STAGE%" === "production") { %>
     <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15.js"></script>
+
 
     <% } else { %>
       <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15-staging.js"></script>

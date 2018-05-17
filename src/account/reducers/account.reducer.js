@@ -139,6 +139,7 @@ const account = (
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
+        error: null,
         orderDetailsError: null,
         fetchOrderDetailsError: null,
         userDetailsError: null,
@@ -162,13 +163,15 @@ const account = (
         cancelProductError: null,
         verifyWalletError: null,
         wishlistError: null,
-        updateProfileError: null
+        updateProfileError: null,
+        changePasswordError: null
       });
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        error: null
       });
     case accountActions.GET_RETURN_REQUEST_SUCCESS:
       return Object.assign({}, state, {
@@ -191,7 +194,8 @@ const account = (
     case accountActions.RETURN_PRODUCT_DETAILS_FAILURE:
       return Object.assign({}, state, {
         loading: false,
-        status: action.status
+        status: action.status,
+        error: action.error
       });
 
     case accountActions.QUICK_DROP_STORE_REQUEST:
@@ -592,8 +596,16 @@ const account = (
       Cookie.deleteCookie(LOGGED_IN_USER_DETAILS);
       //assign firstName and Last Name
       let updateUserDetails = JSON.parse(userDetails);
-      updateUserDetails.firstName = action.userDetails.firstName;
-      updateUserDetails.lastName = action.userDetails.lastName;
+      updateUserDetails.firstName =
+        action.userDetails.firstName !== undefined &&
+        action.userDetails.firstName !== "undefined"
+          ? action.userDetails.firstName
+          : "";
+      updateUserDetails.lastName =
+        action.userDetails.lastName !== undefined &&
+        action.userDetails.lastName !== "undefined"
+          ? action.userDetails.lastName
+          : "";
       Cookies.createCookie(
         LOGGED_IN_USER_DETAILS,
         JSON.stringify(updateUserDetails)
@@ -832,7 +844,18 @@ const account = (
         loadingForClearOrderDetails: false
       });
     }
-
+    case accountActions.RE_SET_ADD_ADDRESS_DETAILS: {
+      return Object.assign({}, state, {
+        addUserAddressStatus: null,
+        addUserAddressError: null
+      });
+    }
+    case accountActions.CLEAR_CHANGE_PASSWORD_DETAILS: {
+      return Object.assign({}, state, {
+        changePasswordStatus: null,
+        changePasswordError: null
+      });
+    }
     default:
       return state;
   }

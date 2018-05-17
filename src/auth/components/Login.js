@@ -17,7 +17,9 @@ import {
   SIGN_UP_PATH,
   HOME_ROUTER,
   MAIN_ROUTER,
-  SOCIAL_LOG_IN
+  SOCIAL_LOG_IN,
+  CHECKOUT_ROUTER,
+  PRODUCT_CART_ROUTER
 } from "../../lib/constants";
 import {
   setDataLayer,
@@ -54,9 +56,15 @@ class Login extends Component {
   }
   goBack() {
     if (this.props.history.length <= 3) {
+      this.props.history.replace(HOME_ROUTER);
+    }
+    if (this.props.history.length === 2) {
       this.props.history.push(HOME_ROUTER);
+    }
+    if (this.props.redirectToAfterAuthUrl === CHECKOUT_ROUTER) {
+      this.props.history.replace(PRODUCT_CART_ROUTER);
     } else {
-      return this.props.history.goBack();
+      this.props.history.goBack();
     }
   }
   onSubmit = () => {

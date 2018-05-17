@@ -1,23 +1,11 @@
 import React from "react";
 import PdpFrame from "./PdpFrame";
 import find from "lodash.find";
-import ProductDetailsMainCard from "./ProductDetailsMainCard";
 import Image from "../../xelpmoc-core/Image";
 import ProductGalleryMobile from "./ProductGalleryMobile";
-import ColourSelector from "./ColourSelector";
-import SizeSelector from "./SizeSelector";
-import OfferCard from "./OfferCard";
-import OtherSellersLink from "./OtherSellersLink";
-import PdpPaymentInfo from "./PdpPaymentInfo";
-import ProductDetails from "./ProductDetails";
-import ProductFeature from "./ProductFeature";
-import RatingAndTextLink from "./RatingAndTextLink";
-import AllDescription from "./AllDescription";
-import PdpPincode from "./PdpPincode";
-import PdpDeliveryModes from "./PdpDeliveryModes";
-import Overlay from "./Overlay";
 import Accordion from "../../general/components/Accordion.js";
-import PDPRecommendedSectionsContainer from "../containers/PDPRecommendedSectionsContainer.js";
+import LoadableVisibility from "react-loadable-visibility/react-loadable";
+
 import * as Cookie from "../../lib/Cookie";
 import {
   CUSTOMER_ACCESS_TOKEN,
@@ -37,7 +25,93 @@ import {
 } from "../../lib/constants";
 
 import styles from "./ProductDescriptionPage.css";
+const ProductDetailsMainCard = LoadableVisibility({
+  loader: () => import("./ProductDetailsMainCard"),
+  loading: () => <div />,
+  delay: 400
+});
 
+const ProductDetails = LoadableVisibility({
+  loader: () => import("./ProductDetails"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const Overlay = LoadableVisibility({
+  loader: () => import("./Overlay"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPincode = LoadableVisibility({
+  loader: () => import("./PdpPincode"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const ProductFeature = LoadableVisibility({
+  loader: () => import("./ProductFeature"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const AllDescription = LoadableVisibility({
+  loader: () => import("./AllDescription"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const RatingAndTextLink = LoadableVisibility({
+  loader: () => import("./RatingAndTextLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpPaymentInfo = LoadableVisibility({
+  loader: () => import("./PdpPaymentInfo"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OtherSellersLink = LoadableVisibility({
+  loader: () => import("./OtherSellersLink"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const OfferCard = LoadableVisibility({
+  loader: () => import("./OfferCard"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const SizeSelector = LoadableVisibility({
+  loader: () => import("./SizeSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const ColourSelector = LoadableVisibility({
+  loader: () => import("./ColourSelector"),
+  loading: () => <div />,
+  delay: 400
+});
+
+const PdpDeliveryModes = LoadableVisibility({
+  loader: () => import("./PdpDeliveryModes"),
+  loading: () => <div />,
+  delay: 1000
+});
+
+const PDPRecommendedSectionsContainer = LoadableVisibility({
+  loader: () => import("../containers/PDPRecommendedSectionsContainer"),
+  loading: () => {
+    return <div />;
+  },
+  delay: 400
+});
+const NO_SIZE = "NO SIZE";
+const FREE_SIZE = "Free Size";
 const PRODUCT_QUANTITY = "1";
 const IMAGE = "Image";
 export default class PdpApparel extends React.Component {
@@ -95,7 +169,12 @@ export default class PdpApparel extends React.Component {
       ) {
         this.props.displayToast("Product is out of stock");
       } else {
-        if (this.checkIfSizeSelected() || this.checkIfSizeDoesNotExist()) {
+        if (
+          this.checkIfSizeSelected() ||
+          this.checkIfSizeDoesNotExist() ||
+          this.checkIfFreeSize() ||
+          this.checkIfNoSize()
+        ) {
           if (userDetails) {
             if (cartDetailsLoggedInUser && customerCookie) {
               this.props.addProductToCart(
@@ -138,6 +217,14 @@ export default class PdpApparel extends React.Component {
       this.props.showPincodeModal(this.props.match.params[1]);
     }
   }
+  showEmiModal = () => {
+    const cartValue = this.props.productDetails.winningSellerPrice.value;
+    const globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+    const globalAccessToken = JSON.parse(globalCookie).access_token;
+    this.props.getPdpEmi(globalAccessToken, cartValue);
+    this.props.getEmiTerms(globalAccessToken, cartValue);
+    this.props.showEmiModal();
+  };
   showSizeSelector = () => {
     if (
       this.props.showSizeSelector &&
@@ -173,6 +260,30 @@ export default class PdpApparel extends React.Component {
         ? true
         : false
       : true;
+  };
+  checkIfNoSize = () => {
+    if (
+      this.props.productDetails.variantOptions &&
+      this.props.productDetails.variantOptions[0].sizelink &&
+      (this.props.productDetails.variantOptions[0].sizelink.size.toUpperCase() ===
+        NO_SIZE ||
+        this.props.productDetails.variantOptions[0].sizelink.size === "0")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  checkIfFreeSize = () => {
+    if (
+      this.props.productDetails.variantOptions &&
+      this.props.productDetails.variantOptions[0].sizelink &&
+      this.props.productDetails.variantOptions[0].sizelink.size === FREE_SIZE
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
   handleShowPiqPage = () => {
     const eligibleForCNC = find(
@@ -231,7 +342,7 @@ export default class PdpApparel extends React.Component {
           <div className={styles.gallery}>
             <ProductGalleryMobile>
               {mobileGalleryImages.map((val, idx) => {
-                return <Image image={val} key={idx} />;
+                return <Image lazyLoad={true} image={val} key={idx} />;
               })}
             </ProductGalleryMobile>
             {(productData.allOOStock ||
@@ -252,14 +363,14 @@ export default class PdpApparel extends React.Component {
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
-              onClick={this.goToReviewPage}
+              goToReviewPage={this.goToReviewPage}
               discount={productData.discount}
             />
           </div>
           <PdpPaymentInfo
             hasEmi={productData.isEMIEligible}
             hasCod={productData.isCOD}
-            showEmiModal={this.showEmiModal}
+            showEmiModal={() => this.showEmiModal()}
           />
           <OfferCard
             showDetails={this.props.showOfferDetails}
@@ -268,14 +379,17 @@ export default class PdpApparel extends React.Component {
           />
           {productData.variantOptions && (
             <React.Fragment>
-              <SizeSelector
-                history={this.props.history}
-                sizeSelected={this.checkIfSizeSelected()}
-                productId={productData.productListingId}
-                hasSizeGuide={productData.showSizeGuide}
-                showSizeGuide={this.props.showSizeGuide}
-                data={productData.variantOptions}
-              />
+              {!this.checkIfNoSize() && (
+                <SizeSelector
+                  history={this.props.history}
+                  sizeSelected={this.checkIfSizeSelected()}
+                  productId={productData.productListingId}
+                  hasSizeGuide={productData.showSizeGuide}
+                  showSizeGuide={this.props.showSizeGuide}
+                  data={productData.variantOptions}
+                />
+              )}
+
               <ColourSelector
                 data={productData.variantOptions}
                 productId={productData.productListingId}

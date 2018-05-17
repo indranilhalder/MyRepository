@@ -10,6 +10,14 @@ export default class ProductDescription extends Component {
     }
   }
 
+  renderTitle = headerText => {
+    if (this.props.isPlp) {
+      return <div className={headerText}>{this.props.title}</div>;
+    } else {
+      return <h2 className={headerText}>{this.props.title}</h2>;
+    }
+  };
+
   render() {
     let headerClass = styles.header;
     let priceClass = styles.priceHolder;
@@ -33,7 +41,8 @@ export default class ProductDescription extends Component {
     return (
       <div className={styles.base}>
         <div className={headerClass}>
-          <h2 className={headerText}>{this.props.title}</h2>
+          {this.renderTitle(headerText)}
+
           {this.props.showWishListButton &&
             this.props.productListingId &&
             this.props.winningUssID &&
@@ -52,7 +61,8 @@ export default class ProductDescription extends Component {
             <h2 className={styles.description}>{this.props.description}</h2>
           )}
 
-          {this.props.discountPrice &&
+          {!this.props.isRange &&
+            this.props.discountPrice &&
             this.props.discountPrice !== this.props.price && (
               <div className={styles.discount}>
                 {this.props.discountPrice.toString().includes(RUPEE_SYMBOL)
@@ -61,13 +71,31 @@ export default class ProductDescription extends Component {
               </div>
             )}
 
-          {this.props.price && (
-            <div className={priceClass}>
-              {this.props.price.toString().includes(RUPEE_SYMBOL)
-                ? this.props.price
-                : `${RUPEE_SYMBOL}${this.props.price}`}
-            </div>
-          )}
+          {!this.props.isRange &&
+            this.props.price && (
+              <div className={priceClass}>
+                {this.props.price.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.price
+                  : `${RUPEE_SYMBOL}${this.props.price}`}
+              </div>
+            )}
+          {this.props.isRange &&
+            this.props.minPrice &&
+            this.props.maxPrice && (
+              <div className={styles.description}>
+                {this.props.minPrice.toString().includes(RUPEE_SYMBOL)
+                  ? this.props.minPrice
+                  : `${RUPEE_SYMBOL}${this.props.minPrice}`}{" "}
+                {this.props.maxPrice !== this.props.minPrice && (
+                  <React.Fragment>
+                    -{" "}
+                    {this.props.maxPrice.toString().includes(RUPEE_SYMBOL)
+                      ? this.props.maxPrice
+                      : `${RUPEE_SYMBOL}${this.props.maxPrice}`}
+                  </React.Fragment>
+                )}
+              </div>
+            )}
         </div>
       </div>
     );
@@ -90,7 +118,9 @@ ProductDescription.defaultProps = {
   description: "",
   price: "",
   isWhite: false,
+  isRange: false,
   textColor: "#212121",
   showWishListButton: true,
-  isShowAddToWishlistIcon: true
+  isShowAddToWishlistIcon: true,
+  isPlp: PropTypes.bool
 };

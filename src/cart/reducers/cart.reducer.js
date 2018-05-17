@@ -295,8 +295,13 @@ const cart = (
 
     case cartActions.RELEASE_USER_COUPON_SUCCESS:
       carDetailsCopy = cloneDeep(state.cartDetails);
+
       cartAmount = action.couponResult && action.couponResult.cartAmount;
-      carDetailsCopy.cartAmount = cartAmount;
+      if (carDetailsCopy) {
+        carDetailsCopy.cartAmount = cartAmount;
+      } else {
+        carDetailsCopy = { cartAmount };
+      }
       delete carDetailsCopy["appliedCoupon"];
 
       Cookies.deleteCookie(COUPON_COOKIE);
@@ -658,8 +663,12 @@ const cart = (
         loading: true
       });
     case cartActions.RELEASE_BANK_OFFER_SUCCESS:
+      const cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      cloneCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
+        cartDetailsCNC: cloneCartDetailCNC,
+        bankOffer: action.bankOffer,
         loading: false
       });
     case cartActions.RELEASE_BANK_OFFER_FAILURE:
@@ -714,7 +723,8 @@ const cart = (
     case cartActions.CREATE_JUS_PAY_ORDER_REQUEST:
       return Object.assign({}, state, {
         createJusPayStatus: action.status,
-        jusPaymentLoader: true
+        jusPaymentLoader: true,
+        isPaymentProceeded: true
       });
 
     case cartActions.CREATE_JUS_PAY_ORDER_SUCCESS: {
@@ -1107,7 +1117,7 @@ const cart = (
         softReservationForPaymentError: action.error,
         jusPaymentLoader: false,
         isSoftReservationFailed: true,
-        isPaymentProceeded:false
+        isPaymentProceeded: false
       });
 
     case cartActions.JUS_PAY_TOKENIZE_REQUEST:

@@ -128,12 +128,17 @@ export default class ReturnFlow extends React.Component {
   }
   render() {
     // if user hit return page by url then i am navigating him on orderDetial page
+    if (this.props.error) {
+      this.props.displayToast(this.props.error);
+      this.props.history.goBack();
+    }
     if (!this.transactionId) {
       this.navigateToOrderDetail();
     }
-    if (!this.props.returnRequest || !this.props.returnProductDetails) {
+    if (!this.props.returnRequest && !this.props.returnProductDetails) {
       return this.renderLoader();
     }
+
     return (
       <React.Fragment>
         <Route
@@ -172,7 +177,9 @@ export default class ReturnFlow extends React.Component {
         <Route
           exact
           path={`${RETURNS}${RETURNS_SELF_COURIER}`}
-          render={() => <SelfCourierContainer {...this.state} />}
+          render={() => (
+            <SelfCourierContainer {...this.state} {...this.props} />
+          )}
         />
         {/* end of need to call return bia store pick up  routes */}
       </React.Fragment>

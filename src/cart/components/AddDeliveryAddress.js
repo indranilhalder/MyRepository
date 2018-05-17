@@ -18,29 +18,28 @@ import {
   EMAIL_REGULAR_EXPRESSION,
   MOBILE_PATTERN
 } from "../../auth/components/Login";
+import AddEmailAddress from "../components/AddEmailAddress";
+import {
+  SAVE_TEXT,
+  PINCODE_TEXT,
+  NAME_TEXT,
+  LAST_NAME_TEXT,
+  ADDRESS_TEXT,
+  EMAIL_TEXT,
+  LANDMARK_TEXT,
+  LANDMARK_ENTER_TEXT,
+  MOBILE_TEXT,
+  PINCODE_VALID_TEXT,
+  EMAIL_VALID_TEXT,
+  PHONE_VALID_TEXT,
+  PHONE_TEXT,
+  CITY_TEXT,
+  STATE_TEXT,
+  SELECT_ADDRESS_TYPE,
+  ISO_CODE,
+  OTHER_LANDMARK
+} from "../../lib/constants";
 
-export const SALUTATION_MR = "Mr. ";
-export const SALUTATION_MS = "Ms. ";
-export const SALUTATION_MSS = "Mss. ";
-
-const SAVE_TEXT = "Save Address";
-const PINCODE_TEXT = "Please enter pincode";
-const NAME_TEXT = "Please enter first name";
-const LAST_NAME_TEXT = "plese enter last name";
-const ADDRESS_TEXT = "Please enter address";
-const EMAIL_TEXT = "Please enter email id";
-const LANDMARK_TEXT = "Please select landmark";
-const LANDMARK_ENTER_TEXT = "Please enter landmark";
-const MOBILE_TEXT = "Please enter mobile number";
-const PINCODE_VALID_TEXT = "Please enter valid pincode";
-const EMAIL_VALID_TEXT = "Please enter valid emailId";
-const PHONE_VALID_TEXT = "Please fill valid mobile number";
-const PHONE_TEXT = "Please enter mobile number";
-const CITY_TEXT = "please enter city";
-const STATE_TEXT = "please enter state";
-const HOME_TEXT = "please select address type";
-const ISO_CODE = "IN";
-const OTHER_LANDMARK = "other";
 export default class AddDeliveryAddress extends React.Component {
   constructor(props) {
     super(props);
@@ -57,12 +56,23 @@ export default class AddDeliveryAddress extends React.Component {
       line2: "",
       line3: "",
       town: "",
-      salutation: SALUTATION_MR,
       defaultFlag: true,
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
-      landmarkList: []
+      landmarkList: [],
+      userEmailId: ""
     };
+  }
+  handleOnFocusInput() {
+    if (this.props.onFocusInput) {
+      this.props.onFocusInput();
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.getUserDetails) {
+      this.props.getUserDetails();
+    }
   }
 
   getPinCodeDetails = val => {
@@ -76,21 +86,45 @@ export default class AddDeliveryAddress extends React.Component {
   };
   handlePhoneInput(val) {
     if (val.length <= 10) {
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, { phone: val });
       this.setState({ phone: val });
+      if (this.props.getAddressDetails) {
+        this.props.getAddressDetails(cloneAddress);
+      }
+    }
+  }
+
+  onChangeEmailId(val) {
+    const cloneAddress = cloneDeep(this.state);
+    Object.assign(cloneAddress, { emailId: val });
+    this.setState({ emailId: val });
+    if (this.props.getAddressDetails) {
+      this.props.getAddressDetails(cloneAddress);
     }
   }
   onChange(val) {
     this.setState(val);
     if (this.props.getAddressDetails) {
-      this.props.getAddressDetails(this.state);
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, val);
+      this.props.getAddressDetails(cloneAddress);
     }
   }
   onChangeDefaultFlag() {
     this.setState(prevState => ({
       defaultFlag: !prevState.defaultFlag
     }));
+    if (this.props.getAddressDetails) {
+      const cloneAddress = cloneDeep(this.state);
+      Object.assign(cloneAddress, { defaultFlag: this.state.defaultFlag });
+      this.props.getAddressDetails(cloneAddress);
+    }
   }
   componentWillUnmount() {
+    if (this.props.resetAddAddressDetails) {
+      this.props.resetAddAddressDetails();
+    }
     if (this.props.resetAutoPopulateDataForPinCode) {
       this.props.resetAutoPopulateDataForPinCode();
     }
@@ -106,6 +140,13 @@ export default class AddDeliveryAddress extends React.Component {
         state: "",
         town: "",
         landmarkList
+      });
+    }
+    if (nextProps.userDetails) {
+      this.setState({
+        userEmailId: nextProps.userDetails.emailID
+          ? nextProps.userDetails.emailID
+          : ""
       });
     }
     if (nextProps.getPincodeStatus === SUCCESS && nextProps.getPinCodeDetails) {
@@ -178,17 +219,7 @@ export default class AddDeliveryAddress extends React.Component {
       this.props.displayToast(ADDRESS_TEXT);
       return false;
     }
-    if (!this.state.emailId) {
-      this.props.displayToast(EMAIL_TEXT);
-      return false;
-    }
-    if (
-      this.state.emailId &&
-      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
-    ) {
-      this.props.displayToast(EMAIL_VALID_TEXT);
-      return false;
-    }
+
     if (!this.state.town) {
       this.props.displayToast(CITY_TEXT);
       return false;
@@ -206,7 +237,23 @@ export default class AddDeliveryAddress extends React.Component {
       return false;
     }
     if (!this.state.addressType) {
-      this.props.displayToast(HOME_TEXT);
+      this.props.displayToast(SELECT_ADDRESS_TYPE);
+      return false;
+    }
+    if (
+      !this.state.userEmailId &&
+      !this.state.emailId &&
+      this.state.emailId === ""
+    ) {
+      this.props.displayToast("Please enter the EmailId");
+      return false;
+    }
+    if (
+      this.state.emailId &&
+      this.state.emailId !== "" &&
+      !EMAIL_REGULAR_EXPRESSION.test(this.state.emailId)
+    ) {
+      this.props.displayToast(EMAIL_VALID_TEXT);
       return false;
     } else {
       const addressObj = cloneDeep(this.state);
@@ -233,7 +280,6 @@ export default class AddDeliveryAddress extends React.Component {
       line1: " ",
       titleValue: "",
       addressType: "",
-      salutation: SALUTATION_MR,
       defaultFlag: false,
       landmarkList: [],
       emailId: ""
@@ -261,57 +307,35 @@ export default class AddDeliveryAddress extends React.Component {
         label: "Office"
       }
     ];
-    const salutation = [
-      {
-        label: "Mr",
-        value: SALUTATION_MR
-      },
-      {
-        label: "Ms",
-        value: SALUTATION_MS
-      },
-      {
-        label: "Mss",
-        value: SALUTATION_MSS
-      }
-    ];
+
     return (
       <div className={styles.base}>
-        <div className={styles.addressInnerBox}>
-          <div className={styles.headingText}>{this.props.heading}</div>
-          <div className={styles.button} onClick={this.clearAllValue}>
-            <UnderLinedButton label="Clear all" />
+        <div className={styles.formHolder}>
+          <div className={styles.addressInnerBox}>
+            <div className={styles.headingText}>{this.props.heading}</div>
+            <div className={styles.button} onClick={this.clearAllValue}>
+              <UnderLinedButton label="Clear all" />
+            </div>
           </div>
-        </div>
-        <div className={styles.content}>
-          <Input2
-            placeholder="Enter a pincode/zipcode*"
-            onChange={postalCode => this.getPinCodeDetails(postalCode)}
-            textStyle={{ fontSize: 14 }}
-            value={
-              this.props.postalCode
-                ? this.props.postalCode
-                : this.state.postalCode
-            }
-            maxLength={"6"}
-            onlyNumber={true}
-            rightChildSize={33}
-          />
-        </div>
-        <div className={styles.content}>
-          <div className={styles.salutation}>
-            <SelectBoxMobile2
-              height={33}
-              options={salutation.map((val, i) => {
-                return {
-                  value: val.value,
-                  label: val.label
-                };
-              })}
-              onChange={salutation => this.onChangeSalutation(salutation)}
+          <div className={styles.content}>
+            <Input2
+              placeholder="Enter your PIN code*"
+              onChange={postalCode => this.getPinCodeDetails(postalCode)}
+              textStyle={{ fontSize: 14 }}
+              value={
+                this.props.postalCode
+                  ? this.props.postalCode
+                  : this.state.postalCode
+              }
+              maxLength={"6"}
+              onlyNumber={true}
+              rightChildSize={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
-          <div className={styles.name}>
+          <div className={styles.content}>
             <Input2
               option={this.state.options}
               placeholder="First Name*"
@@ -323,120 +347,162 @@ export default class AddDeliveryAddress extends React.Component {
               onChange={firstName => this.onChange({ firstName })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
-        </div>
-        <div className={styles.content}>
-          <Input2
-            boxy={true}
-            placeholder="Last Name*"
-            value={
-              this.props.lastName ? this.props.lastName : this.state.lastName
-            }
-            onChange={lastName => this.onChange({ lastName })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
-        </div>
-        <div className={styles.content}>
-          <TextArea
-            placeholder="Address*"
-            value={this.props.line1 ? this.props.line1 : this.state.line1}
-            onChange={line1 => this.onChange({ line1 })}
-          />
-        </div>
-        <div className={styles.content}>
-          <SelectBoxMobile2
-            height={33}
-            placeholder={"Landmark"}
-            options={
-              this.state.landmarkList.length > 0 &&
-              this.state.landmarkList.map((val, i) => {
-                return {
-                  value: val && val.landmark,
-                  label: val && val.landmark
-                };
-              })
-            }
-            onChange={landmark => this.onSelectLandmark(landmark)}
-          />
-        </div>
-        {this.state.isOtherLandMarkSelected && (
+
           <div className={styles.content}>
             <Input2
               boxy={true}
-              placeholder="Landmark*"
-              value={this.props.line2 ? this.props.line2 : this.state.line2}
-              onChange={line2 => this.onChange({ line2 })}
+              placeholder="Last Name*"
+              value={
+                this.props.lastName ? this.props.lastName : this.state.lastName
+              }
+              onChange={lastName => this.onChange({ lastName })}
               textStyle={{ fontSize: 14 }}
               height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
             />
           </div>
-        )}
-        <div className={styles.content}>
-          <Input2
-            boxy={true}
-            placeholder="Email*"
-            value={this.props.emailId ? this.props.emailId : this.state.emailId}
-            onChange={emailId => this.onChange({ emailId })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
-        </div>
-        <div className={styles.content}>
-          <Input2
-            boxy={true}
-            placeholder="City/district*"
-            value={this.props.town ? this.props.town : this.state.town}
-            onChange={town => this.onChange({ town })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
-        </div>
-        <div className={styles.content}>
-          <Input2
-            placeholder="State*"
-            value={this.props.state ? this.props.state : this.state.state}
-            boxy={true}
-            onChange={state => this.onChange({ state })}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
-        </div>
-        <div className={styles.content}>
-          <Input2
-            type="number"
-            placeholder="Phone number*"
-            value={this.props.phone ? this.props.phone : this.state.phone}
-            boxy={true}
-            onChange={phone => this.handlePhoneInput(phone)}
-            textStyle={{ fontSize: 14 }}
-            height={33}
-          />
-        </div>
+          <div className={styles.content}>
+            <TextArea
+              placeholder="Address*"
+              value={this.props.line1 ? this.props.line1 : this.state.line1}
+              onChange={line1 => this.onChange({ line1 })}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div>
+          <div className={styles.content}>
+            <SelectBoxMobile2
+              height={33}
+              placeholder={"Landmark"}
+              options={
+                this.state.landmarkList.length > 0 &&
+                this.state.landmarkList.map((val, i) => {
+                  return {
+                    value: val && val.landmark,
+                    label: val && val.landmark
+                  };
+                })
+              }
+              onChange={landmark => this.onSelectLandmark(landmark)}
+            />
+          </div>
+          {this.state.isOtherLandMarkSelected && (
+            <div className={styles.content}>
+              <Input2
+                boxy={true}
+                placeholder="Landmark*"
+                value={this.props.line2 ? this.props.line2 : this.state.line2}
+                onChange={line2 => this.onChange({ line2 })}
+                textStyle={{ fontSize: 14 }}
+                height={33}
+                onFocus={() => {
+                  this.handleOnFocusInput();
+                }}
+              />
+            </div>
+          )}
+          {/* <div className={styles.content}>
+            <Input2
+              boxy={true}
+              placeholder="Email*"
+              value={
+                this.props.emailId ? this.props.emailId : this.state.emailId
+              }
+              onChange={emailId => this.onChange({ emailId })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div> */}
+          <div className={styles.content}>
+            <Input2
+              boxy={true}
+              placeholder="City/district*"
+              value={this.props.town ? this.props.town : this.state.town}
+              onChange={town => this.onChange({ town })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div>
+          <div className={styles.content}>
+            <Input2
+              placeholder="State*"
+              value={this.props.state ? this.props.state : this.state.state}
+              boxy={true}
+              onChange={state => this.onChange({ state })}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div>
+          <div className={styles.content}>
+            <Input2
+              type="number"
+              placeholder="Phone number*"
+              value={this.props.phone ? this.props.phone : this.state.phone}
+              boxy={true}
+              onChange={phone => this.handlePhoneInput(phone)}
+              textStyle={{ fontSize: 14 }}
+              height={33}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+            />
+          </div>
 
-        <div className={styles.content}>
-          <GridSelect
-            limit={1}
-            offset={0}
-            elementWidthMobile={50}
-            onSelect={val => this.onChange({ addressType: val[0] })}
-            selected={[this.state.addressType]}
-          >
-            {dataLabel.map((val, i) => {
-              return (
-                <CheckboxAndText key={i} label={val.label} value={val.label} />
-              );
-            })}
-          </GridSelect>
+          <div className={styles.content}>
+            <GridSelect
+              limit={1}
+              offset={0}
+              elementWidthMobile={50}
+              onSelect={val => this.onChange({ addressType: val[0] })}
+              selected={[this.state.addressType]}
+            >
+              {dataLabel.map((val, i) => {
+                return (
+                  <CheckboxAndText
+                    key={i}
+                    label={val.label}
+                    value={val.label}
+                  />
+                );
+              })}
+            </GridSelect>
+          </div>
+          <div className={styles.defaultText}>
+            <CheckboxAndText
+              label="Make this default address"
+              selected={this.state.defaultFlag}
+              selectItem={() => this.onChangeDefaultFlag()}
+            />
+          </div>
         </div>
-        <div className={styles.defaultText}>
-          <CheckboxAndText
-            label="Make this default address"
-            selected={this.state.defaultFlag}
-            selectItem={() => this.onChangeDefaultFlag()}
-          />
-        </div>
+        {!this.state.userEmailId &&
+          this.state.userEmailId === "" && (
+            <div className={styles.emailHolder}>
+              <AddEmailAddress
+                value={
+                  this.props.emailId ? this.props.emailId : this.state.emailId
+                }
+                onChange={emailId => this.onChangeEmailId(emailId)}
+              />
+            </div>
+          )}
         <div className={styles.buttonHolder}>
           <div className={styles.saveAndContinueButton}>
             {!this.props.isFirstAddress && (

@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./EmiPanel.css";
 import PropTypes from "prop-types";
 import MenuDetails from "../../general/components/MenuDetails.js";
-import eWalletIcon from "./img/netBanking.svg";
+import emiIcon from "./img/emi.svg";
 import NoCostEmi from "./NoCostEmi.js";
 import CheckoutEmi from "./CheckoutEmi.js";
 import NoCostEmiBankDetails from "./NoCostEmiBankDetails.js";
@@ -51,13 +51,13 @@ export default class EmiPanel extends React.Component {
   };
   applyNoCostEmi = (couponCode, bankName) => {
     if (this.props.applyNoCostEmi) {
-      this.props.applyNoCostEmi(couponCode, bankName);
+      return this.props.applyNoCostEmi(couponCode, bankName);
     }
   };
 
   removeNoCostEmi = couponCode => {
     if (this.props.removeNoCostEmi) {
-      this.props.removeNoCostEmi(couponCode);
+      return this.props.removeNoCostEmi(couponCode);
     }
   };
   getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {
@@ -101,7 +101,7 @@ export default class EmiPanel extends React.Component {
       <div className={styles.base}>
         <MenuDetails
           text={EMI}
-          icon={eWalletIcon}
+          icon={emiIcon}
           isOpen={this.props.currentPaymentMode === EMI}
           onOpenMenu={currentPaymentMode =>
             this.props.onChange({ currentPaymentMode })
@@ -123,9 +123,11 @@ export default class EmiPanel extends React.Component {
                   onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 >
                   <NoCostEmiBankDetails
+                    isNoCostEmiApplied={this.props.isNoCostEmiApplied}
                     selectedEMIType={this.state.currentSelectedEMIType}
                     onBankSelect={val => this.onBankSelect(val)}
                     onSelectMonth={val => this.onSelectMonth(val)}
+                    onFocusInput={this.props.onFocusInput}
                     bankList={
                       this.props.cart &&
                       this.props.cart.bankAndTenureDetails &&

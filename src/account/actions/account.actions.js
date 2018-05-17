@@ -19,7 +19,8 @@ import {
   CART_DETAILS_FOR_LOGGED_IN_USER,
   DEFAULT_PIN_CODE_LOCAL_STORAGE,
   GLOBAL_ACCESS_TOKEN,
-  PLAT_FORM_NUMBER
+  PLAT_FORM_NUMBER,
+  SUCCESS_MESSAGE_IN_CANCELING_ORDER
 } from "../../lib/constants";
 import {
   showModal,
@@ -53,6 +54,7 @@ import {
   hideSecondaryLoader
 } from "../../general/secondaryLoader.actions";
 import * as ErrorHandling from "../../general/ErrorHandling.js";
+import { displayToast } from "../../general/toast.actions";
 export const GET_USER_DETAILS_REQUEST = "GET_USER_DETAILS_REQUEST";
 export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
 export const GET_USER_DETAILS_FAILURE = "GET_USER_DETAILS_FAILURE";
@@ -199,6 +201,8 @@ export const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
 export const Clear_ORDER_DATA = "Clear_ORDER_DATA";
+export const RE_SET_ADD_ADDRESS_DETAILS = "RE_SET_ADD_ADDRESS_DETAILS";
+export const CLEAR_CHANGE_PASSWORD_DETAILS = "CLEAR_CHANGE_PASSWORD_DETAILS";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -338,6 +342,7 @@ export function cancelProduct(cancelProductDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+      dispatch(displayToast(SUCCESS_MESSAGE_IN_CANCELING_ORDER));
       return dispatch(cancelProductSuccess(resultJson));
     } catch (e) {
       return dispatch(cancelProductFailure(e.message));
@@ -557,10 +562,10 @@ export function returnPinCode(productDetails) {
       resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
       if (resultJsonStatus.status) {
-        let message=resultJsonStatus.message
-        if(resultJsonStatus.message=== FAILURE_UPPERCASE)
-        {
-          message="Sorry! pick up is not available for your area......"
+        let message = resultJsonStatus.message;
+        if (resultJsonStatus.message === FAILURE_UPPERCASE) {
+          message =
+            "Sorry! pick up is not available for your area. You can still return the item by dropping in store or by self shipping the product";
         }
         throw new Error(message);
       }
@@ -645,11 +650,14 @@ export function giftCardFailure(error) {
 }
 export function getGiftCardDetails() {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(giftCardRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_PATH}/egvProductInfo?access_token=${
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/giftCard/egvProductInfo?access_token=${
           JSON.parse(customerCookie).access_token
         }`
       );
@@ -758,7 +766,7 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
           JSON.parse(userDetails).userName
         }/checkWalletMobileNumber?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isUpdateProfile=0`,
+        }&isUpdateProfile=false`,
         customerDetails
       );
       const resultJson = await result.json();
@@ -814,8 +822,11 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
           JSON.parse(userDetails).userName
         }/verifyWalletOtp?access_token=${
           JSON.parse(customerCookie).access_token
-        }&otp=${customerDetailsWithOtp.otp}`,
-        customerDetailsWithOtp
+        }&otp=${customerDetailsWithOtp.otp}&firstName=${
+          customerDetailsWithOtp.firstName
+        }&lastName=${customerDetailsWithOtp.lastName}&mobileNumber=${
+          customerDetailsWithOtp.mobileNumber
+        }`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -971,10 +982,9 @@ export function getPinCode(pinCode) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        let errorMessage=resultJsonStatus.message;
-        if(errorMessage === FAILURE_UPPERCASE)
-        {
-          errorMessage="Pincode is not serviceable"
+        let errorMessage = resultJsonStatus.message;
+        if (errorMessage === FAILURE_UPPERCASE) {
+          errorMessage = "Pincode is not serviceable";
         }
         throw new Error(errorMessage);
       }
@@ -1128,7 +1138,7 @@ export function getUserDetailsFailure(error) {
   };
 }
 
-export function getUserDetails() {
+export function getUserDetails(isSetDataLayer) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -1147,7 +1157,9 @@ export function getUserDetails() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      setDataLayer(AODBE_MY_ACCOUNT_SETTINGS);
+      if (isSetDataLayer) {
+        setDataLayer(AODBE_MY_ACCOUNT_SETTINGS);
+      }
       dispatch(getUserDetailsSuccess(resultJson));
     } catch (e) {
       dispatch(getUserDetailsFailure(e.message));
@@ -1529,18 +1541,31 @@ export function updateProfile(accountDetails, otp) {
   return async (dispatch, getState, { api }) => {
     dispatch(updateProfileRequest());
     let updateProfileUrl;
+    let requestUrl = `isPwa=true&access_token=${
+      JSON.parse(customerCookie).access_token
+    }&ProfileDataRequired=true`;
+    if (accountDetails.firstName) {
+      requestUrl = requestUrl + `&firstName=${accountDetails.firstName}`;
+    }
+    if (accountDetails.lastName) {
+      requestUrl = requestUrl + `&lastName=${accountDetails.lastName}`;
+    }
+    if (accountDetails.dateOfBirth) {
+      requestUrl = requestUrl + `&dateOfBirth=${dateOfBirth}`;
+    }
+    if (accountDetails.mobileNumber) {
+      requestUrl = requestUrl + `&mobilenumber=${accountDetails.mobileNumber}`;
+    }
+    if (accountDetails.gender) {
+      requestUrl = requestUrl + `&gender=${accountDetails.gender}`;
+    }
+    if (accountDetails.emailId) {
+      requestUrl = requestUrl + `&emailid=${accountDetails.emailId}`;
+    }
     try {
       updateProfileUrl = `${USER_PATH}/${
         JSON.parse(userDetails).userName
-      }/updateprofile?isPwa=true&access_token=${
-        JSON.parse(customerCookie).access_token
-      }&ProfileDataRequired=true&firstName=${
-        accountDetails.firstName
-      }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
-        accountDetails.gender
-      }&mobilenumber=${accountDetails.mobileNumber}&emailid=${
-        accountDetails.emailId
-      }`;
+      }/updateprofile?${requestUrl}`;
       if (otp) {
         updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
       }
@@ -1937,9 +1962,9 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
         guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
         dispatch(getPaymentModes(guIdObject));
       }
-      dispatch(redeemCliqVoucherSuccess(resultJson));
+      return dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
-      dispatch(redeemCliqVoucherFailure(e.message));
+      return dispatch(redeemCliqVoucherFailure(e.message));
     }
   };
 }
@@ -1963,5 +1988,16 @@ export function clearAccountUpdateType() {
 export function clearOrderDetails() {
   return {
     type: Clear_ORDER_DATA
+  };
+}
+
+export function resetAddAddressDetails() {
+  return {
+    type: RE_SET_ADD_ADDRESS_DETAILS
+  };
+}
+export function clearChangePasswordDetails() {
+  return {
+    type: CLEAR_CHANGE_PASSWORD_DETAILS
   };
 }

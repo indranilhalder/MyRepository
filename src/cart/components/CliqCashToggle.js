@@ -29,7 +29,7 @@ export default class CliqCashToggle extends React.Component {
         <div className={styles.toggleButtonHolder}>
           <div className={styles.toggleButton}>
             <Toggle
-              active={this.props.active}
+              active={this.props.isCliqCashApplied}
               onToggle={val => this.onToggle(val)}
               disabled={toggleDisable}
             />

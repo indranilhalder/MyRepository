@@ -5,11 +5,11 @@ import {
   SUCCESS,
   FAILURE,
   LOGGED_IN_USER_DETAILS,
-  CART_DETAILS_FOR_LOGGED_IN_USER
+  CART_DETAILS_FOR_LOGGED_IN_USER,
+  CART_DETAILS_FOR_ANONYMOUS
 } from "./constants.js";
 import * as ErrorHandling from "../general/ErrorHandling.js";
 import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
-import { customerAccessToken } from "../auth/actions/user.actions";
 import { USER_CART_PATH } from "../cart/actions/cart.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
@@ -23,7 +23,7 @@ if (
 ) {
   API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "tmpprod") {
-  API_URL_ROOT = "https://p2tmppprd.tataunistore.com/marketplacewebservices";
+  API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "p2") {
@@ -33,7 +33,7 @@ if (
 }
 
 if (process.env.REACT_APP_STAGE === "tmpprod") {
-  URL_ROOT = "https://p2tmpprd.tataunistore.com";
+  URL_ROOT = "https://tmpprd.tataunistore.com";
 } else if (process.env.REACT_APP_STAGE === "production") {
   URL_ROOT = "https://www.tatacliq.com";
 } else if (process.env.REACT_APP_STAGE === "p2") {
@@ -198,6 +198,7 @@ export async function post(path, postData, doNotUseApiSuffix: true) {
         path
       );
     }
+
     return await corePost(newUrl, postData);
   } catch (e) {
     throw e;
@@ -238,13 +239,23 @@ async function handleInvalidCustomerAccessToken(message, oldUrl) {
 
 async function handleCartNotFoundError(response, oldUrl) {
   let newUrl = null;
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
   if (isCartNotFoundError(response)) {
     const refreshCartIdResponse = await refreshCartId();
 
     if (!refreshCartIdResponse) {
       throw new Error("Customer Cart id refresh failure");
     }
-    newUrl = replaceOldCartCookie(oldUrl, refreshCartIdResponse);
+    if (userDetails && customerCookie) {
+      newUrl = replaceOldCartCookieForLoggedInUser(
+        oldUrl,
+        refreshCartIdResponse
+      );
+    } else {
+      newUrl = replaceOldCartCookieForAnonymnous(oldUrl, refreshCartIdResponse);
+    }
   }
   return newUrl;
 }
@@ -284,7 +295,7 @@ function replaceOldCustomerCookie(url, newCustomerCookie) {
     newCustomerCookie.access_token
   );
 }
-async function replaceOldCartCookie(url, newCustomerCookie) {
+async function replaceOldCartCookieForLoggedInUser(url, newCustomerCookie) {
   let oldCustomerCookie = JSON.parse(
     Cookie.getCookie(CART_DETAILS_FOR_LOGGED_IN_USER)
   );
@@ -296,6 +307,18 @@ async function replaceOldCartCookie(url, newCustomerCookie) {
   return url.replace(oldCustomerCookie.code, newCustomerCookie.code);
 }
 
+async function replaceOldCartCookieForAnonymnous(url, newCustomerCookie) {
+  let oldCustomerCookie = JSON.parse(
+    Cookie.getCookie(CART_DETAILS_FOR_ANONYMOUS)
+  );
+
+  Cookie.deleteCookie(CART_DETAILS_FOR_ANONYMOUS);
+  Cookie.createCookie(
+    CART_DETAILS_FOR_ANONYMOUS,
+    JSON.stringify(newCustomerCookie)
+  );
+  return url.replace(oldCustomerCookie.guid, newCustomerCookie.guid);
+}
 async function refreshCustomerAccessToken() {
   let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   if (!JSON.parse(customerCookie).refresh_token) {
@@ -337,6 +360,17 @@ async function refreshCartId() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
 
+  if (userDetails && customerCookie) {
+    return await refreshCartIdForLoggedUser();
+  } else {
+    return await refreshCartIdForAnonymous();
+  }
+}
+
+async function refreshCartIdForLoggedUser() {
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+  const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
   const resultForGetCartId = await get(
     `${USER_CART_PATH}/${JSON.parse(userDetails).userName}/carts?access_token=${
       JSON.parse(customerCookie).access_token
@@ -369,7 +403,22 @@ async function refreshCartId() {
   }
   return resultForGetCartIdJson;
 }
-
+async function refreshCartIdForAnonymous() {
+  let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
+  const resultForCreateCartId = await post(
+    `${USER_CART_PATH}/anonymous/carts?access_token=${
+      JSON.parse(globalCookie).access_token
+    }&isPwa=true`
+  );
+  const resultForCreateCartIdJson = await resultForCreateCartId.json();
+  const errorStatusForCreateCartObj = ErrorHandling.getFailureResponse(
+    resultForCreateCartIdJson
+  );
+  if (errorStatusForCreateCartObj.status) {
+    return null;
+  }
+  return resultForCreateCartIdJson;
+}
 function isCustomerAccessTokenFailure(message) {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   const customerAccessToken =

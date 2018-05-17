@@ -29,6 +29,7 @@
   overflow: hidden;
   margin-left: -20px;
   display: inline-block;
+  vertical-align: top;
 }
 .contenHolder {
   composes: tabHolder;

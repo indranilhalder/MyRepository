@@ -48,6 +48,18 @@ export default class ProductGrid extends React.Component {
     // if (data.type === PRODUCT) {
     return (
       <ProductModule
+        isRange={data.price.isRange}
+        maxPrice={
+          data.price &&
+          data.price.maxPrice &&
+          data.price.maxPrice.formattedValueNoDecimal
+        }
+        minPrice={
+          data.price &&
+          data.price.minPrice &&
+          data.price.minPrice.formattedValueNoDecimal
+        }
+        isPlp={true}
         productImage={data.imageURL}
         title={data.brandname}
         price={data.price.mrpPrice.formattedValueNoDecimal}
