@@ -2475,7 +2475,9 @@ export function createJusPayOrder(
           address.state ? address.state : ""
         }&pincode=${
           address.postalCode
-        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&bankName=${
+        }&cardSaved=true&sameAsShipping=true&cartGuid=${cartId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}&bankName=${
           bankName ? bankName : ""
         }&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
@@ -2548,7 +2550,9 @@ export function createJusPayOrderForGiftCard(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?access_token=${
           JSON.parse(customerCookie).access_token
-        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&bankName=${
+        }&firstName=&lastName=&addressLine1=&addressLine2=&addressLine3=&country=&city=&state=&pincode=&cardSaved=true&sameAsShipping=true&cartGuid=${guId}&token=${token}&isPwa=true&platformNumber=2&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}&paymentMode=${currentSelectedPaymentMode}&bankName=${
           bankName ? bankName : ""
         }`
       );
@@ -2602,7 +2606,9 @@ export function createJusPayOrderForNetBanking(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&isPwa=true`,
+        }&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}&paymentMode=${currentSelectedPaymentMode}&isPwa=true`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2663,7 +2669,9 @@ export function createJusPayOrderForGiftCardNetBanking(guId) {
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&bankName=${bankName}&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=&city=&cartGuid=${guId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}$paymentMode=${currentSelectedPaymentMode}`
+        }&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}$paymentMode=${currentSelectedPaymentMode}`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -2726,7 +2734,9 @@ export function createJusPayOrderForSavedCards(
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}$paymentMode=${currentSelectedPaymentMode}$bankName=${
+        }&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}$paymentMode=${currentSelectedPaymentMode}$bankName=${
           bankName ? bankName : ""
         }`,
         cartItem
@@ -2787,7 +2797,9 @@ export function createJusPayOrderForGiftCardFromSavedCards(cardDetails, guId) {
           cardDetails.cardReferenceNumber
         }&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}&bankName=${
+        }&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}&paymentMode=${currentSelectedPaymentMode}&bankName=${
           bankName ? bankName : ""
         }`
       );
@@ -2848,7 +2860,9 @@ export function createJusPayOrderForCliqCash(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${jusPayUrl}&paymentMode=${currentSelectedPaymentMode}`,
+        }&juspayUrl=${encodeURIComponent(
+          jusPayUrl
+        )}&paymentMode=${currentSelectedPaymentMode}`,
         cartItem
       );
       const resultJson = await result.json();
