@@ -584,6 +584,8 @@ class CheckOutPage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+
+
     if (nextProps.cart.isSoftReservationFailed) {
       return this.navigateToCartForOutOfStock();
     }
@@ -756,8 +758,8 @@ class CheckOutPage extends React.Component {
       this.setState({
         isRemainingAmount:
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
-        payableAmount: nextProps.cart.cliqCashPaymentDetails.paybleAmount
-          ? nextProps.cart.cliqCashPaymentDetails.paybleAmount
+        payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value
+          ? nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value
           : "0.00",
         cliqCashAmount:
           nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
@@ -766,8 +768,8 @@ class CheckOutPage extends React.Component {
                   100
               ) / 100
             : "0.00",
-        bagAmount: nextProps.cart.cliqCashPaymentDetails.totalAmount
-          ? nextProps.cart.cliqCashPaymentDetails.totalAmount
+        bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
+          ? nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
           : "0.00",
         totalDiscount:
           nextProps.cart.cliqCashPaymentDetails.otherDiscount.value > 0
