@@ -10,6 +10,8 @@
 .base {
   width: 100%;
   height: auto;
+  padding-bottom: 40%;
+  position: relative;
   margin: 0px;
 }
 .inCard {
@@ -23,10 +25,13 @@
 }
 .buffer {
   width: 100%;
-  height: auto;
+  height: 100%;
   min-height: 125px;
   overflow: hidden;
   padding: 30px;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 .content {
   width: 100%;
