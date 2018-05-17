@@ -275,7 +275,6 @@ class App extends Component {
     }
 
     if (this.props.modalStatus) {
-      console.log(this.props.scrollPosition);
       className = AppStyles.blur;
     }
 

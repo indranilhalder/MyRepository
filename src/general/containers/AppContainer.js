@@ -52,7 +52,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  console.log(state.modal);
   return {
     modalStatus: state.modal.modalDisplayed,
     scrollPosition: state.modal.scrollPosition,
