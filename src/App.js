@@ -277,13 +277,13 @@ class App extends Component {
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
-
+    const appTransform =
+      this.props.scrollPosition !== 0
+        ? `translateY(-${this.props.scrollPosition}px)`
+        : null;
     return (
       <React.Fragment>
-        <div
-          className={className}
-          style={{ transform: `translateY(-${this.props.scrollPosition}px)` }}
-        >
+        <div className={className} style={{ transform: appTransform }}>
           <HeaderContainer />
           <Switch>
             <Route path={MY_ACCOUNT} component={MyAccountWrapper} />{" "}
