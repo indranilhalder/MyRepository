@@ -53,9 +53,13 @@ class PDPRecommendedSections extends React.Component {
       brandId = this.props.aboutTheBrand.id;
     }
 
+    const options = {
+      onChange: this.handleIntersection,
+      rootMargin: "0% 0% -25%"
+    };
     return (
       this.props.aboutTheBrand && (
-        <React.Fragment>
+        <Observer {...options}>
           <div className={styles.brandSection}>
             <h3 className={styles.brandHeader}>About the Brand</h3>
             <div className={styles.brandLogoSection}>
@@ -95,7 +99,7 @@ class PDPRecommendedSections extends React.Component {
               </div>
             )}
           </div>
-        </React.Fragment>
+        </Observer>
       )
     );
   }
@@ -135,15 +139,19 @@ class PDPRecommendedSections extends React.Component {
   }
 
   handleIntersection = event => {
-    if (event.isIntersecting && !this.props.aboutTheBrand) {
-      if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-        this.props.getMsdRequest(this.props.match.params[0]);
-        this.props.pdpAboutBrand(this.props.match.params[0]);
-      } else if (
-        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-      ) {
-        this.props.getMsdRequest(this.props.match.params[1]);
-        this.props.pdpAboutBrand(this.props.match.params[1]);
+    if (event.isIntersecting) {
+      if (this.props.visitedNewProduct) {
+        if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+          this.props.setToOld();
+          this.props.getMsdRequest(this.props.match.params[0]);
+          this.props.pdpAboutBrand(this.props.match.params[0]);
+        } else if (
+          this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+        ) {
+          this.props.setToOld();
+          this.props.getMsdRequest(this.props.match.params[1]);
+          this.props.pdpAboutBrand(this.props.match.params[1]);
+        }
       }
     }
   };
