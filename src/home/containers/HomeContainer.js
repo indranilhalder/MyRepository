@@ -7,6 +7,7 @@ import { setHeaderText } from "../../general/header.actions";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
 import { LOGGED_IN_USER_DETAILS } from "../../lib/constants";
+
 const mapDispatchToProps = dispatch => {
   return {
     homeFeed: () => {
