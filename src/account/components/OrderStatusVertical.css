@@ -1,6 +1,7 @@
 .base {
   width: 100%;
   height: auto;
+  margin-top: 15px;
 }
 
 .step {
@@ -92,6 +93,7 @@
   display: inline-block;
   color: #212121;
   font-size: 14px;
+  line-height: 21px;
   vertical-align: top;
   font-family: regular;
 }
