@@ -292,3 +292,6 @@ export const OTP_VERIFICATION_REQUIRED_CODE = "NU0002";
 export const RESET_PASSWORD_SUCCESS_MESSAGE =
   "Password reset successfully. Kindly login with your new password";
 export const OTP_VERIFICATION_REQUIRED_TEXT = "OTP VERIFICATION REQUIRED";
+export const STORE_NOT_AVAILABLE_TEXT = "Store Not available";
+export const BACK_END_ISSUE_ERROR_MESSAGE =
+  "An exception occurred at back-end.";
