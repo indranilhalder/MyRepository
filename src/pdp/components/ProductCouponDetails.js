@@ -103,11 +103,11 @@ class ProductCouponDetails extends Component {
     }
   };
 
-  navigateToLogin = () => {
+  navigateToLogin() {
     if (this.props.navigateToLogin) {
       this.props.navigateToLogin(this.props.history.location.pathname);
     }
-  };
+  }
   render() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     let coupons = [];
@@ -149,11 +149,8 @@ class ProductCouponDetails extends Component {
             <span>Note:</span> {USER_COUPON_NOTE}
           </div>
           {!showLogOutUserCoupon && (
-            <div className={styles.link}>
-              <div
-                className={styles.linkArrow}
-                onClick={val => this.navigateToLogin()}
-              >
+            <div className={styles.link} onClick={() => this.navigateToLogin()}>
+              <div className={styles.linkArrow}>
                 <Icon image={arrowIcon} size={10} />
               </div>Login to view personal coupons
             </div>
