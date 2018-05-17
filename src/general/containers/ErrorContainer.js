@@ -107,7 +107,7 @@ class ErrorDisplay extends React.Component {
     if (
       this.props.plpError !== "" &&
       this.props.plpError !== null &&
-      this.props.userError !== undefined
+      this.props.plpError !== undefined
     ) {
       this.displayError(this.props.plpError);
       return;
@@ -116,7 +116,7 @@ class ErrorDisplay extends React.Component {
     if (
       this.props.pdpError !== "" &&
       this.props.pdpError !== null &&
-      this.props.userError !== undefined
+      this.props.pdpError !== undefined
     ) {
       this.displayError(this.props.pdpError);
       return;
