@@ -97,6 +97,9 @@ export default class EmiPanel extends React.Component {
     this.setState({ currentSelectedEMIType });
   }
   render() {
+    if (this.props.isCliqCashApplied) {
+      return null;
+    }
     return (
       <div className={styles.base}>
         <MenuDetails

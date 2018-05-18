@@ -2026,4 +2026,3 @@ export function clearPinCodeStatus() {
     type: CLEAR_PIN_CODE_STATUS
   };
 }
-
