@@ -194,7 +194,11 @@ class CartPage extends React.Component {
     this.props.setUrlToRedirectToAfterAuth(url);
     this.props.history.replace(LOGIN_PATH);
   }
-
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   renderToCheckOutPage() {
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
@@ -418,6 +422,9 @@ class CartPage extends React.Component {
                       isOutOfStock={product.isOutOfStock}
                       qtySelectedByUser={product.qtySelectedByUser}
                       isClickable={false}
+                      onClickImage={() =>
+                        this.onClickImage(product.productcode)
+                      }
                     />
                   </div>
                 );
