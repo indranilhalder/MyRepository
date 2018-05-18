@@ -604,14 +604,16 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     } = getProductData;
     Object.assign(data, {
       cpj: {
         product: {
           id: productIdsArray,
           quantity: productQuantityArray,
-          price: productPriceArray
+          price: productPriceArray,
+          category: categoryArray
         },
         brand: {
           name: productBrandArray
@@ -646,14 +648,16 @@ function getDigitalDataForOrderConfirmation(type, response) {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     } = getProductData;
     Object.assign(data, {
       cpj: {
         product: {
           id: productIdsArray,
           quantity: productQuantityArray,
-          price: productPriceArray
+          price: productPriceArray,
+          category: categoryArray
         },
         brand: {
           name: productBrandArray
@@ -675,7 +679,8 @@ function getProductsDigitalData(response) {
     let productIdsArray = [],
       productQuantityArray = [],
       productPriceArray = [],
-      productBrandArray = [];
+      productBrandArray = [],
+      categoryArray = [];
     response.products.forEach(function(product) {
       productIdsArray.push(
         product.productcode && product.productcode.toLowerCase()
@@ -696,12 +701,21 @@ function getProductsDigitalData(response) {
         product.productBrand &&
           product.productBrand.replace(/ /g, "_").toLowerCase()
       );
+      categoryArray.push(
+        product.categoryHierarchy &&
+          product.categoryHierarchy[0] &&
+          product.categoryHierarchy[0].category_name &&
+          product.categoryHierarchy[0].category_name
+            .replace(/ /g, "_")
+            .toLowerCase()
+      );
     });
     return {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     };
   } else {
     return null;
@@ -1043,7 +1057,7 @@ export function setDataLayerForPlpDirectCalls(response) {
 export function setDataLayerForLogin(type) {
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
   const data = {};
-  if (ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
+  if (type === ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
     if (userDetails) {
       if (userDetails.loginType === LOGIN_WITH_EMAIL) {
         Object.assign(data, {
@@ -1142,7 +1156,7 @@ export function setDataLayerForLogin(type) {
     window.digitalData.flag = ADOBE_LOGIN_SUCCESS;
     window._satellite.track(ADOBE_LOGIN_SUCCESS);
   }
-  if (ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
+  if (type === ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
     window.digitalData.flag = ADOBE_LOGIN_FAILURE;
     window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
@@ -1387,7 +1401,7 @@ export function setDataLayerForMyAccountDirectCalls(
         }
       }
     };
-    window.digitalData = data;
+    window.digitalDalta = data;
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
 }
