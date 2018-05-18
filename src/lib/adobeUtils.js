@@ -1397,7 +1397,7 @@ export function setDataLayerForMyAccountDirectCalls(
         }
       }
     };
-    window.digitalDalta = data;
+    window.digitalData = data;
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
 }
