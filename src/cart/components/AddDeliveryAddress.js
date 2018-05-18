@@ -60,7 +60,8 @@ export default class AddDeliveryAddress extends React.Component {
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
       landmarkList: [],
-      userEmailId: ""
+      userEmailId: "",
+      isEnable: false
     };
   }
   handleOnFocusInput() {
@@ -78,9 +79,17 @@ export default class AddDeliveryAddress extends React.Component {
   getPinCodeDetails = val => {
     let landmarkList = [];
     if (val.length <= 6) {
-      this.setState({ postalCode: val, state: "", town: "", landmarkList });
+      this.setState({
+        postalCode: val,
+        state: "",
+        town: "",
+        landmarkList,
+        isEnable: false,
+        line2: ""
+      });
     }
     if (val.length === 6 && this.props.getPinCode) {
+      this.setState({ isEnable: true });
       this.props.getPinCode(val);
     }
   };
@@ -286,7 +295,8 @@ export default class AddDeliveryAddress extends React.Component {
       addressType: "",
       defaultFlag: false,
       landmarkList: [],
-      emailId: ""
+      emailId: "",
+      isEnable: false
     });
   };
   onChangeSalutation(val) {
@@ -395,6 +405,7 @@ export default class AddDeliveryAddress extends React.Component {
                   };
                 })
               }
+              isEnable={this.state.isEnable}
               onChange={landmark => this.onSelectLandmark(landmark)}
             />
           </div>
