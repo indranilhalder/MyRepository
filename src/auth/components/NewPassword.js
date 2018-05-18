@@ -57,11 +57,11 @@ export default class NewPassword extends React.Component {
     }
   }
   render() {
-    let mobileNumber;
+    let emailIdOrMobileNumber;
     if (this.props.userObj && this.props.userObj.userName) {
-      mobileNumber = this.props.userObj.userName;
-    } else if (this.props.userObj && this.props.userObj.mobileNumber) {
-      mobileNumber = this.props.userObj.mobileNumber;
+      emailIdOrMobileNumber = this.props.userObj.userName;
+    } else {
+      emailIdOrMobileNumber = "";
     }
     return (
       <AuthPopUp>
@@ -73,9 +73,9 @@ export default class NewPassword extends React.Component {
             Password reset for
             <span className={styles.header}>
               {" "}
-              {mobileNumber.indexOf("@") !== -1
-                ? mobileNumber
-                : `+91${mobileNumber}`}
+              {emailIdOrMobileNumber.indexOf("@") !== -1
+                ? emailIdOrMobileNumber
+                : `+91${emailIdOrMobileNumber}`}
             </span>
           </div>
         </div>
