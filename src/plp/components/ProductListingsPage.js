@@ -6,7 +6,9 @@ import {
   BRAND_AND_CATEGORY_PAGE,
   SKU_PAGE,
   CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
-  CATEGORY_PAGE_WITH_SLUG
+  CATEGORY_PAGE_WITH_SLUG,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PAGE_WITH_SLUG
 } from "../../lib/constants.js";
 import {
   CATEGORY_CAPTURE_REGEX,
@@ -48,10 +50,23 @@ class ProductListingsPage extends Component {
       if (searchText) {
         searchText = searchText.replace(
           ":relevance",
-          `:relevance:category:${this.props.match.params[0].toUpperCase()}`
+          `:relevance:brand:${this.props.match.params[0].toUpperCase()}`
         );
       } else {
         searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
+      }
+    }
+    if (
+      this.props.match.path === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === BRAND_PAGE_WITH_SLUG
+    ) {
+      if (searchText) {
+        searchText = searchText.replace(
+          ":relevance",
+          `:relevance:brand:${this.props.match.params[0].toUpperCase()}`
+        );
+      } else {
+        searchText = `:relevance:brand:${this.props.match.params[0].toUpperCase()}`;
       }
     }
     if (searchText) {
@@ -86,6 +101,17 @@ class ProductListingsPage extends Component {
     if (
       this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
       this.props.match.path === CATEGORY_PAGE_WITH_SLUG
+    ) {
+      page = this.props.match.params[1];
+
+      let searchText = this.getSearchTextFromUrl();
+
+      this.props.getProductListings(searchText, SUFFIX, page - 1);
+      return;
+    }
+    if (
+      this.props.match.path === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === BRAND_PAGE_WITH_SLUG
     ) {
       page = this.props.match.params[1];
 
