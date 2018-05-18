@@ -425,11 +425,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = currentDigitalData;
   }
 
-  // we don't have to trigger virtual page load on first time .
-  // thats why we are checking page previous digital data
-  if (previousDigitalData) {
-    window._satellite.track(ADOBE_SATELLITE_CODE);
-  }
+  window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
