@@ -26,14 +26,20 @@ export default class OfferCard extends React.Component {
           onClick={this.handleShowDetails}
         >
           {this.props.potentialPromotions && (
-            <div className={styles.headingText}>
-              {this.props.potentialPromotions.title}
-            </div>
+            <div
+              className={styles.headingText}
+              dangerouslySetInnerHTML={{
+                __html: this.props.potentialPromotions.title
+              }}
+            />
           )}
           {this.props.secondaryPromotions && (
-            <div className={styles.headingText}>
-              {this.props.secondaryPromotions.messageID}
-            </div>
+            <div
+              className={styles.headingText}
+              dangerouslySetInnerHTML={{
+                __html: this.props.secondaryPromotions.messageID
+              }}
+            />
           )}
         </div>
       );
