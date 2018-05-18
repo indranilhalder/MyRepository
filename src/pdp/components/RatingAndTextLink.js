@@ -24,7 +24,11 @@ export default class RatingAndTextLink extends React.Component {
           </div>
           {this.props.numberOfReview !== 0 && (
             <div className={styles.textHolder}>
-              <span itemProp="ratingValue">{this.props.averageRating}</span>{" "}
+              <span itemProp="ratingValue">
+                {this.props.averageRating
+                  ? Math.floor(this.props.averageRating)
+                  : ""}
+              </span>{" "}
               based on
               <span itemProp="reviewCount"> {this.props.numberOfReview}</span>
               reviews
