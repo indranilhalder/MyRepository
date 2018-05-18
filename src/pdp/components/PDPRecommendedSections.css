@@ -16,7 +16,7 @@
 }
 
 .observer {
-  height: 30px;
+  min-height: 30px;
 }
 .brandLogoSection {
   width: 100%;
