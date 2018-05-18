@@ -24,6 +24,9 @@ import icid from "../src/general/icid.reducer.js";
 import wishlistItems from "./wishlist/reducers/wishlist.reducer";
 import auth from "./auth/reducers/auth.reducer";
 import cart from "./cart/reducers/cart.reducer";
+import Toast from "./general/components/Toast";
+import delay from "lodash.delay";
+import { TOAST_DELAY } from "./general/toast.actions";
 import "intersection-observer";
 
 const rootReducer = combineReducers({
@@ -62,4 +65,14 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-registerServiceWorker();
+
+const displayToastFunc = message => {
+  ReactDOM.render(
+    <Toast data={message} autoRemove={true} />,
+    document.getElementById("service-worker-toast-root")
+  );
+  delay(() => {
+    document.getElementById("service-worker-toast-root").innerHTML = "";
+  }, TOAST_DELAY);
+};
+registerServiceWorker(displayToastFunc);

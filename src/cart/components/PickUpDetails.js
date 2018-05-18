@@ -18,14 +18,14 @@ export default class PickUpDetails extends React.Component {
   render() {
     return (
       <div className={styles.base}>
-        <div className={styles.header}>Pickup details</div>
+        <div className={styles.header}>Who's picking up your order</div>
         <div className={styles.subHeader}>
           (Changing pickup person details will overwrite the previous pick up
           person details)
         </div>
         <div className={styles.inputHolder}>
           <Input2
-            placeholder="Full name"
+            placeholder="Name"
             boxy={true}
             onChange={name => this.getValue({ name })}
             textStyle={{ fontSize: 14 }}

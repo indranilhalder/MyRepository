@@ -58,7 +58,7 @@ export default class DeliveryModeSet extends React.Component {
                       deliveryOption.name === "Home Delivery"
                         ? "Standard Shipping"
                         : deliveryOption.name === "Express Delivery"
-                          ? "Express Shipping"
+                          ? "Express Delivery"
                           : deliveryOption.name
                     } ${
                       deliveryOption.code === COLLECT
