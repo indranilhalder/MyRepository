@@ -90,9 +90,12 @@ export function getWishListItems() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      const currentWishlist = resultJson.wishList.filter(wishlist => {
-        return wishlist.name === MY_WISH_LIST;
-      });
+      let currentWishlist = [];
+      if (resultJson.wishList) {
+        currentWishlist = resultJson.wishList.filter(wishlist => {
+          return wishlist.name === MY_WISH_LIST;
+        });
+      }
 
       return dispatch(getWishListItemsSuccess(currentWishlist[0]));
     } catch (e) {
@@ -263,6 +266,7 @@ export function createWishlist(productDetails) {
 
       return dispatch(createWishlistSuccess());
     } catch (e) {
+      console.log(e.message);
       return dispatch(createWishlistFailure(e.message));
     }
   };

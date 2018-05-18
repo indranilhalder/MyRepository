@@ -84,13 +84,6 @@ const mapDispatchToProps = dispatch => {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
           return;
         }
-        if (signUpResponse.status === SUCCESS) {
-          const wishListResponse = await dispatch(createWishlist());
-          if (wishListResponse.status === ERROR) {
-            dispatch(singleAuthCallHasFailed(signUpResponse.error));
-            return;
-          }
-        }
       }
 
       const customerAccessTokenActionResponse = await dispatch(
@@ -217,18 +210,9 @@ const mapDispatchToProps = dispatch => {
             SOCIAL_CHANNEL_GOOGLE_PLUS
           )
         );
-
         if (signUpResponse.status !== SUCCESS) {
           dispatch(singleAuthCallHasFailed(signUpResponse.error));
           return;
-        }
-
-        if (signUpResponse.status === SUCCESS) {
-          const wishListResponse = await dispatch(createWishlist());
-          if (wishListResponse.status === ERROR) {
-            dispatch(singleAuthCallHasFailed(signUpResponse.error));
-            return;
-          }
         }
       }
 
