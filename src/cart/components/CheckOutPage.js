@@ -574,7 +574,7 @@ class CheckOutPage extends React.Component {
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
           getUserDetails={() => this.getUserDetails()}
           userDetails={this.props.userDetails}
-          clearPinCodeStatus={()=>this.props.clearPinCodeStatus()}
+          clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -1983,7 +1983,7 @@ class CheckOutPage extends React.Component {
             resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
             getUserDetails={() => this.getUserDetails()}
             userDetails={this.props.userDetails}
-            clearPinCodeStatus={()=>this.props.clearPinCodeStatus()}
+            clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
           />
         </div>
       );

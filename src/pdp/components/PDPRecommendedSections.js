@@ -111,13 +111,17 @@ class PDPRecommendedSections extends React.Component {
   }
 
   renderProductModuleSection(title, key) {
-    return this.props.msdItems[key] ? (
-      <div className={styles.brandSection}>
-        <h3 className={styles.brandHeader}>{title}</h3>
-        {this.props.msdItems[key] &&
-          this.renderCarousel(this.props.msdItems[key])}
-      </div>
-    ) : null;
+    if (this.props.msdItems) {
+      return this.props.msdItems[key] ? (
+        <div className={styles.brandSection}>
+          <h3 className={styles.brandHeader}>{title}</h3>
+          {this.props.msdItems[key] &&
+            this.renderCarousel(this.props.msdItems[key])}
+        </div>
+      ) : null;
+    } else {
+      return null;
+    }
   }
 
   handleIntersection = event => {
