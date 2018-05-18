@@ -574,7 +574,7 @@ class CheckOutPage extends React.Component {
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
           getUserDetails={() => this.getUserDetails()}
           userDetails={this.props.userDetails}
-          clearPinCodeStatus={()=>this.props.clearPinCodeStatus()}
+          clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
         />
         <DummyTab title="Delivery Mode" number={2} />
         <DummyTab title="Payment Method" number={3} />
@@ -1716,10 +1716,17 @@ class CheckOutPage extends React.Component {
       });
       localStorage.setItem(PAYMENT_MODE_TYPE, `${cardDetails.cardType} Card`);
       this.setState({ savedCardDetails: cardDetails });
-      this.props.binValidation(
-        `${cardDetails.cardType} Card`,
-        cardDetails.cardISIN
-      );
+      if (
+        !this.state.savedCardDetails ||
+        (this.state.savedCardDetails &&
+          this.state.savedCardDetails.cardEndingDigits !==
+            cardDetails.cardEndingDigits)
+      ) {
+        this.props.binValidation(
+          `${cardDetails.cardType} Card`,
+          cardDetails.cardISIN
+        );
+      }
     } else {
       this.setState({ savedCardDetails: null });
     }
@@ -1786,6 +1793,7 @@ class CheckOutPage extends React.Component {
   navigateToOrderDetailPage(orderId) {
     this.props.history.push(`${MY_ACCOUNT}${ORDER}/?${ORDER_CODE}=${orderId}`);
   }
+
   validateCard() {
     if (
       !this.state.cardDetails.cardNumber ||
@@ -1801,6 +1809,7 @@ class CheckOutPage extends React.Component {
     } else {
       const card = new cardValidator(this.state.cardDetails.cardNumber);
       let cardDetails = card.getCardDetails();
+
       if (card.validateCard()) {
         if (
           cardDetails &&
@@ -1983,7 +1992,7 @@ class CheckOutPage extends React.Component {
             resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
             getUserDetails={() => this.getUserDetails()}
             userDetails={this.props.userDetails}
-            clearPinCodeStatus={()=>this.props.clearPinCodeStatus()}
+            clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
           />
         </div>
       );
@@ -2061,6 +2070,7 @@ class CheckOutPage extends React.Component {
                 changeSubEmiOption={currentSelectedEMIType =>
                   this.changeSubEmiOption(currentSelectedEMIType)
                 }
+                selectedSavedCardDetails={this.state.savedCardDetails}
                 selectedBankOfferCode={this.state.selectedBankOfferCode}
                 openBankOffers={() => this.openBankOffers()}
                 cliqCashAmount={this.state.cliqCashAmount}
