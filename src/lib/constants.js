@@ -225,7 +225,7 @@ export const ABOUT_US_URL = "/aboutus";
 export const PRIVACY_POLICY_URL = "/privacy-policy";
 export const CANCEL_URL = "/cancellation";
 export const RETURN_URL = "/returns";
-export const FAQ_URL = "/faq";
+export const FAQ_URL = "/faq-page";
 export const HELP_URL = "/help";
 
 // constants for payments method
