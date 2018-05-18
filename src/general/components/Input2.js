@@ -35,7 +35,7 @@ export default class Input2 extends React.Component {
       this.props.onKeyPress(event);
     }
     if (this.props.onlyAlphabet) {
-      var regex = new RegExp("^[a-zA-Z]+$");
+      var regex = new RegExp("^[a-zA-Z\\s]+$");
       var charCode = event.which ? event.which : event.keyCode;
       if (
         (charCode > 64 && charCode < 91) ||
