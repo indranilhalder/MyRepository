@@ -9,7 +9,6 @@ import Observer from "@researchgate/react-intersection-observer";
 
 import {
   ABOUT_THE_BRAND_WIDGET_KEY,
-  RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
 import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
@@ -37,69 +36,52 @@ class PDPRecommendedSections extends React.Component {
   }
   renderAboutTheBrand() {
     let brandId;
-    if (!this.props.aboutTheBrand) {
-      const options = {
-        onChange: this.handleIntersection,
-        rootMargin: "0% 0% -25%"
-      };
-      return (
-        <Observer {...options}>
-          <div />
-        </Observer>
-      );
-    }
 
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
     }
 
-    const options = {
-      onChange: this.handleIntersection,
-      rootMargin: "0% 0% -25%"
-    };
     return (
       this.props.aboutTheBrand && (
-        <Observer {...options}>
-          <div className={styles.brandSection}>
-            <h3 className={styles.brandHeader}>About the Brand</h3>
-            <div className={styles.brandLogoSection}>
-              {this.props.aboutTheBrand.brandLogo && (
-                <div className={styles.brandLogoHolder}>
-                  <Logo image={this.props.aboutTheBrand.brandLogo} />
-                </div>
-              )}
-              {brandId && (
-                <div className={styles.followButton}>
-                  <FollowUnFollowButtonContainer
-                    brandId={brandId}
-                    isFollowing={this.props.aboutTheBrand.isFollowing}
-                    pageType={PDP_FOLLOW_AND_UN_FOLLOW}
-                  />
-                </div>
-              )}
-            </div>
-            {this.props.aboutTheBrand.description && (
-              <h3 className={styles.brandDescription}>
-                {this.props.aboutTheBrand.description}
-              </h3>
+        <div className={styles.brandSection}>
+          <h3 className={styles.brandHeader}>About the Brand</h3>
+          <div className={styles.brandLogoSection}>
+            {this.props.aboutTheBrand.brandLogo && (
+              <div className={styles.brandLogoHolder}>
+                <Logo image={this.props.aboutTheBrand.brandLogo} />
+              </div>
             )}
-
-            {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
-              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
-              this.renderCarousel(
-                this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
-              )}
             {brandId && (
-              <div className={styles.visitBrandButton}>
-                <Button
-                  type="secondary"
-                  label="Visit Brand Store"
-                  onClick={() => this.visitBrand()}
+              <div className={styles.followButton}>
+                <FollowUnFollowButtonContainer
+                  brandId={brandId}
+                  isFollowing={this.props.aboutTheBrand.isFollowing}
+                  pageType={PDP_FOLLOW_AND_UN_FOLLOW}
                 />
               </div>
             )}
           </div>
-        </Observer>
+          {this.props.aboutTheBrand.description && (
+            <h3 className={styles.brandDescription}>
+              {this.props.aboutTheBrand.description}
+            </h3>
+          )}
+
+          {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
+            this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
+            this.renderCarousel(
+              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
+            )}
+          {brandId && (
+            <div className={styles.visitBrandButton}>
+              <Button
+                type="secondary"
+                label="Visit Brand Store"
+                onClick={() => this.visitBrand()}
+              />
+            </div>
+          )}
+        </div>
       )
     );
   }
@@ -129,13 +111,13 @@ class PDPRecommendedSections extends React.Component {
   }
 
   renderProductModuleSection(title, key) {
-    return (
+    return this.props.msdItems[key] ? (
       <div className={styles.brandSection}>
         <h3 className={styles.brandHeader}>{title}</h3>
         {this.props.msdItems[key] &&
           this.renderCarousel(this.props.msdItems[key])}
       </div>
-    );
+    ) : null;
   }
 
   handleIntersection = event => {
@@ -157,8 +139,14 @@ class PDPRecommendedSections extends React.Component {
   };
 
   render() {
+    const options = {
+      onChange: this.handleIntersection
+    };
     return (
       <React.Fragment>
+        <Observer {...options}>
+          <div className={styles.observer} />
+        </Observer>
         {this.renderAboutTheBrand()}
         {this.renderProductModuleSection(
           "Similar Products",
