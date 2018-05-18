@@ -266,7 +266,6 @@ export function createWishlist(productDetails) {
 
       return dispatch(createWishlistSuccess());
     } catch (e) {
-      console.log(e.message);
       return dispatch(createWishlistFailure(e.message));
     }
   };
