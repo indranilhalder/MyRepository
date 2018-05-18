@@ -69,7 +69,8 @@ import {
   getUserDetails,
   getPinCodeSuccess,
   resetAddAddressDetails,
-  updateProfile
+  updateProfile,
+  clearPinCodeStatus
 } from "../../account/actions/account.actions.js";
 import { displayToast } from "../../general/toast.actions";
 import { setHeaderText } from "../../general/header.actions.js";
@@ -408,6 +409,9 @@ const mapDispatchToProps = dispatch => {
     },
     resetAddAddressDetails: () => {
       dispatch(resetAddAddressDetails());
+    },
+    clearPinCodeStatus: () => {
+      dispatch(clearPinCodeStatus());
     }
   };
 };
