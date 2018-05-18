@@ -68,6 +68,7 @@ import Loadable from "react-loadable";
 import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
+import NoResultPage from "./errorsPage/components/NoResultPage";
 
 const Loader = () => {
   return (
@@ -441,6 +442,7 @@ class App extends Component {
             <Route exact path={HELP_URL} component={HelpDetailsContainer} />
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
             <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
+            <Route component={NoResultPage} />
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />
