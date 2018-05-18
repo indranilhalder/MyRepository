@@ -1316,8 +1316,12 @@ const cart = (
       });
 
     case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
+      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      cloneCartDetailCNC.cartAmount =
+        action.paymentFailureOrderDetails.cartAmount;
       return Object.assign({}, state, {
         paymentFailureOrderDetailsStatus: action.status,
+        cartDetailsCNC: cloneCartDetailCNC,
         paymentFailureOrderDetails: action.paymentFailureOrderDetails,
         loading: false
       });
