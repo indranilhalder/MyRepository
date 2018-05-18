@@ -7,11 +7,18 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class LatestCollections extends React.Component {
   arrowNextClick() {
-    const urlSuffix = this.props.feedComponentData.webURL.replace(
-      TATA_CLIQ_ROOT,
-      "$1"
-    );
-    this.props.history.push(urlSuffix);
+    if (this.props.feedComponentData.webURL) {
+      const urlSuffix = this.props.feedComponentData.webURL
+        .replace(TATA_CLIQ_ROOT, "$1")
+        .trim();
+      const urlPath = new URL(this.props.feedComponentData.webURL).pathname;
+      if (urlPath.indexOf("/que") > -1) {
+        window.open(urlSuffix, "_blank");
+        window.focus();
+      } else {
+        this.props.history.push(urlSuffix);
+      }
+    }
   }
   render() {
     let feedComponentData = this.props.feedComponentData;
