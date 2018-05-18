@@ -36,8 +36,6 @@ class PDPRecommendedSections extends React.Component {
   }
   renderAboutTheBrand() {
     let brandId;
-    console.log("RENDER ABOUT THE BRAND");
-    console.log(this.props.aboutTheBrand);
 
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
