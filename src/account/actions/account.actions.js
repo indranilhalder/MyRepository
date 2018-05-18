@@ -618,20 +618,20 @@ export function quickDropStore(pincode, ussId) {
 
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      if (resultJsonStatus.status || resultJson.status === "Store Not available") {
-
-        let errorMessage=resultJsonStatus.message
-        if(resultJson.status === "Store Not available")
-        {
-
-          errorMessage="Store Not available";
+      if (
+        resultJsonStatus.status ||
+        resultJson.status === "Store Not available"
+      ) {
+        let errorMessage = resultJsonStatus.message;
+        if (resultJson.status === "Store Not available") {
+          errorMessage = "Store Not available";
         }
 
         throw new Error(errorMessage);
       }
-     return dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
+      return dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
     } catch (e) {
-      return  dispatch(quickDropStoreFailure(e.message));
+      return dispatch(quickDropStoreFailure(e.message));
     }
   };
 }
@@ -1202,6 +1202,7 @@ export function getUserCoupons() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
+    dispatch(showSecondaryLoader());
     dispatch(getUserCouponsRequest());
     try {
       const result = await api.get(
@@ -1218,7 +1219,10 @@ export function getUserCoupons() {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserCouponsSuccess(resultJson));
+      dispatch(hideSecondaryLoader());
     } catch (e) {
+      dispatch(hideSecondaryLoader());
+
       dispatch(getUserCouponsFailure(e.message));
     }
   };
@@ -1249,8 +1253,11 @@ export function getUserAlertsFailure(error) {
 export function getUserAlerts() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
   return async (dispatch, getState, { api }) => {
     dispatch(getUserAlertsRequest());
+    dispatch(showSecondaryLoader());
+
     try {
       const result = await api.get(
         `${USER_PATH}/${
@@ -1266,7 +1273,9 @@ export function getUserAlerts() {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserAlertsSuccess(resultJson));
+      dispatch(hideSecondaryLoader());
     } catch (e) {
+      dispatch(hideSecondaryLoader());
       dispatch(getUserAlertsFailure(e.message));
     }
   };
