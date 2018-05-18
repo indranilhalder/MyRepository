@@ -857,6 +857,13 @@ const account = (
         changePasswordError: null
       });
     }
+    case accountActions.CLEAR_PIN_CODE_STATUS: {
+      return Object.assign({}, state, {
+        getPinCodeStatus: null,
+        getPinCodeError: null
+      });
+    }
+
     default:
       return state;
   }

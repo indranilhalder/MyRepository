@@ -186,6 +186,10 @@ export default class AddDeliveryAddress extends React.Component {
   }
   onSelectLandmark = landmark => {
     if (landmark.value === OTHER_LANDMARK) {
+      if (this.props.clearPinCodeStatus) {
+        this.props.clearPinCodeStatus();
+      }
+
       this.setState({
         isOtherLandMarkSelected: true,
         selectedLandmarkLabel: landmark.value
@@ -428,7 +432,11 @@ export default class AddDeliveryAddress extends React.Component {
             <Input2
               boxy={true}
               placeholder="City/district*"
-              value={this.props.town ? this.props.town : this.state.town}
+              value={
+                this.props.town && this.props.town !== ""
+                  ? this.props.town
+                  : this.state.town
+              }
               onChange={town => this.onChange({ town })}
               textStyle={{ fontSize: 14 }}
               height={33}
@@ -440,7 +448,11 @@ export default class AddDeliveryAddress extends React.Component {
           <div className={styles.content}>
             <Input2
               placeholder="State*"
-              value={this.props.state ? this.props.state : this.state.state}
+              value={
+                this.props.state && this.props.state !== ""
+                  ? this.props.state
+                  : this.state.state
+              }
               boxy={true}
               onChange={state => this.onChange({ state })}
               textStyle={{ fontSize: 14 }}

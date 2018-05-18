@@ -18,7 +18,8 @@ import {
   getReturnRequest,
   getUserDetails,
   updateProfile,
-  resetAddAddressDetails
+  resetAddAddressDetails,
+  clearPinCodeStatus
 } from "../../account/actions/account.actions.js";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
@@ -94,6 +95,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     resetAddAddressDetails: () => {
       dispatch(resetAddAddressDetails());
+    },
+    clearPinCodeStatus: () => {
+      dispatch(clearPinCodeStatus());
     }
   };
 };
