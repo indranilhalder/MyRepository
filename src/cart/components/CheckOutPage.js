@@ -699,63 +699,6 @@ class CheckOutPage extends React.Component {
 
       this.setState({ ussIdAndDeliveryModesObj: defaultSelectedDeliveryModes });
     }
-
-    //for paymentFailure
-    if (
-      nextProps.cart.paymentFailureOrderDetails &&
-      nextProps.cart.paymentFailureOrderDetails.cartAmount
-    ) {
-      this.setState({
-        payableAmount: nextProps.cart.paymentFailureOrderDetails.cartAmount
-          .paybleAmount.value
-          ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
-                .value * 100
-            ) / 100
-          : "0.00",
-        cliqCashAmount: nextProps.cart.paymentFailureOrderDetails
-          .cliqCashBalance.value
-          ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.cliqCashBalance.value *
-                100
-            ) / 100
-          : "0.00",
-        bagAmount: nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
-          .value
-          ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.cartAmount.bagTotal
-                .value * 100
-            ) / 100
-          : "0.00",
-        deliveryCharge: nextProps.cart.paymentFailureOrderDetails
-          .deliveryCharges.value
-          ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
-                100
-            ) / 100
-          : "0.00",
-        couponDiscount:
-          nextProps.cart.paymentFailureOrderDetails.cartAmount
-            .couponDiscountAmount &&
-          nextProps.cart.paymentFailureOrderDetails.cartAmount
-            .couponDiscountAmount.value
-            ? Math.round(
-                nextProps.cart.paymentFailureOrderDetails.cartAmount
-                  .couponDiscountAmount.value * 100
-              ) / 100
-            : "0.00",
-        totalDiscount: nextProps.cart.paymentFailureOrderDetails.cartAmount
-          .totalDiscountAmount.value
-          ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.cartAmount
-                .totalDiscountAmount.value * 100
-            ) / 100
-          : "0.00",
-        isRemainingAmount:
-          nextProps.cart.paymentFailureOrderDetails.isRemainingAmount
-      });
-    }
-
     // end if adding selected default delivery modes for every product
 
     if (nextProps.cart.cliqCashPaymentDetails) {
@@ -794,8 +737,7 @@ class CheckOutPage extends React.Component {
     } else {
       if (
         nextProps.cart.cartDetailsCNC &&
-        this.state.isRemainingAmount &&
-        !this.state.isPaymentFailed
+        this.state.isRemainingAmount
       ) {
         let cliqCashAmount = 0;
         if (
@@ -859,7 +801,7 @@ class CheckOutPage extends React.Component {
               : "0.00"
         });
 
-        if (
+        if (!this.state.isPaymentFailed&&
           nextProps.cart.cartDetailsCNC &&
           nextProps.cart.cartDetailsCNC.deliveryCharge
         ) {
@@ -868,6 +810,16 @@ class CheckOutPage extends React.Component {
               nextProps.cart.cartDetailsCNC &&
               nextProps.cart.cartDetailsCNC.deliveryCharge
           });
+        }
+        else{
+          this.setState({deliveryCharge: nextProps.cart.paymentFailureOrderDetails && nextProps.cart.paymentFailureOrderDetails
+            .deliveryCharges && nextProps.cart.paymentFailureOrderDetails
+          .deliveryCharges.value
+          ? Math.round(
+              nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
+                100
+            ) / 100
+          : "0.00" });
         }
         if (
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
