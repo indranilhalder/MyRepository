@@ -346,6 +346,7 @@ const productDescription = (
     case pdpActions.PRODUCT_MSD_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
+        msdItems: null,
         error: action.error,
         loading: false
       });

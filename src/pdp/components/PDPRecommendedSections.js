@@ -131,9 +131,14 @@ class PDPRecommendedSections extends React.Component {
   renderProductModuleSection(title, key) {
     return (
       <div className={styles.brandSection}>
-        <h3 className={styles.brandHeader}>{title}</h3>
-        {this.props.msdItems[key] &&
-          this.renderCarousel(this.props.msdItems[key])}
+        {this.props.msdItems &&
+          this.props.msdItems[key] &&
+          this.props.msdItems[key] !== undefined && (
+            <React.Fragment>
+              <h3 className={styles.brandHeader}>{title}</h3>
+              {this.renderCarousel(this.props.msdItems[key])}
+            </React.Fragment>
+          )}
       </div>
     );
   }
@@ -158,7 +163,7 @@ class PDPRecommendedSections extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <div style={{ minHeight: 50 }}>
         {this.renderAboutTheBrand()}
         {this.renderProductModuleSection(
           "Similar Products",
@@ -168,7 +173,7 @@ class PDPRecommendedSections extends React.Component {
           "Frequently Bought Together",
           SIMILAR_PRODUCTS_WIDGET_KEY
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }
