@@ -91,6 +91,7 @@ export default class PaymentCardWrapper extends React.Component {
     return (
       <CheckoutSavedCard
         currentPaymentMode={this.props.currentPaymentMode}
+        selectedSavedCardDetails={this.props.selectedSavedCardDetails}
         onSelectPaymentsMode={currentPaymentMode =>
           this.props.onChange({ currentPaymentMode })
         }
