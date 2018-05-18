@@ -1,7 +1,7 @@
 import React from "react";
 import InformationHeader from "./InformationHeader.js";
 import SearchContainer from "../../search/SearchContainer.js";
-import HollowHeader from "./HollowHeader.js";
+import HollowHeaderContainer from "../containers/HollowHeaderContainer.js";
 import StickyHeader from "./StickyHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -27,7 +27,6 @@ import {
   CHECKOUT_ROUTER_THANKYOU,
   APP_VIEW
 } from "../../../src/lib/constants";
-import { SIGN_UP } from "../../auth/actions/user.actions";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
@@ -201,13 +200,15 @@ class HeaderWrapper extends React.Component {
           bagCount={this.props.bagCount}
         />
       ) : (
-        <HollowHeader
+        <HollowHeaderContainer
           goBack={this.onBackClick}
           redirectToHome={this.redirectToHome}
           goToCart={this.goToCart}
           goToWishList={this.goToWishList}
           isShowCompanyLogo={companyLogoInPdp}
           bagCount={this.props.bagCount}
+          history={this.props.history}
+          location={this.props.location}
         />
       );
     } else if (shouldRenderSearch) {

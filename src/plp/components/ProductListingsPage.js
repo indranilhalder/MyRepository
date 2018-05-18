@@ -84,6 +84,13 @@ class ProductListingsPage extends Component {
       return;
     }
 
+    console.log("COMPONENT DID MOUNT");
+    console.log(this.props.isGoBackFromPdpPage);
+
+    if (this.props.isGoBackFromPdpPage) {
+      return;
+    }
+
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;
       let searchText = `:relevance:collectionIds:${skuId}`;
@@ -155,6 +162,11 @@ class ProductListingsPage extends Component {
 
   componentDidUpdate() {
     let page = null;
+    console.log("COMPONENT DID UPDATE");
+    console.log(this.props.isGoBackFromPdpPage);
+    if (this.props.isGoBackFromPdpPage) {
+      return;
+    }
 
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;

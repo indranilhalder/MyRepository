@@ -33,6 +33,20 @@ export const SET_PAGE = "SET_PAGE";
 export const FILTER_HAS_BEEN_CLICKED = "FILTER_HAS_BEEN_CLICKED";
 export const SORT_HAS_BEEN_CLICKED = "SORT_HAS_BEEN_CLICKED";
 
+export const IS_GO_BACK_FROM_PDP = "IS_GO_BACK_FROM_PDP";
+export const IS_NOT_GO_BACK_FROM_PDP = "IS_NOT_GO_BACK_FROM_PDP";
+export function setIsGoBackFromPDP() {
+  return {
+    type: IS_GO_BACK_FROM_PDP
+  };
+}
+
+export function setIsNotGoBackFromPDP() {
+  return {
+    type: IS_NOT_GO_BACK_FROM_PDP
+  };
+}
+
 export function setIfSortHasBeenClicked() {
   return {
     type: SORT_HAS_BEEN_CLICKED

@@ -15,13 +15,22 @@ const productListings = (
     isCategorySelected: true,
     selectedFacetKey: null,
     filterHasBeenClicked: false,
-    sortHasBeenClicked: false
+    sortHasBeenClicked: false,
+    isGoBackFromPdpPage: false
   },
   action
 ) => {
   let existingProductListings;
   let toUpdate;
   switch (action.type) {
+    case plpActions.IS_GO_BACK_FROM_PDP:
+      return Object.assign({}, state, {
+        isGoBackFromPdpPage: true
+      });
+    case plpActions.IS_NOT_GO_BACK_FROM_PDP:
+      return Object.assign({}, state, {
+        isGoBackFromPdpPage: false
+      });
     case CLEAR_ERROR:
       return Object.assign({}, state, {
         error: null
@@ -98,6 +107,7 @@ const productListings = (
       return Object.assign({}, state, {
         status: action.status,
         productListings: action.productListings,
+        isGoBackFromPdpPage: false,
         loading: false
       });
 
