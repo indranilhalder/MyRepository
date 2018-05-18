@@ -197,6 +197,7 @@ export default class ReturnAddressList extends React.Component {
           getUserDetails={() => this.props.getUserDetails()}
           userDetails={this.props.userDetails}
           resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+          clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
         />
       </div>
     );

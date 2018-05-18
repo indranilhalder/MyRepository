@@ -7,7 +7,8 @@ import {
   getPinCodeSuccess,
   resetAddAddressDetails,
   getUserDetails,
-  updateProfile
+  updateProfile,
+  clearPinCodeStatus
 } from "../actions/account.actions.js";
 import {
   showSecondaryLoader,
@@ -58,6 +59,9 @@ const mapDispatchToProps = dispatch => {
     },
     getUserDetails: () => {
       dispatch(getUserDetails());
+    },
+    clearPinCodeStatus: () => {
+      dispatch(clearPinCodeStatus());
     }
   };
 };

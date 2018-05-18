@@ -34,9 +34,9 @@ export default class ProductDetailsCard extends React.Component {
             itemType="http://schema.org/Organization"
           >
             {this.props.brandName && (
-              <h1 className={styles.brandName}>
+              <h2 className={styles.brandName}>
                 <span itemProp="name">{this.props.brandName}</span>
-              </h1>
+              </h2>
             )}
           </div>
           <a

@@ -14,6 +14,7 @@ import induslandBankIcon from "./img/indusind.svg";
 import kotakBankIcon from "./img/kotak.svg";
 const axisBankName = "Axis Bank";
 const hdfcBankName = "HDFC BANK, LTD.";
+const hdfcBankName1 = "HDFC Bank";
 const iciciBankName = "ICICI Bank";
 const sbiBankName = "State Bank of India";
 const kotakBankName = "Kotak Bank";
@@ -69,17 +70,27 @@ export default class NetBanking extends React.Component {
                 selected={this.state.bankName === axisBankName}
                 name="Axis Bank"
               />
-            ) : null}
+            ) : (
+              <div />
+            )}
             {this.props.bankList.find(bank => {
-              return bank.bankName === hdfcBankName;
+              return (
+                bank.bankName === hdfcBankName ||
+                bank.bankName === hdfcBankName1
+              );
             }) ? (
               <BankSelect
                 selectItem={() => this.handleSelectForIcon(hdfcBankName)}
                 image={hdfcBankIcon}
-                selected={this.state.bankName === hdfcBankName}
+                selected={
+                  this.state.bankName === hdfcBankName ||
+                  this.state.bankName === hdfcBankName1
+                }
                 name="HDFC BANK, LTD."
               />
-            ) : null}
+            ) : (
+              <div />
+            )}
             {this.props.bankList.find(bank => {
               return bank.bankName === iciciBankName;
             }) ? (
@@ -89,7 +100,9 @@ export default class NetBanking extends React.Component {
                 selected={this.state.bankName === iciciBankName}
                 name="ICICI Bank"
               />
-            ) : null}
+            ) : (
+              <div />
+            )}
             {this.props.bankList.find(bank => {
               return bank.bankName === sbiBankName;
             }) ? (
@@ -99,7 +112,9 @@ export default class NetBanking extends React.Component {
                 selected={this.state.bankName === sbiBankName}
                 name="State Bank of India"
               />
-            ) : null}
+            ) : (
+              <div />
+            )}
             {this.props.bankList.find(bank => {
               return bank.bankName === kotakBankName;
             }) ? (
@@ -109,7 +124,9 @@ export default class NetBanking extends React.Component {
                 selected={this.state.bankName === kotakBankName}
                 name="Kotak Bank"
               />
-            ) : null}
+            ) : (
+              <div />
+            )}
             {this.props.bankList.find(bank => {
               return bank.bankName === induslandBankName;
             }) ? (
@@ -119,7 +136,9 @@ export default class NetBanking extends React.Component {
                 selected={this.state.bankName === induslandBankName}
                 name="IndusInd Bank"
               />
-            ) : null}
+            ) : (
+              <div />
+            )}
           </Grid>
         )}
         <div className={styles.bankDropDown}>
