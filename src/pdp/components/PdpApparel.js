@@ -233,6 +233,7 @@ export default class PdpApparel extends React.Component {
     ) {
       this.props.showSizeSelector({
         sizeSelected: this.checkIfSizeSelected(),
+        productName: this.props.productDetails.productName,
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
         hasSizeGuide: this.props.productDetails.showSizeGuide,

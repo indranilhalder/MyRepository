@@ -23,5 +23,6 @@
   line-height: 21px;
   text-align: center;
   display: flex;
+  justify-content: center;
   padding: 15px 40px;
 }

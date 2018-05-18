@@ -229,10 +229,6 @@ class ProductReviewPage extends Component {
           .map(image => {
             return image[0].value;
           });
-
-      console.log("PRODUCT REVIEW PAGE");
-      console.log(this.props.productDetails);
-
       return (
         <PdpFrame
           {...this.props.productDetails}
