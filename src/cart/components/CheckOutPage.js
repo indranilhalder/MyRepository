@@ -829,7 +829,7 @@ class CheckOutPage extends React.Component {
 
         if(this.state.isPaymentFailed && nextProps.cart.paymentFailureOrderDetails)
         {
-          this.setState({isCliqCashApplied:nextProps.cart.paymentFailureOrderDetails.cliqCashApplied,cliqCashPaidAmount:nextProps.cart.paymentFailureOrderDetails.cliqCashPaidAmount})
+          this.setState({isCliqCashApplied:nextProps.cart.paymentFailureOrderDetails.cliqCashApplied,cliqCashPaidAmount:nextProps.cart.paymentFailureOrderDetails.cliqCashPaidAmount.value})
 
         }
         if (
