@@ -6,7 +6,6 @@ import backArrow from "./img/arrowBack.svg";
 import downloadIcon from "./img/downloadWhite.svg";
 import Icon from "../../xelpmoc-core/Icon";
 import companyLogo from "./img/group.svg";
-import { HOME_ROUTER } from "../../lib/constants";
 export default class StickyHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
