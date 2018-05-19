@@ -24,6 +24,10 @@ import {
 
 import { HOME_ROUTER } from "../../lib/constants";
 import throttle from "lodash.throttle";
+import {
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_ORDER_HISTORY
+} from "../../lib/adobeUtils";
 const dateFormat = "DD MMM YYYY";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SCROLL_CHECK_INTERVAL = 500;
@@ -47,6 +51,7 @@ export default class AllOrderDetails extends React.Component {
   }
   componentDidMount() {
     if (this.props.shouldCallHeaderContainer) {
+      setDataLayer(ADOBE_MY_ACCOUNT_ORDER_HISTORY);
       this.props.setHeaderText(ORDER_HISTORY);
     }
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);

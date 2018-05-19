@@ -15,8 +15,8 @@ const UPDATE_PROFILE_SUCCESS = "Profile Updated Successfully";
 const UPDATE_PASSWORD = "Password Updated Successfully";
 const mapDispatchToProps = dispatch => {
   return {
-    getUserDetails: addressId => {
-      dispatch(getUserDetails(addressId, true)); //second param for setData Layer
+    getUserDetails: () => {
+      dispatch(getUserDetails(true)); //second param for setData Layer
     },
 
     updateProfile: async accountDetails => {
