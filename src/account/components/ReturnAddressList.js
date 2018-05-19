@@ -157,7 +157,6 @@ export default class ReturnAddressList extends React.Component {
                           : ""
                       }`,
                       value: addressSelected.id,
-
                       selected: addressSelected.defaultAddress
                     };
                   }

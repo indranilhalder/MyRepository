@@ -1322,9 +1322,25 @@ const cart = (
       });
 
     case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
+
+    if(state.cartDetailsCNC)
+    {
       cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
-      cloneCartDetailCNC.cartAmount =
-        action.paymentFailureOrderDetails.cartAmount;
+    }
+    else{
+      cloneCartDetailCNC={};
+    }
+      if (
+        cloneCartDetailCNC.cartAmount &&
+        action.paymentFailureOrderDetails &&
+        action.paymentFailureOrderDetails.cartAmount
+      ) {
+        cloneCartDetailCNC.cartAmount = action.paymentFailureOrderDetails.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.paymentFailureOrderDetails.cartAmount
+        });
+      }
       return Object.assign({}, state, {
         paymentFailureOrderDetailsStatus: action.status,
         cartDetailsCNC: cloneCartDetailCNC,
