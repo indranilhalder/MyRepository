@@ -6,7 +6,6 @@ import backArrow from "./img/back-with-bg.svg";
 import downloadIcon from "./img/save-with-bg.svg";
 import Icon from "../../xelpmoc-core/Icon";
 import companyLogo from "./img/companylogo.svg";
-import { HOME_ROUTER } from "../../lib/constants";
 export default class HollowHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
