@@ -17,7 +17,9 @@ const wishlistItems = (
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
-        error: null
+        error: null,
+        addItemError: null,
+        removeItemError: null
       });
     case wishlistActions.CREATE_WISHLIST_REQUEST:
       return Object.assign({}, state, {
@@ -39,9 +41,19 @@ const wishlistItems = (
         status: action.status,
         loading: true
       });
-    case wishlistActions.GET_WISH_LIST_ITEMS_FAILURE:
     case wishlistActions.ADD_PRODUCT_TO_WISH_LIST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        addItemError: action.error
+      });
     case wishlistActions.REMOVE_PRODUCT_FROM_WISH_LIST_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        loading: false,
+        removeItemError: action.error
+      });
+    case wishlistActions.GET_WISH_LIST_ITEMS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         loading: false,

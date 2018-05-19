@@ -5,6 +5,7 @@ import Icon from "../../xelpmoc-core/Icon";
 import Button from "../../general/components/Button.js";
 import Input2 from "../../general/components/Input2.js";
 import giftImageURL from "../../general/components/img/Gift.svg";
+import MDSpinner from "../../general/components/Loader";
 export default class GiftCardPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -19,6 +20,9 @@ export default class GiftCardPopup extends React.Component {
     }
   }
   render() {
+    if (this.props.loading) {
+      return <MDSpinner />;
+    }
     return (
       <div className={styles.base}>
         <div className={styles.giftCardHeading}>

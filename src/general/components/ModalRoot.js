@@ -576,6 +576,7 @@ export default class ModalRoot extends React.Component {
         <GiftCardModal
           closeModal={() => this.handleClose()}
           addGiftCard={val => this.addGiftCard(val)}
+          loading={this.props.loading}
         />
       ),
       OfferModal: (

@@ -107,7 +107,10 @@
     <% } else { %>
       <script src="//assets.adobedtm.com/9fd06d4068c619c47b289b9c496761efd086a233/satelliteLib-08855880a6fbd52183d526aa0c8510335499cc15-staging.js"></script>
       <% } %>
-        <script type="text/javascript">_satellite.pageBottom();</script>
+        <script type="text/javascript">
+          window.digitalData = Object.assign({}, { page: { pageInfo: { pageName: "basepage" } } });
+          _satellite.pageBottom();
+        </script>
 </body>
 
 </html>

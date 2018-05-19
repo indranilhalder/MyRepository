@@ -12,8 +12,13 @@
 .subCategoryRegular {
   font-size: 14px;
   font-family: regular;
-  width: 100%;
+  width: calc(100% - 50px);
   height: auto;
+  line-height: normal;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
 }
 .subCategoryBold {
   composes: subCategoryRegular;
