@@ -234,7 +234,6 @@ export default class PdpElectronics extends React.Component {
     }
   };
   render() {
-    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
