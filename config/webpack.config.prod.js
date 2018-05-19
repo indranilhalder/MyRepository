@@ -254,7 +254,8 @@ module.exports = {
         minifyJS: true,
         minifyCSS: true,
         minifyURLs: true
-      }
+      },
+      stage: process.env.REACT_APP_STAGE
     }),
     new PreloadWebpackPlugin({
       rel: "preload",
