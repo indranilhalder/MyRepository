@@ -254,16 +254,25 @@ export default class PdpElectronics extends React.Component {
       let price = "";
       let discountPrice = "";
       let seoDoublePrice = 0;
-      if (productData.winningSellerPrice) {
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
         seoDoublePrice = productData.winningSellerPrice.doubleValue;
-      } else if (productData.mrpPrice) {
+      } else if (productData.mrpPrice && productData.mrpPrice.doubleValue) {
         seoDoublePrice = productData.mrpPrice.doubleValue;
       }
-      if (productData.mrpPrice) {
+      if (
+        productData.mrpPrice &&
+        productData.mrpPrice.formattedValueNoDecimal
+      ) {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
 
-      if (productData.winningSellerPrice) {
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.formattedValueNoDecimal
+      ) {
         discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
       }
       return (

@@ -327,9 +327,12 @@ export default class PdpApparel extends React.Component {
         discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
       }
       let seoDoublePrice = 0;
-      if (productData.winningSellerPrice) {
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
         seoDoublePrice = productData.winningSellerPrice.doubleValue;
-      } else if (productData.mrpPrice) {
+      } else if (productData.mrpPrice && productData.mrpPrice.doubleValue) {
         seoDoublePrice = productData.mrpPrice.doubleValue;
       }
       return (
