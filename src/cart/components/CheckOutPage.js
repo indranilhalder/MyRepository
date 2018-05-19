@@ -77,7 +77,8 @@ import {
   STATE_TEXT,
   SELECT_ADDRESS_TYPE,
   ISO_CODE,
-  OTHER_LANDMARK
+  OTHER_LANDMARK,
+  BANK_COUPON_COOKIE
 } from "../../lib/constants";
 import {
   EMAIL_REGULAR_EXPRESSION,
@@ -206,7 +207,6 @@ class CheckOutPage extends React.Component {
     ) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
-
     //here we need to reset captch if if already done .but payment mode is changed
     if (this.state.captchaReseponseForCOD) {
       window.grecaptcha.reset();
@@ -220,7 +220,8 @@ class CheckOutPage extends React.Component {
       noCostEmiBankName: null,
       noCostEmiDiscount: "0.00",
       isNoCostEmiProceeded: false,
-      paymentModeSelected: null
+      paymentModeSelected: null,
+      binValidationCOD: false
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
@@ -708,9 +709,9 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
         payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
           .value
-          ? Math.round(nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value*
-          100
-      ) / 100
+          ? Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
+            ) / 100
           : "0.00",
         cliqCashAmount:
           nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
@@ -720,9 +721,9 @@ class CheckOutPage extends React.Component {
               ) / 100
             : "0.00",
         bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
-          ? Math.round(nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value*
-            100
-        ) / 100
+          ? Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+            ) / 100
           : "0.00",
         totalDiscount:
           nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value > 0
@@ -867,9 +868,6 @@ class CheckOutPage extends React.Component {
       this.props.orderConfirmation(
         nextProps.cart.cliqCashJusPayDetails.orderId
       );
-    }
-    if (nextProps.cart.binValidationCODStatus === SUCCESS) {
-      this.setState({ binValidationCOD: true });
     }
   }
 
@@ -1362,9 +1360,11 @@ class CheckOutPage extends React.Component {
         true // for payment failure we need to use old cart id
       );
     }
+
     if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
+    this.onChangePaymentMode({ currentPaymentMode: null });
   };
   handleSubmit = () => {
     localStorage.setItem(
@@ -1493,6 +1493,7 @@ class CheckOutPage extends React.Component {
         this.setState({ isNoCostEmiProceeded: true });
       }
     }
+    this.onChangePaymentMode({ currentPaymentMode: null });
   };
 
   addAddress = address => {
@@ -1600,7 +1601,7 @@ class CheckOutPage extends React.Component {
   };
   openBankOffers = () => {
     this.props.showCouponModal({
-      selectedBankOfferCode: this.state.selectedBankOfferCode,
+      selectedBankOfferCode: localStorage.getItem(BANK_COUPON_COOKIE),
       coupons: this.props.cart.paymentModes.paymentOffers,
       selecteBankOffer: val => {
         this.selecteBankOffer(val);
@@ -1666,7 +1667,7 @@ class CheckOutPage extends React.Component {
   };
   binValidationForCOD = paymentMode => {
     localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
-    this.setState({ paymentModeSelected: paymentMode });
+    this.setState({ paymentModeSelected: paymentMode, binValidationCOD: true });
     this.props.binValidationForCOD(paymentMode);
   };
 
