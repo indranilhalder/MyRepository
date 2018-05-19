@@ -1769,13 +1769,13 @@ export function followAndUnFollowBrand(
         // here we are hitting call for update follow brand on p2 and we don;t have to
         // wait for this response . we just need to wait for msd follow and un follow brand
         // api response if it success then we have to update our reducer with success
-
-        const followInCommerceApiResult = await api.post(
-          `${PRODUCT_PATH}/${
-            JSON.parse(customerCookie).access_token
-          }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
-        );
-
+        if (customerCookie) {
+          await api.post(
+            `${PRODUCT_PATH}/${
+              JSON.parse(customerCookie).access_token
+            }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
+          );
+        }
         // dispatch success for following brand on the basis of page type
         if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
           const clonedComponent = getState().home.homeFeed[positionInFeed];
@@ -1801,7 +1801,6 @@ export function followAndUnFollowBrand(
             ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
             { followStatus: updatedFollowedStatus, brandName }
           );
-
           return dispatch(
             followAndUnFollowBrandSuccessForPdp(brandId, updatedFollowedStatus)
           );
