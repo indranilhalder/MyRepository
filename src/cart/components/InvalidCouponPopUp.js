@@ -11,7 +11,8 @@ import {
   SUCCESS,
   INVALID_NO_COST_EMI_TYPE,
   NO_COST_EMI_COUPON,
-  BANK_COUPON_COOKIE
+  BANK_COUPON_COOKIE,
+  COUPON_COOKIE
 } from "../../lib/constants";
 
 export default class InvalidCouponPopUp extends React.Component {
@@ -56,6 +57,7 @@ export default class InvalidCouponPopUp extends React.Component {
         : ""
     }`;
   }
+
   changePaymentMethod() {
     if (this.props.changePaymentMethod) {
       this.props.changePaymentMethod();
@@ -109,9 +111,24 @@ export default class InvalidCouponPopUp extends React.Component {
         );
       }
     }
-    if (releaseStatus.status === SUCCESS) {
-      this.props.redoCreateJusPayApi();
-      this.props.closeModal();
+    if (
+      localStorage.getItem(BANK_COUPON_COOKIE) ||
+      localStorage.getItem(COUPON_COOKIE) ||
+      localStorage.getItem(NO_COST_EMI_COUPON)
+    ) {
+      const bankCouponCode = localStorage.getItem(BANK_COUPON_COOKIE);
+      const userCouponCode = localStorage.getItem(COUPON_COOKIE);
+      const noCostEmiCoupon = localStorage.getItem(NO_COST_EMI_COUPON);
+
+      Promise.all([
+        bankCouponCode && this.props.releaseBankOffer(bankCouponCode),
+        userCouponCode && this.props.releaseUserCoupon(userCouponCode),
+        noCostEmiCoupon && this.props.removeNoCostEmi(noCostEmiCoupon)
+      ]).then(res => {
+        localStorage.removeItem(BANK_COUPON_COOKIE);
+        localStorage.removeItem(COUPON_COOKIE);
+        this.props.closeModal();
+      });
     }
   }
   render() {
@@ -150,16 +167,14 @@ export default class InvalidCouponPopUp extends React.Component {
                   {this.getInvalidNCEOfferTemplate(data.noCostEmiCoupon)}
                 </div>
               )}
-          </div>
-          <div className={styles.bankLogoAndCouponCode}>
-            {this.props.cardLogo && (
-              <div className={styles.cardLogo}>
-                <Logo image={this.props.cardLogo} />
-              </div>
-            )}
-            <div className={styles.couponCodeHolder}>
-              {this.props.couponCode}
-            </div>
+            {data &&
+              !data.noCostEmiCoupon &&
+              !data.bankOffer &&
+              !data.userCoupon && (
+                <div className={styles.invalidCouponHeading}>
+                  {data.errorMessage ? data.errorMessage : ""}
+                </div>
+              )}
           </div>
         </div>
         <div className={styles.buttonHolderForPaymentMode}>

@@ -9,7 +9,7 @@ import {
   RELEASE_BANK_OFFER_FAILURE,
   APPLY_BANK_OFFER_FAILURE
 } from "../actions/cart.actions";
-const COUPON_HEADER = "Bank promotions";
+const COUPON_HEADER = "Bank Offers";
 const REMOVE = "Remove";
 const APPLY = "Apply";
 class BankOffersDetails extends Component {
@@ -20,7 +20,6 @@ class BankOffersDetails extends Component {
       selectedBankOfferCode: props.selectedBankOfferCode
     };
   }
-
   async applyUserCoupon() {
     if (this.state.selectedBankOfferCode) {
       if (
@@ -100,44 +99,46 @@ class BankOffersDetails extends Component {
       <div className={styles.base}>
         <SlideModal {...this.props}>
           <div className={styles.couponHeader}>{COUPON_HEADER}</div>
-          <div className={styles.searchHolder}>
-            <SearchCupon
-              label={
-                this.state.previousSelectedCouponCode &&
-                this.state.previousSelectedCouponCode ===
-                  this.state.selectedBankOfferCode
-                  ? REMOVE
-                  : APPLY
-              }
-              couponCode={this.state.selectedBankOfferCode}
-              getValue={selectedBankOfferCode =>
-                this.setState({ selectedBankOfferCode })
-              }
-              applyUserCoupon={() => this.applyUserCoupon()}
-            />
+          <div>
+            <div className={styles.searchHolder}>
+              <SearchCupon
+                label={
+                  this.state.previousSelectedCouponCode &&
+                  this.state.previousSelectedCouponCode ===
+                    this.state.selectedBankOfferCode
+                    ? REMOVE
+                    : APPLY
+                }
+                couponCode={this.state.selectedBankOfferCode}
+                getValue={selectedBankOfferCode =>
+                  this.setState({ selectedBankOfferCode })
+                }
+                applyUserCoupon={() => this.applyUserCoupon()}
+              />
+            </div>
+            <GridSelect
+              elementWidthMobile={100}
+              offset={0}
+              limit={1}
+              onSelect={val => this.onSelectCouponCode(val)}
+              selected={[this.state.selectedBankOfferCode]}
+            >
+              {this.props.coupons &&
+                this.props.coupons.coupons.map((value, i) => {
+                  return (
+                    <BankCoupons
+                      offerDescription={value.offerDescription}
+                      offerCode={value.offerCode}
+                      offerMinCartValue={value.offerMinCartValue}
+                      offerMaxDiscount={value.offerMaxDiscount}
+                      offerTitle={value.offerTitle}
+                      key={i}
+                      value={value.offerCode}
+                    />
+                  );
+                })}
+            </GridSelect>
           </div>
-          <GridSelect
-            elementWidthMobile={100}
-            offset={0}
-            limit={1}
-            onSelect={val => this.onSelectCouponCode(val)}
-            selected={[this.state.selectedBankOfferCode]}
-          >
-            {this.props.coupons &&
-              this.props.coupons.coupons.map((value, i) => {
-                return (
-                  <BankCoupons
-                    offerDescription={value.offerDescription}
-                    offerCode={value.offerCode}
-                    offerMinCartValue={value.offerMinCartValue}
-                    offerMaxDiscount={value.offerMaxDiscount}
-                    offerTitle={value.offerTitle}
-                    key={i}
-                    value={value.offerCode}
-                  />
-                );
-              })}
-          </GridSelect>
         </SlideModal>
       </div>
     );

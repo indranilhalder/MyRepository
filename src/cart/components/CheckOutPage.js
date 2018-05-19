@@ -77,7 +77,8 @@ import {
   STATE_TEXT,
   SELECT_ADDRESS_TYPE,
   ISO_CODE,
-  OTHER_LANDMARK
+  OTHER_LANDMARK,
+  BANK_COUPON_COOKIE
 } from "../../lib/constants";
 import {
   EMAIL_REGULAR_EXPRESSION,
@@ -708,9 +709,9 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
         payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
           .value
-          ? Math.round(nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value*
-          100
-      ) / 100
+          ? Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value * 100
+            ) / 100
           : "0.00",
         cliqCashAmount:
           nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
@@ -720,9 +721,9 @@ class CheckOutPage extends React.Component {
               ) / 100
             : "0.00",
         bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
-          ? Math.round(nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value*
-            100
-        ) / 100
+          ? Math.round(
+              nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value * 100
+            ) / 100
           : "0.00",
         totalDiscount:
           nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value > 0
@@ -1590,7 +1591,7 @@ class CheckOutPage extends React.Component {
   };
   openBankOffers = () => {
     this.props.showCouponModal({
-      selectedBankOfferCode: this.state.selectedBankOfferCode,
+      selectedBankOfferCode: localStorage.getItem(BANK_COUPON_COOKIE),
       coupons: this.props.cart.paymentModes.paymentOffers,
       selecteBankOffer: val => {
         this.selecteBankOffer(val);
