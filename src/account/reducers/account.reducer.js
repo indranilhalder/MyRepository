@@ -688,7 +688,8 @@ const account = (
       return Object.assign({}, state, {
         cliqCashVoucherDetailsStatus: action.status,
         cliqCashVoucherDetailsError: action.error,
-        loading: false
+        loading: false,
+        error: action.error
       });
 
     case accountActions.NEW_RETURN_INITIATE_REQUEST:
