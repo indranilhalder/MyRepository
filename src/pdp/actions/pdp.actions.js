@@ -153,7 +153,7 @@ export function getProductDescription(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductDescriptionRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
@@ -337,8 +337,8 @@ export function getProductSizeGuide(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductSizeGuideRequest());
     try {
-      const result = await api.get(
-        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
+      const result = await api.getMiddlewareUrl(
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -463,7 +463,7 @@ export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
     dispatch(ProductSpecificationRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
@@ -875,7 +875,7 @@ export function getPdpItems(itemIds, widgetKey) {
         productCodes = `${itemId},${productCodes}`;
       });
       const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
-      const result = await api.get(url);
+      const result = await api.getMiddlewareUrl(url);
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
