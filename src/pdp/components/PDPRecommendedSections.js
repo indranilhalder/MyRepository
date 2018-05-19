@@ -41,6 +41,9 @@ class PDPRecommendedSections extends React.Component {
       brandId = this.props.aboutTheBrand.id;
     }
 
+    console.log("WHAT IS THIS");
+    console.log(this);
+
     return (
       this.props.aboutTheBrand && (
         <div className={styles.brandSection}>

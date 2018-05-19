@@ -346,7 +346,7 @@ const productDescription = (
     case pdpActions.PRODUCT_MSD_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: null,
+        msdItems: {},
         error: action.error,
         loading: false
       });
@@ -368,7 +368,7 @@ const productDescription = (
     case pdpActions.GET_PDP_ITEMS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
-        msdItems: null,
+        msdItems: {},
         loading: false
       });
     case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
