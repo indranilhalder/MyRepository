@@ -53,13 +53,24 @@ export default class AddressBook extends React.Component {
         {this.props.userAddress &&
           this.props.userAddress.addresses &&
           this.props.userAddress.addresses.map(address => {
+            console.log(address);
             return (
               <div className={styles.addressBlock}>
                 <div className={styles.addressHolder}>
                   <div className={styles.name}>{`${address.firstName} ${
                     address.lastName
                   }`}</div>
-                  <div className={styles.address}>{address.line1}</div>
+                  <div className={styles.address}>{`${
+                    address.line1 ? address.line1 : ""
+                  }, ${address.landmark ? address.landmark : ""}, ${
+                    address.city ? address.city : ""
+                  }, ${address.state ? address.state : ""} ,${
+                    address.postalCode ? address.postalCode : ""
+                  } ,${
+                    address.country && address.country.isocode
+                      ? address.country.isocode
+                      : ""
+                  }`}</div>
                   <div className={styles.phoneNumber}>{`Ph. ${
                     address.phone
                   }`}</div>
