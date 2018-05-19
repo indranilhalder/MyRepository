@@ -65,9 +65,10 @@ export default class ReturnModes extends React.Component {
           <div className={styles.card}>
             <OrderCard
               imageUrl={
-                productInfo &&
-                productInfo.product &&
-                productInfo.product.imageURL
+                data &&
+                data.orderProductWsDTO &&
+                data.orderProductWsDTO[0] &&
+                data.orderProductWsDTO[0].imageURL
               }
               productName={
                 productInfo && productInfo.product && productInfo.product.name

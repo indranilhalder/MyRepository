@@ -515,6 +515,7 @@ class CheckOutPage extends React.Component {
             this.state.selectedProductsUssIdForCliqAndPiq
           ]
         }
+        pinCodeUpdateDisabled={true}
         numberOfStores={availableStores.length}
         showPickupPerson={
           this.state.selectedSlaveIdObj[
@@ -707,7 +708,9 @@ class CheckOutPage extends React.Component {
           nextProps.cart.cliqCashPaymentDetails.isRemainingAmount,
         payableAmount: nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount
           .value
-          ? nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value
+          ? Math.round(nextProps.cart.cartDetailsCNC.cartAmount.paybleAmount.value*
+          100
+      ) / 100
           : "0.00",
         cliqCashAmount:
           nextProps.cart.cliqCashPaymentDetails.cliqCashBalance.value > 0
@@ -717,7 +720,9 @@ class CheckOutPage extends React.Component {
               ) / 100
             : "0.00",
         bagAmount: nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
-          ? nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value
+          ? Math.round(nextProps.cart.cartDetailsCNC.cartAmount.bagTotal.value*
+            100
+        ) / 100
           : "0.00",
         totalDiscount:
           nextProps.cart.cartDetailsCNC.cartAmount.totalDiscountAmount.value > 0
@@ -735,10 +740,7 @@ class CheckOutPage extends React.Component {
             : "0.00"
       });
     } else {
-      if (
-        nextProps.cart.cartDetailsCNC &&
-        this.state.isRemainingAmount
-      ) {
+      if (nextProps.cart.cartDetailsCNC && this.state.isRemainingAmount) {
         let cliqCashAmount = 0;
         if (
           nextProps.cart.paymentModes &&
@@ -801,7 +803,8 @@ class CheckOutPage extends React.Component {
               : "0.00"
         });
 
-        if (!this.state.isPaymentFailed&&
+        if (
+          !this.state.isPaymentFailed &&
           nextProps.cart.cartDetailsCNC &&
           nextProps.cart.cartDetailsCNC.deliveryCharge
         ) {
@@ -810,16 +813,24 @@ class CheckOutPage extends React.Component {
               nextProps.cart.cartDetailsCNC &&
               nextProps.cart.cartDetailsCNC.deliveryCharge
           });
+        } else {
+          this.setState({
+            deliveryCharge:
+              nextProps.cart.paymentFailureOrderDetails &&
+              nextProps.cart.paymentFailureOrderDetails.deliveryCharges &&
+              nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value
+                ? Math.round(
+                    nextProps.cart.paymentFailureOrderDetails.deliveryCharges
+                      .value * 100
+                  ) / 100
+                : "0.00"
+          });
         }
-        else{
-          this.setState({deliveryCharge: nextProps.cart.paymentFailureOrderDetails && nextProps.cart.paymentFailureOrderDetails
-            .deliveryCharges && nextProps.cart.paymentFailureOrderDetails
-          .deliveryCharges.value
-          ? Math.round(
-              nextProps.cart.paymentFailureOrderDetails.deliveryCharges.value *
-                100
-            ) / 100
-          : "0.00" });
+
+        if(this.state.isPaymentFailed && nextProps.cart.paymentFailureOrderDetails)
+        {
+          this.setState({isCliqCashApplied:nextProps.cart.paymentFailureOrderDetails.cliqCashApplied,cliqCashPaidAmount:nextProps.cart.paymentFailureOrderDetails.cliqCashPaidAmount})
+
         }
         if (
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
@@ -2099,7 +2110,6 @@ class CheckOutPage extends React.Component {
                     isNoCostEmiProceeded: false
                   })
                 }
-                isCliqCashApplied={this.state.isCliqCashApplied}
                 totalProductCount={
                   this.props.cart &&
                   this.props.cart.cartDetailsCNC &&

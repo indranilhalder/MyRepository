@@ -13,16 +13,17 @@ export default class RatingAndTextLink extends React.Component {
   render() {
     return (
       <PdpLink onClick={() => this.onClick()}>
-        <div
-          itemProp="aggregateRating"
-          itemScope
-          itemType="http://schema.org/AggregateRating"
-          className={styles.base}
-        >
-          <div className={styles.ratingsHolder}>
-            <StarRating averageRating={this.props.averageRating} />
-          </div>
-          {this.props.numberOfReview !== 0 && (
+        {this.props.numberOfReview !== 0 && (
+          <div
+            itemProp="aggregateRating"
+            itemScope
+            itemType="http://schema.org/AggregateRating"
+            className={styles.base}
+          >
+            <div className={styles.ratingsHolder}>
+              <StarRating averageRating={this.props.averageRating} />
+            </div>
+
             <div className={styles.textHolder}>
               <span itemProp="ratingValue">
                 {this.props.averageRating
@@ -33,13 +34,16 @@ export default class RatingAndTextLink extends React.Component {
               <span itemProp="reviewCount"> {this.props.numberOfReview}</span>
               reviews
             </div>
-          )}
-          {this.props.numberOfReview === 0 && (
-            <div itemProp="reviewCount" className={styles.text}>
-              {NO_REVIEW_TEXT}
+          </div>
+        )}
+        {this.props.numberOfReview === 0 && (
+          <div className={styles.base}>
+            <div className={styles.ratingsHolder}>
+              <StarRating averageRating={this.props.averageRating} />
             </div>
-          )}
-        </div>
+            <div className={styles.textHolder}>{NO_REVIEW_TEXT}</div>
+          </div>
+        )}
       </PdpLink>
     );
   }
