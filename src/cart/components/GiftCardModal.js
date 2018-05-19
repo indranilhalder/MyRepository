@@ -15,6 +15,7 @@ export default class GiftCardModal extends React.Component {
           addGiftCard={val => this.addGiftCard(val)}
           voucherNumber={this.props.voucherNumber}
           voucherPin={this.props.voucherPin}
+          loading={this.props.loading}
         />
       </BottomSlideModal>
     );
