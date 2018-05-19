@@ -207,7 +207,6 @@ class CheckOutPage extends React.Component {
     ) {
       this.removeNoCostEmi(noCostEmiCouponCode);
     }
-
     //here we need to reset captch if if already done .but payment mode is changed
     if (this.state.captchaReseponseForCOD) {
       window.grecaptcha.reset();
@@ -221,7 +220,8 @@ class CheckOutPage extends React.Component {
       noCostEmiBankName: null,
       noCostEmiDiscount: "0.00",
       isNoCostEmiProceeded: false,
-      paymentModeSelected: null
+      paymentModeSelected: null,
+      binValidationCOD: false
     });
   };
   changeSubEmiOption(currentSelectedEMIType) {
@@ -863,9 +863,6 @@ class CheckOutPage extends React.Component {
         nextProps.cart.cliqCashJusPayDetails.orderId
       );
     }
-    if (nextProps.cart.binValidationCODStatus === SUCCESS) {
-      this.setState({ binValidationCOD: true });
-    }
   }
 
   componentWillUnmount() {
@@ -1353,9 +1350,11 @@ class CheckOutPage extends React.Component {
         true // for payment failure we need to use old cart id
       );
     }
+
     if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
+    this.onChangePaymentMode({ currentPaymentMode: null });
   };
   handleSubmit = () => {
     localStorage.setItem(
@@ -1484,6 +1483,7 @@ class CheckOutPage extends React.Component {
         this.setState({ isNoCostEmiProceeded: true });
       }
     }
+    this.onChangePaymentMode({ currentPaymentMode: null });
   };
 
   addAddress = address => {
@@ -1657,7 +1657,7 @@ class CheckOutPage extends React.Component {
   };
   binValidationForCOD = paymentMode => {
     localStorage.setItem(PAYMENT_MODE_TYPE, paymentMode);
-    this.setState({ paymentModeSelected: paymentMode });
+    this.setState({ paymentModeSelected: paymentMode, binValidationCOD: true });
     this.props.binValidationForCOD(paymentMode);
   };
 

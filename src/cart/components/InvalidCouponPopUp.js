@@ -130,6 +130,9 @@ export default class InvalidCouponPopUp extends React.Component {
         this.props.closeModal();
       });
     }
+    if (releaseStatus.status === SUCCESS) {
+      this.props.closeModal();
+    }
   }
   render() {
     const data = this.props.result;
@@ -165,6 +168,29 @@ export default class InvalidCouponPopUp extends React.Component {
                 FAILURE_LOWERCASE && (
                 <div className={styles.invalidCouponHeading}>
                   {this.getInvalidNCEOfferTemplate(data.noCostEmiCoupon)}
+                </div>
+              )}
+            {data &&
+              ((data.noCostEmiCoupon &&
+                data.noCostEmiCoupon.status &&
+                data.noCostEmiCoupon.status.toLowerCase() === SUCCESS) ||
+                (data.bankOffer &&
+                  data.bankOffer.status &&
+                  data.bankOffer.status.toLowerCase() === SUCCESS)) && (
+                <div>
+                  Note:
+                  {data.bankOffer &&
+                    data.bankOffer.status &&
+                    data.bankOffer.status.toLowerCase() === SUCCESS && (
+                      <div>You may have to select a bank offer again."</div>
+                    )}
+                  {data.noCostEmiCoupon &&
+                    data.noCostEmiCoupon.status &&
+                    data.noCostEmiCoupon.status.toLowerCase() === SUCCESS && (
+                      <div>
+                        You may have to select a No Cost EMI plan again."
+                      </div>
+                    )}
                 </div>
               )}
             {data &&
