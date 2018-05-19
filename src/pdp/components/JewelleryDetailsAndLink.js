@@ -88,8 +88,8 @@ export default class JewelleryDetailsAndLink extends React.Component {
           </div>
           <div
             itemProp="offers"
-            itemScope=""
-            itemType="http://schema.org/Offer"
+            itemScope
+            itemType="http://schema.org/AggregateOffer"
             className={styles.priceContainer}
           >
             <meta itemProp="priceCurrency" content={RUPEE_SYMBOL} />
