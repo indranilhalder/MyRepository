@@ -70,7 +70,8 @@ const productDescription = (
     case pdpActions.PRODUCT_DESCRIPTION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        productDetails: null
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_SUCCESS:
