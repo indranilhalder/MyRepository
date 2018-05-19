@@ -84,8 +84,19 @@ export default class ProductDetailsCard extends React.Component {
             )}
           </div>
           {this.props.averageRating && (
-            <div className={styles.displayRatingText}>
-              Rating <span>{this.props.averageRating}/5</span>
+            <div
+              className={styles.displayRatingText}
+              itemprop="aggregateRating"
+              itemscope
+              itemtype="http://schema.org/AggregateRating"
+            >
+              Rating{" "}
+              <span>
+                {" "}
+                <span span itemProp="ratingValue">
+                  {this.props.averageRating}
+                </span>/5
+              </span>
             </div>
           )}
         </div>
