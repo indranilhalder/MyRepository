@@ -92,11 +92,11 @@ export function getProductListingsPaginatedSuccess(productListings) {
     productListings
   };
 }
-export function getProductListingsRequest(paginated: false) {
+export function getProductListingsRequest(paginated: false, isFilter: false) {
   return {
     type: PRODUCT_LISTINGS_REQUEST,
     status: REQUESTING,
-
+    isFilter,
     isPaginated: paginated
   };
 }
@@ -124,7 +124,7 @@ export function getProductListings(
   isFilter: false
 ) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductListingsRequest(paginated));
+    dispatch(getProductListingsRequest(paginated, isFilter));
     dispatch(showSecondaryLoader());
     try {
       const searchState = getState().search;
