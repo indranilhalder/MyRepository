@@ -329,6 +329,15 @@ export default class PdpJewellery extends React.Component {
       if (productData.winningSellerPrice) {
         price = productData.winningSellerPrice.formattedValueNoDecimal;
       }
+      let seoDoublePrice = 0;
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = productData.winningSellerPrice.doubleValue;
+      } else if (productData.mrpPrice && productData.mrpPrice.doubleValue) {
+        seoDoublePrice = productData.mrpPrice.doubleValue;
+      }
 
       return (
         <PdpFrame
@@ -370,6 +379,7 @@ export default class PdpJewellery extends React.Component {
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
               goToReviewPage={this.goToReviewPage}
+              doublePrice={seoDoublePrice}
               discount={productData.discount}
               brandUrl={productData.brandURL}
               hasPriceBreakUp={productData.showPriceBrkUpPDP === "Yes"}
