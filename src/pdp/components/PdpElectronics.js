@@ -234,6 +234,7 @@ export default class PdpElectronics extends React.Component {
     }
   };
   render() {
+    console.log(this.props);
     const productData = this.props.productDetails;
     const mobileGalleryImages = productData.galleryImagesList
       ? productData.galleryImagesList
@@ -253,6 +254,12 @@ export default class PdpElectronics extends React.Component {
     if (productData) {
       let price = "";
       let discountPrice = "";
+      let seoDoublePrice = 0;
+      if (productData.winningSellerPrice) {
+        seoDoublePrice = productData.winningSellerPrice.doubleValue;
+      } else if (productData.mrpPrice) {
+        seoDoublePrice = productData.mrpPrice.doubleValue;
+      }
       if (productData.mrpPrice) {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
@@ -317,6 +324,7 @@ export default class PdpElectronics extends React.Component {
                   productName={productData.productName}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
+                  doublePrice={seoDoublePrice}
                   price={price}
                   discountPrice={discountPrice}
                   averageRating={productData.averageRating}
@@ -331,6 +339,7 @@ export default class PdpElectronics extends React.Component {
                   brandUrl={productData.brandURL}
                   history={this.props.history}
                   price={discountPrice}
+                  doublePrice={seoDoublePrice}
                   discountPrice={price}
                   averageRating={productData.averageRating}
                   goToReviewPage={this.goToReviewPage}

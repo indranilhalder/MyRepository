@@ -3,6 +3,7 @@ import styles from "./JewelleryDetailsAndLink.css";
 import StarRating from "../../general/components/StarRating.js";
 import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
+import { RUPEE_SYMBOL } from "../../lib/constants.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import MetaTags from "react-meta-tags";
@@ -91,6 +92,8 @@ export default class JewelleryDetailsAndLink extends React.Component {
             itemType="http://schema.org/Offer"
             className={styles.priceContainer}
           >
+            <meta itemProp="priceCurrency" content={RUPEE_SYMBOL} />
+            <meta itemProp="lowPrice" content={this.props.doublePrice} />
             {this.props.price && (
               <div className={styles.price}>
                 <span itemType="price">{`${this.props.price}`}</span>
