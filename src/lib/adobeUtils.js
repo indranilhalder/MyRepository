@@ -281,7 +281,10 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_OVERVIEW);
   }
   if (type === ADOBE_MY_ACCOUNT_SAVED_LIST) {
-    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_LIST);
+    window.digitalData = getDigitalDataForMyAccount(
+      MY_ACCOUNT_SAVED_LIST,
+      response
+    );
   }
   if (type === ADOBE_MY_ACCOUNT_ADDRESS_BOOK) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ADDRESS_BOOK);
@@ -682,7 +685,11 @@ function getProductsDigitalData(response) {
         product.productcode && product.productcode.toLowerCase()
       );
       productQuantityArray.push(
-        product.qtySelectedByUser ? product.qtySelectedByUser : product.quantity
+        product.qtySelectedByUser
+          ? product.qtySelectedByUser
+          : product.quantity
+            ? product.quantity
+            : null
       );
       productPriceArray.push(
         product.offerPrice
@@ -691,7 +698,9 @@ function getProductsDigitalData(response) {
             ? product.pricevalue
             : product.price
               ? product.price
-              : null
+              : product.mrp && product.mrp.value
+                ? product.mrp.value
+                : null
       );
       productBrandArray.push(
         product.productBrand &&
@@ -1401,7 +1410,7 @@ export function setDataLayerForMyAccountDirectCalls(
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
 }
-export function getDigitalDataForMyAccount(pageTitle) {
+export function getDigitalDataForMyAccount(pageTitle, response) {
   const data = {
     page: {
       pageInfo: { pageName: pageTitle },
@@ -1409,6 +1418,29 @@ export function getDigitalDataForMyAccount(pageTitle) {
       display: { hierarchy: `home|my_tata_cliq|${pageTitle}` }
     }
   };
+  if (response) {
+    const getProductData = getProductsDigitalData(response);
+    if (getProductData) {
+      let {
+        productIdsArray,
+        productQuantityArray,
+        productPriceArray,
+        productBrandArray
+      } = getProductData;
+      Object.assign(data, {
+        cpj: {
+          product: {
+            id: productIdsArray,
+            quantity: productQuantityArray,
+            price: productPriceArray
+          },
+          brand: {
+            name: productBrandArray
+          }
+        }
+      });
+    }
+  }
   return data;
 }
 export function getDigitalDataForBLP(response) {
