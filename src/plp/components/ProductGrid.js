@@ -39,8 +39,10 @@ export default class ProductGrid extends React.Component {
     }
   }
 
-  goToProductDescription = (url, productObj) => {
-    setDataLayerForPlpDirectCalls(productObj);
+  goToProductDescription = (url, productObj, productModuleId) => {
+    // change this
+    setDataLayerForPlpDirectCalls({});
+    this.props.setProductModuleRef(productModuleId);
     this.props.history.push(url, {
       isComingFromPlp: true
     });
@@ -76,7 +78,9 @@ export default class ProductGrid extends React.Component {
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}
-        onClick={url => this.goToProductDescription(url, data)}
+        onClick={(url, data, ref) =>
+          this.goToProductDescription(url, data, ref)
+        }
         productCategory={data.productCategoryType}
         productId={data.productId}
         showWishListButton={false}

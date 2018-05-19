@@ -1,7 +1,8 @@
 import React from "react";
 import InformationHeader from "./InformationHeader.js";
 import SearchContainer from "../../search/SearchContainer.js";
-import HollowHeaderContainer from "../containers/HollowHeaderContainer.js";
+import HollowHeader from "./HollowHeader.js";
+import { connect } from "react-redux";
 import StickyHeader from "./StickyHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -27,6 +28,7 @@ import {
   CHECKOUT_ROUTER_THANKYOU,
   APP_VIEW
 } from "../../../src/lib/constants";
+import { setIsGoBackFromPDP } from "../../plp/actions/plp.actions.js";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
@@ -40,6 +42,18 @@ class HeaderWrapper extends React.Component {
     if (this.props.isPlpFilterOpen) {
       this.props.hideFilter();
       return;
+    }
+    const url = this.props.location.pathname;
+    let productCode;
+
+    if (PRODUCT_CODE_REGEX.test(url)) {
+      productCode = PRODUCT_CODE_REGEX.exec(url);
+    }
+
+    if (productCode) {
+      if (this.props.location.state.isComingFromPlp) {
+        this.props.setIsGoBackFromPDP();
+      }
     }
 
     const parsedQueryString = queryString.parse(this.props.location.search);
@@ -200,7 +214,7 @@ class HeaderWrapper extends React.Component {
           bagCount={this.props.bagCount}
         />
       ) : (
-        <HollowHeaderContainer
+        <HollowHeader
           goBack={this.onBackClick}
           redirectToHome={this.redirectToHome}
           goToCart={this.goToCart}
@@ -234,4 +248,12 @@ class HeaderWrapper extends React.Component {
   }
 }
 
-export default withRouter(HeaderWrapper);
+const mapDispatchToProps = dispatch => {
+  return {
+    setIsGoBackFromPDP: () => {
+      dispatch(setIsGoBackFromPDP());
+    }
+  };
+};
+
+export default withRouter(connect(null, mapDispatchToProps)(HeaderWrapper));

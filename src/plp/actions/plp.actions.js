@@ -35,6 +35,22 @@ export const SORT_HAS_BEEN_CLICKED = "SORT_HAS_BEEN_CLICKED";
 
 export const IS_GO_BACK_FROM_PDP = "IS_GO_BACK_FROM_PDP";
 export const IS_NOT_GO_BACK_FROM_PDP = "IS_NOT_GO_BACK_FROM_PDP";
+
+export const SET_PRODUCT_MODULE_REF = "SET_PRODUCT_MODULE_REF";
+export const CLEAR_PRODUCT_MODULE_REF = "CLEAR_PRODUCT_MODULE_REF";
+
+export function setProductModuleRef(ref) {
+  return {
+    type: SET_PRODUCT_MODULE_REF,
+    ref
+  };
+}
+
+export function clearProductModuleRef() {
+  return {
+    type: CLEAR_PRODUCT_MODULE_REF
+  };
+}
 export function setIsGoBackFromPDP() {
   return {
     type: IS_GO_BACK_FROM_PDP

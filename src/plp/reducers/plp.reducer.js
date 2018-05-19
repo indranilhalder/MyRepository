@@ -2,6 +2,7 @@ import * as plpActions from "../actions/plp.actions";
 import concat from "lodash.concat";
 import cloneDeep from "lodash.clonedeep";
 import { CLEAR_ERROR } from "../../general/error.actions";
+import { returnProductDetailsFailure } from "../../account/actions/account.actions";
 const productListings = (
   state = {
     status: null,
@@ -16,13 +17,22 @@ const productListings = (
     selectedFacetKey: null,
     filterHasBeenClicked: false,
     sortHasBeenClicked: false,
-    isGoBackFromPdpPage: false
+    isGoBackFromPdpPage: false,
+    clickedProductModuleRef: null
   },
   action
 ) => {
   let existingProductListings;
   let toUpdate;
   switch (action.type) {
+    case plpActions.SET_PRODUCT_MODULE_REF:
+      return Object.assign({}, state, {
+        clickedProductModuleRef: action.ref
+      });
+    case plpActions.CLEAR_PRODUCT_MODULE_REF:
+      return Object.assign({}, state, {
+        clickedProductModuleRef: null
+      });
     case plpActions.IS_GO_BACK_FROM_PDP:
       return Object.assign({}, state, {
         isGoBackFromPdpPage: true
@@ -108,6 +118,7 @@ const productListings = (
         status: action.status,
         productListings: action.productListings,
         isGoBackFromPdpPage: false,
+        clickedProductModuleRef: null,
         loading: false
       });
 

@@ -9,11 +9,6 @@ import companyLogo from "./img/companylogo.svg";
 export default class HollowHeader extends React.Component {
   backPage() {
     if (this.props.goBack) {
-      console.log("HOLLOW HEADER");
-      console.log(this.props.location);
-      if (this.props.location.state.isComingFromPlp) {
-        this.props.setIsGoBackFromPDP();
-      }
       this.props.goBack();
     }
   }
