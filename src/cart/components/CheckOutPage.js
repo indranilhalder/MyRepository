@@ -821,6 +821,12 @@ class CheckOutPage extends React.Component {
             ) / 100
           : "0.00" });
         }
+
+        if(this.state.isPaymentFailed && nextProps.cart.paymentFailureOrderDetails)
+        {
+          this.setState({isCliqCashApplied:nextProps.cart.paymentFailureOrderDetails.cliqCashApplied,cliqCashPaidAmount:nextProps.cart.paymentFailureOrderDetails.cliqCashPaidAmount})
+
+        }
         if (
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount &&
           nextProps.cart.cartDetailsCNC.cartAmount.couponDiscountAmount.value
@@ -2099,7 +2105,6 @@ class CheckOutPage extends React.Component {
                     isNoCostEmiProceeded: false
                   })
                 }
-                isCliqCashApplied={this.state.isCliqCashApplied}
                 totalProductCount={
                   this.props.cart &&
                   this.props.cart.cartDetailsCNC &&

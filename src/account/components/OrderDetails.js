@@ -193,7 +193,6 @@ export default class OrderDetails extends React.Component {
                 }
               );
             });
-
             return (
               <div className={styles.order} key={i}>
                 <div className={styles.orderIdHolder}>
@@ -252,6 +251,7 @@ export default class OrderDetails extends React.Component {
                           ) / 100
                         : "0.00"
                     }
+                    cliqCashAmountDeducted={orderDetails.cliqCashAmountDeducted}
                   />
                 </div>
                 <OrderPaymentMethod

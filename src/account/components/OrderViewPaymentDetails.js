@@ -14,6 +14,7 @@ export default class OrderViewPaymentDetails extends React.Component {
             </div>
           )}
         </div>
+
         <div className={styles.deliverDataHolder}>
           <div className={styles.labelText}>Delivery & Shipping Charges</div>
           {this.props.DeliveryCharges && (
@@ -41,6 +42,14 @@ export default class OrderViewPaymentDetails extends React.Component {
           {this.props.ConvenienceCharges && (
             <div className={styles.infoText}>
               {`${RUPEE_SYMBOL} ${this.props.ConvenienceCharges}`}
+            </div>
+          )}
+        </div>
+        <div className={styles.subTotalsHolder}>
+          <div className={styles.labelText}>Cliq Cash Applied</div>
+          {this.props.SubTotal && (
+            <div className={styles.infoText}>
+              {`${RUPEE_SYMBOL}${this.props.cliqCashAmountDeducted}`}
             </div>
           )}
         </div>
