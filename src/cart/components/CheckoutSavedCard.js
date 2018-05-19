@@ -25,6 +25,13 @@ import {
 } from "../../lib/constants";
 
 export default class CheckoutSavedCard extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      selectedCardIndex: 0,
+      cvv: ""
+    };
+  }
   getCardLogo(cardDetails) {
     switch (cardDetails.value.cardBrand) {
       case VISA_CARD:
@@ -47,8 +54,9 @@ export default class CheckoutSavedCard extends React.Component {
         return false;
     }
   }
-  onChangeCvv(cvv, cardNo) {
-    if (cvv.length === 3) {
+  onChangeCvv(cvv, cardNo, index) {
+    this.setState({ cvv, selectedCardIndex: index });
+    if (cvv.length >= 3) {
       let paymentModesToDisplay = filter(this.props.saveCardDetails, modes => {
         return modes.value.cardEndingDigits === cardNo;
       });
@@ -79,10 +87,12 @@ export default class CheckoutSavedCard extends React.Component {
             return (
               <SavedCard
                 key={i}
+                cvv={this.state.cvv}
                 onFocusInput={this.props.onFocusInput}
                 cardNumber={data.value.cardEndingDigits}
                 cardImage={cardLogo}
-                onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo)}
+                selected={i === this.state.selectedCardIndex}
+                onChangeCvv={(cvv, cardNo) => this.onChangeCvv(cvv, cardNo, i)}
               />
             );
           })}

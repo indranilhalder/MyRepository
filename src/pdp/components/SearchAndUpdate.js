@@ -58,7 +58,7 @@ export default class SearchAndUpdate extends React.Component {
               boxy={true}
               value={this.state.pinCode}
               type="number"
-              placeholder="Enter you PIN code"
+              placeholder="Enter your PIN code"
               onChange={val => this.getValue(val)}
               textStyle={{ fontSize: 14 }}
               height={35}

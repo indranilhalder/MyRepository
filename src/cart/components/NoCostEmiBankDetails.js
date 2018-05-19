@@ -6,7 +6,7 @@ import UnderLinedButton from "../../general/components/UnderLinedButton";
 import SelectBoxMobile2 from "../../general/components/SelectBoxMobile2";
 import EmiDisplay from "./EmiDisplay";
 import CreditCardForm from "./CreditCardForm";
-import { NO_COST_EMI, RUPEE_SYMBOL } from "../../lib/constants";
+import { NO_COST_EMI, RUPEE_SYMBOL, SUCCESS } from "../../lib/constants";
 
 export default class NoCostEmiBankDetails extends React.Component {
   constructor(props) {
@@ -60,6 +60,14 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   }
   selectOtherBank(val) {
+    if (
+      this.props.removeNoCostEmi &&
+      this.state.selectedCouponCode &&
+      this.state.selectedCouponCode !== ""
+    ) {
+      this.props.removeNoCostEmi(this.state.selectedCouponCode);
+    }
+
     const selectedBankName = val.label;
     const selectedBankIndex = val.value;
     const selectedBankCodeObj = this.props.bankList.find(
@@ -87,6 +95,13 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   }
   handleSelect(index, code) {
+    if (
+      this.props.removeNoCostEmi &&
+      this.state.selectedCouponCode &&
+      this.state.selectedCouponCode !== ""
+    ) {
+      this.props.removeNoCostEmi(this.state.selectedCouponCode);
+    }
     if (this.state.selectedFromDropDown === true) {
       this.setState({
         selectedBankIndex: null,
@@ -146,34 +161,50 @@ export default class NoCostEmiBankDetails extends React.Component {
     }
   };
 
-  onSelectMonth(index, val) {
-    if (this.state.selectedBankName !== "Other Bank") {
-      if (this.state.selectedMonth === index) {
+  async applyNoCostEmi(index, val) {
+    if (val && this.props.applyNoCostEmi) {
+      const applyNoCostEmiReponse = await this.props.applyNoCostEmi(
+        val.emicouponCode,
+        this.state.selectedBankName
+      );
+      if (applyNoCostEmiReponse.status === SUCCESS) {
+        this.setState({
+          selectedMonth: index,
+          selectedCouponCode: val.emicouponCode,
+          selectedTenure: val.tenure
+        });
+        this.onChangeCardDetail({
+          is_emi: true,
+          emi_bank: this.state.selectedBankCode,
+          emi_tenure: val.tenure
+        });
+      } else {
         this.setState({
           selectedMonth: null,
           selectedCouponCode: null,
           selectedTenure: null
         });
-
-        this.props.removeNoCostEmi(val.emicouponCode);
-      } else {
-        if (val && this.props.applyNoCostEmi) {
+      }
+    }
+  }
+  async onSelectMonth(index, val) {
+    if (this.state.selectedBankName !== "Other Bank") {
+      if (this.props.removeNoCostEmi && this.state.selectedCouponCode) {
+        const removeNoCostEmiResponce = await this.props.removeNoCostEmi(
+          this.state.selectedCouponCode
+        );
+        if (removeNoCostEmiResponce.status === SUCCESS) {
+          if (this.state.selectedMonth !== index) {
+            this.applyNoCostEmi(index, val);
+          }
           this.setState({
-            selectedMonth: index,
-            selectedCouponCode: val.emicouponCode,
-            selectedTenure: val.tenure
+            selectedMonth: null,
+            selectedCouponCode: null,
+            selectedTenure: null
           });
-
-          this.onChangeCardDetail({
-            is_emi: true,
-            emi_bank: this.state.selectedCode,
-            emi_tenure: val.tenure
-          });
-          this.props.applyNoCostEmi(
-            val.emicouponCode,
-            this.state.selectedBankName
-          );
         }
+      } else {
+        this.applyNoCostEmi(index, val);
       }
     }
   }

@@ -5,19 +5,16 @@
   position: relative;
 }
 .logoHolder {
-  width: 100%;
-  height: 40px;
+  width: 26%;
+  height: 100px;
+  background-size: contain;
+  background-position: bottom left;
+  background-repeat: no-repeat;
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  text-align: center;
+  left: 20px;
+  bottom: 20px;
 }
-.logo {
-  height: 100%;
-  display: inline-block;
-}
+
 .image {
   width: 100%;
   height: 100%;
@@ -36,5 +33,4 @@
   left: 0;
   top: 0;
   border-radius: 4px;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000000);
 }

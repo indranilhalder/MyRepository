@@ -51,13 +51,13 @@ export default class EmiPanel extends React.Component {
   };
   applyNoCostEmi = (couponCode, bankName) => {
     if (this.props.applyNoCostEmi) {
-      this.props.applyNoCostEmi(couponCode, bankName);
+      return this.props.applyNoCostEmi(couponCode, bankName);
     }
   };
 
   removeNoCostEmi = couponCode => {
     if (this.props.removeNoCostEmi) {
-      this.props.removeNoCostEmi(couponCode);
+      return this.props.removeNoCostEmi(couponCode);
     }
   };
   getItemBreakUpDetails = (couponCode, noCostEmiText, noCostProductCount) => {
@@ -97,6 +97,9 @@ export default class EmiPanel extends React.Component {
     this.setState({ currentSelectedEMIType });
   }
   render() {
+    if (this.props.isCliqCashApplied) {
+      return null;
+    }
     return (
       <div className={styles.base}>
         <MenuDetails
@@ -107,7 +110,8 @@ export default class EmiPanel extends React.Component {
             this.props.onChange({ currentPaymentMode })
           }
         >
-          {this.props.cart &&
+          {!this.props.isCliqCashApplied &&
+            this.props.cart &&
             this.props.cart.emiEligibilityDetails &&
             this.props.cart.emiEligibilityDetails.isNoCostEMIEligible && (
               <div className={styles.subListHolder}>
@@ -123,6 +127,7 @@ export default class EmiPanel extends React.Component {
                   onChangeCardDetail={val => this.onChangeCardDetail(val)}
                 >
                   <NoCostEmiBankDetails
+                    isNoCostEmiApplied={this.props.isNoCostEmiApplied}
                     selectedEMIType={this.state.currentSelectedEMIType}
                     onBankSelect={val => this.onBankSelect(val)}
                     onSelectMonth={val => this.onSelectMonth(val)}

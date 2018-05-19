@@ -246,7 +246,8 @@ export default class PdpJewellery extends React.Component {
         showSizeGuide: this.props.showSizeGuide,
         headerText: this.props.productDetails.isSizeOrLength,
         hasSizeGuide: this.props.productDetails.showSizeGuide,
-        data: this.props.productDetails.variantOptions
+        data: this.props.productDetails.variantOptions,
+        productName: this.props.productDetails.productName
       });
     }
   };
@@ -268,7 +269,9 @@ export default class PdpJewellery extends React.Component {
     if (
       this.props.productDetails.variantOptions &&
       this.props.productDetails.variantOptions[0].sizelink &&
-      (this.props.productDetails.variantOptions[0].sizelink.size === NO_SIZE ||
+      this.props.productDetails.variantOptions[0].sizelink.size &&
+      (this.props.productDetails.variantOptions[0].sizelink.size.toUpperCase() ===
+        NO_SIZE ||
         this.props.productDetails.variantOptions[0].sizelink.size === "0")
     ) {
       return true;
@@ -326,6 +329,15 @@ export default class PdpJewellery extends React.Component {
       if (productData.winningSellerPrice) {
         price = productData.winningSellerPrice.formattedValueNoDecimal;
       }
+      let seoDoublePrice = 0;
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = productData.winningSellerPrice.doubleValue;
+      } else if (productData.mrpPrice && productData.mrpPrice.doubleValue) {
+        seoDoublePrice = productData.mrpPrice.doubleValue;
+      }
 
       return (
         <PdpFrame
@@ -366,6 +378,8 @@ export default class PdpJewellery extends React.Component {
               price={price}
               discountPrice={discountPrice}
               averageRating={productData.averageRating}
+              goToReviewPage={this.goToReviewPage}
+              doublePrice={seoDoublePrice}
               discount={productData.discount}
               brandUrl={productData.brandURL}
               hasPriceBreakUp={productData.showPriceBrkUpPDP === "Yes"}
@@ -434,10 +448,7 @@ export default class PdpJewellery extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay
-              labelText="Not serviceable in you pincode,
-please try another pincode"
-            >
+            <Overlay labelText="This item can't be delivered to your PIN code">
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}

@@ -91,6 +91,7 @@ export default class PaymentCardWrapper extends React.Component {
     return (
       <CheckoutSavedCard
         currentPaymentMode={this.props.currentPaymentMode}
+        selectedSavedCardDetails={this.props.selectedSavedCardDetails}
         onSelectPaymentsMode={currentPaymentMode =>
           this.props.onChange({ currentPaymentMode })
         }
@@ -200,10 +201,7 @@ export default class PaymentCardWrapper extends React.Component {
           {this.props.isRemainingBalance && (
             <div className={styles.paymentModes}>
               <div className={styles.card}>
-                <CheckOutHeader
-                  confirmTitle="Choose payment Method"
-                  indexNumber="3"
-                />
+                <CheckOutHeader confirmTitle="Make Payment" indexNumber="3" />
               </div>
               {this.renderSavedCards()}
               {this.props.cart.paymentModes &&

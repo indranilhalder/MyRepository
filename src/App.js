@@ -14,10 +14,8 @@ import MobileFooter from "./general/components/MobileFooter.js";
 import * as Cookie from "./lib/Cookie";
 import SecondaryLoader from "./general/components/SecondaryLoader";
 import HeaderContainer from "./general/containers/HeaderContainer.js";
-import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
-import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
-import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 import SecondaryLoaderContainer from "./general/containers/SecondaryLoaderContainer.js";
+import HelpDetailsContainer from "./account/containers/HelpDetailsContainer.js";
 import {
   HOME_ROUTER,
   PRODUCT_LISTINGS,
@@ -62,9 +60,14 @@ import {
   MY_ACCOUNT,
   STATIC_PAGE,
   SKU_PAGE_FILTER,
-  PRODUCT_LISTINGS_WITHOUT_SLASH
+  PRODUCT_LISTINGS_WITHOUT_SLASH,
+  HELP_URL
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
+
+import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
+import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
+import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
 
 const Loader = () => {
   return (
@@ -274,10 +277,13 @@ class App extends Component {
     if (this.props.modalStatus) {
       className = AppStyles.blur;
     }
-
+    const appTransform =
+      this.props.scrollPosition !== 0
+        ? `translateY(-${this.props.scrollPosition}px)`
+        : null;
     return (
       <React.Fragment>
-        <div className={className}>
+        <div className={className} style={{ transform: appTransform }}>
           <HeaderContainer />
           <Switch>
             <Route path={MY_ACCOUNT} component={MyAccountWrapper} />{" "}
@@ -432,6 +438,7 @@ class App extends Component {
               path={SKU_PAGE_FILTER}
               component={ProductListingsContainer}
             />
+            <Route exact path={HELP_URL} component={HelpDetailsContainer} />
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
             <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
           </Switch>

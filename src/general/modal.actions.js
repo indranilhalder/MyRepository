@@ -33,9 +33,13 @@ export const CANCEL_ORDER_POP_UP = "CancelOrderPopUp";
 export const STORY_MODAL = "StoryModal";
 export const CLIQ_CASH_AND_NO_COST_EMI_POPUP = "CliqCashAndNoCostEmiPopup";
 export function showModal(type, ownProps) {
+  const scrollPosition =
+    window.pageYOffset || document.documentElement.scrollTop;
+
   return {
     type: SHOW_MODAL,
     modalType: type,
+    scrollPosition: scrollPosition,
     ownProps
   };
 }

@@ -1,9 +1,13 @@
 import React from "react";
 import styles from "./JewelleryDetailsAndLink.css";
+import StarRating from "../../general/components/StarRating.js";
+import Icon from "../../xelpmoc-core/Icon";
 import PropTypes from "prop-types";
+import { RUPEE_SYMBOL } from "../../lib/constants.js";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import MetaTags from "react-meta-tags";
+import arrowIcon from "../../general/components/img/arrow.svg";
 
 export default class JewelleryDetailsAndLink extends React.Component {
   readMore() {
@@ -16,7 +20,11 @@ export default class JewelleryDetailsAndLink extends React.Component {
       this.props.showPriceBreakUp();
     }
   }
-
+  handleRatingLink() {
+    if (this.props.goToReviewPage) {
+      this.props.goToReviewPage();
+    }
+  }
   handleLinkClick = e => {
     e.preventDefault();
   };
@@ -39,6 +47,10 @@ export default class JewelleryDetailsAndLink extends React.Component {
     );
   };
   render() {
+    let averageRating = "";
+    if (this.props.averageRating) {
+      averageRating = Math.floor(this.props.averageRating);
+    }
     return (
       <div className={styles.base}>
         {this.renderSchemaTags()}
@@ -76,10 +88,12 @@ export default class JewelleryDetailsAndLink extends React.Component {
           </div>
           <div
             itemProp="offers"
-            itemScope=""
-            itemType="http://schema.org/Offer"
+            itemScope
+            itemType="http://schema.org/AggregateOffer"
             className={styles.priceContainer}
           >
+            <meta itemProp="priceCurrency" content={RUPEE_SYMBOL} />
+            <meta itemProp="lowPrice" content={this.props.doublePrice} />
             {this.props.price && (
               <div className={styles.price}>
                 <span itemType="price">{`${this.props.price}`}</span>
@@ -108,6 +122,28 @@ export default class JewelleryDetailsAndLink extends React.Component {
               </div>
             )}
           </div>
+          {this.props.averageRating && (
+            <div
+              className={styles.ratingHolder}
+              onClick={() => this.handleRatingLink()}
+            >
+              <StarRating averageRating={this.props.averageRating}>
+                {this.props.averageRating && (
+                  <div
+                    itemprop="aggregateRating"
+                    itemscope
+                    itemtype="http://schema.org/AggregateRating"
+                    className={styles.ratingText}
+                  >
+                    Rating {`${averageRating}`} /5
+                  </div>
+                )}
+                <div className={styles.arrowHolder}>
+                  <Icon image={arrowIcon} size={15} />
+                </div>
+              </StarRating>
+            </div>
+          )}
         </div>
         {this.props.informationText && (
           <div className={styles.textHolder}>

@@ -208,6 +208,7 @@ export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
+export const HELP = "Help";
 
 // COPY
 //STATIC PAGE
@@ -224,7 +225,8 @@ export const ABOUT_US_URL = "/aboutus";
 export const PRIVACY_POLICY_URL = "/privacy-policy";
 export const CANCEL_URL = "/cancellation";
 export const RETURN_URL = "/returns";
-export const FAQ_URL = "/faq";
+export const FAQ_URL = "/faq-page";
+export const HELP_URL = "/help";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
@@ -287,4 +289,9 @@ export const SELECT_ADDRESS_TYPE = "please select address type";
 export const ISO_CODE = "IN";
 export const OTHER_LANDMARK = "other";
 export const OTP_VERIFICATION_REQUIRED_CODE = "NU0002";
+export const RESET_PASSWORD_SUCCESS_MESSAGE =
+  "Password reset successfully. Kindly login with your new password";
 export const OTP_VERIFICATION_REQUIRED_TEXT = "OTP VERIFICATION REQUIRED";
+export const STORE_NOT_AVAILABLE_TEXT = "Store Not available";
+export const BACK_END_ISSUE_ERROR_MESSAGE =
+  "An exception occurred at back-end.";

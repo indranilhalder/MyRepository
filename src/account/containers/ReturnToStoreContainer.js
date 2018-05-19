@@ -6,14 +6,20 @@ import { displayToast } from "../../general/toast.actions.js";
 import {
   SUCCESS,
   MY_ACCOUNT,
-  MY_ACCOUNT_ORDERS_PAGE
+  MY_ACCOUNT_ORDERS_PAGE,
+  ERROR,
+  FAILURE
 } from "../../lib/constants.js";
 const RETURN_SUCCESS_MESSAGE = "Return has been initiated";
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     quickDropStore: (pincode, ussId) => {
-      dispatch(quickDropStore(pincode, ussId));
+      dispatch(quickDropStore(pincode, ussId)).then(result => {
+        if (result.status === FAILURE) {
+          dispatch(displayToast(result.error));
+        }
+      });
     },
     newReturnInitial: (productObjToBeReturn, product) => {
       dispatch(newReturnInitial(productObjToBeReturn, product)).then(res => {

@@ -189,7 +189,23 @@ class CartPage extends React.Component {
     this.props.showCouponModal(couponDetails);
   };
 
+  navigateToLogin() {
+    const url = this.props.location.pathname;
+    this.props.setUrlToRedirectToAfterAuth(url);
+    this.props.history.replace(LOGIN_PATH);
+  }
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   renderToCheckOutPage() {
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    if (!customerCookie || !userDetails) {
+      return this.navigateToLogin();
+    }
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
     if (pinCode && this.state.isServiceable === true) {
@@ -406,6 +422,9 @@ class CartPage extends React.Component {
                       isOutOfStock={product.isOutOfStock}
                       qtySelectedByUser={product.qtySelectedByUser}
                       isClickable={false}
+                      onClickImage={() =>
+                        this.onClickImage(product.productcode)
+                      }
                     />
                   </div>
                 );

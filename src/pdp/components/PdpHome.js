@@ -299,6 +299,18 @@ export default class PdpApparel extends React.Component {
       if (productData.winningSellerPrice) {
         discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
       }
+      let seoDoublePrice = 0;
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = productData.winningSellerPrice.doubleValue;
+      } else if (
+        productData.mrpPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = productData.mrpPrice.doubleValue;
+      }
       return (
         <PdpFrame
           goToCart={() => this.goToCart()}
@@ -336,9 +348,10 @@ export default class PdpApparel extends React.Component {
                 brandUrl={productData.brandURL}
                 history={this.props.history}
                 price={price}
+                doublePrice={seoDoublePrice}
+                goToReviewPage={this.goToReviewPage}
                 discountPrice={discountPrice}
                 averageRating={productData.averageRating}
-                onClick={this.goToReviewPage}
                 discount={productData.discount}
               />
             </div>
@@ -410,10 +423,7 @@ export default class PdpApparel extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay
-              labelText="Not serviceable in you pincode,
-  please try another pincode"
-            >
+            <Overlay labelText="This item can't be delivered to your PIN code">
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}

@@ -113,7 +113,7 @@ export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE =
 export const SHOW_PDP_PIQ_PAGE = "showPdpPiqPage";
 export const HIDE_PDP_PIQ_PAGE = "hidePdpPiqPage";
 const ALL_STORES_FOR_CLIQ_AND_PIQ_PATH = "v2/mpl/allStores";
-
+export const SET_TO_OLD = "SET_TO_OLD";
 const MY_WISH_LIST = "MyWishList";
 const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
@@ -177,7 +177,11 @@ export function getProductDescription(productCode) {
     }
   };
 }
-
+export function setToOld() {
+  return {
+    type: SET_TO_OLD
+  };
+}
 export function getProductPinCodeRequest() {
   return {
     type: CHECK_PRODUCT_PIN_CODE_REQUEST,
@@ -823,7 +827,6 @@ export function pdpAboutBrand(productCode) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
