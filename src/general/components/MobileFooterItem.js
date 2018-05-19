@@ -11,7 +11,7 @@ export default class MobileFooterItem extends React.Component {
   render() {
     return (
       <div className={styles.base} onClick={() => this.handleSelect()}>
-        {this.props.bagCount && (
+        {this.props.bagCount > 0 && (
           <div className={styles.count}>{this.props.bagCount}</div>
         )}
 
