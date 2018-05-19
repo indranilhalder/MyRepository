@@ -73,10 +73,11 @@ export default class Plp extends React.Component {
 
   componentDidMount() {
     this.throttledScroll = this.handleScroll();
+    this.setHeaderText();
     window.addEventListener("scroll", this.throttledScroll);
   }
 
-  componentDidUpdate(prevProps) {
+  setHeaderText = () => {
     if (this.props.productListings !== null) {
       if (this.props.isFilterOpen) {
         this.props.setHeaderText("Refine by");
@@ -103,6 +104,10 @@ export default class Plp extends React.Component {
         }
       }
     }
+  };
+
+  componentDidUpdate(prevProps) {
+    this.setHeaderText();
   }
   backPage = () => {
     if (this.props.isFilterOpen) {
