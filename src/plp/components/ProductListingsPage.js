@@ -165,7 +165,6 @@ class ProductListingsPage extends Component {
 
   componentDidUpdate() {
     let page = null;
-    console.log("COMPONENT DID UPDATE");
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;
       const searchText = `:relevance:collectionIds:${skuId}`;
