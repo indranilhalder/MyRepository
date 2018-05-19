@@ -12,7 +12,8 @@ import {
   MY_ACCOUNT_PAGE,
   MY_ACCOUNT_ADDRESS_EDIT_PAGE,
   EDIT_ADDRESS_BOOK,
-  CDN_URL_ROOT
+  CDN_URL_ROOT,
+  CART_BAG_DETAILS
 } from "../../../src/lib/constants";
 import { CATEGORY_REGEX } from "../../plp/components/PlpBrandCategoryWrapper";
 const HOME = "home";
@@ -102,6 +103,11 @@ class MobileFooter extends React.Component {
         <MobileFooterItem
           activeIcon={myBagIconRed}
           basicIcon={myBagIcon}
+          bagCount={
+            localStorage.getItem(CART_BAG_DETAILS) &&
+            JSON.parse(localStorage.getItem(CART_BAG_DETAILS)) &&
+            JSON.parse(localStorage.getItem(CART_BAG_DETAILS)).length
+          }
           value={BAG}
           text="My Bag"
           selected={selected}

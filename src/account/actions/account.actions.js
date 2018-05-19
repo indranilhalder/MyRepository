@@ -1979,9 +1979,8 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
       }
       if (fromCheckout) {
         dispatch(hideModal(GIFT_CARD_MODAL));
-        let guIdObject = new FormData();
-        guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
-        dispatch(getPaymentModes(guIdObject));
+
+        dispatch(getPaymentModes(JSON.parse(cartDetails).guid));
       }
       return dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {

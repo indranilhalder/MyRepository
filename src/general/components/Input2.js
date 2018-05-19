@@ -88,7 +88,8 @@ export default class Input2 extends React.Component {
               paddingRight: `${this.props.rightChildSize - 10}px`,
               height: `${this.props.height}px`,
               borderColor: `${this.props.borderColor}`,
-              borderBottom: `${this.props.borderBottom}`
+              borderBottom: `${this.props.borderBottom}`,
+              background: `${this.props.background}`
             }}
           >
             <input
@@ -140,6 +141,7 @@ Input2.propTypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   height: PropTypes.number,
+  background: PropTypes.string,
   textStyle: PropTypes.shape({
     fontSize: PropTypes.number
   })
