@@ -39,7 +39,7 @@ export default class EmiModal extends React.Component {
   toggleTermsView() {
     this.setState({ showEmi: !this.state.showEmi }, () => {
       if (this.state.showEmi) {
-        let scroll = document.getElementById("content");
+        let scroll = document.getElementById("viewTermsAndConditionEmi");
         scroll.scrollIntoView();
       }
     });
@@ -75,7 +75,7 @@ export default class EmiModal extends React.Component {
                 );
               })}
           </div>
-          <div className={styles.info} id="content">
+          <div className={styles.info} id="viewTermsAndConditionEmi">
             <UnderLinedButton
               label={
                 this.state.showEmi
