@@ -151,11 +151,21 @@ class ProductListingsPage extends Component {
 
       this.props.getProductListings(searchText, SUFFIX, page);
     }
+
+    if (!this.props.location.state) {
+      const searchText = this.getSearchTextFromUrl();
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
+      }
+      this.props.getProductListings(searchText, SUFFIX, page);
+    }
   }
 
   componentDidUpdate() {
     let page = null;
-
+    console.log("COMPONENT DID UPDATE");
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;
       const searchText = `:relevance:collectionIds:${skuId}`;
@@ -186,6 +196,8 @@ class ProductListingsPage extends Component {
       return;
     }
     page = 0;
+    console.log("THIS.PROPS.LOCATION>STATE");
+    console.log(this.props.location.state);
     if (
       this.props.location.state &&
       this.props.location.state.isFilter === true
@@ -202,6 +214,16 @@ class ProductListingsPage extends Component {
       this.props.location.state &&
       this.props.location.state.isFilter === false
     ) {
+      const searchText = this.getSearchTextFromUrl();
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
+      }
+      this.props.getProductListings(searchText, SUFFIX, page);
+    }
+
+    if (!this.props.location.state) {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {
