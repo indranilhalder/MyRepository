@@ -176,7 +176,7 @@ export function getItems(positionInFeed, itemIds) {
         productCodes = `${itemId},${productCodes}`;
       });
       const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
-      const result = await api.get(url);
+      const result = await api.getMiddlewareUrl(url);
       const resultJson = await result.json();
 
       if (resultJson.status === "FAILURE") {

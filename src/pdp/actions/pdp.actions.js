@@ -153,7 +153,7 @@ export function getProductDescription(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductDescriptionRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
@@ -334,7 +334,7 @@ export function getProductSizeGuide(productCode) {
     dispatch(getProductSizeGuideRequest());
     try {
       const result = await api.getMiddlewareUrl(
-        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
