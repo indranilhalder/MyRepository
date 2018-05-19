@@ -1647,7 +1647,7 @@ export function getFollowedBrandsFailure(error) {
   };
 }
 
-export function getFollowedBrands() {
+export function getFollowedBrands(isSetDataLayer) {
   return async (dispatch, getState, { api }) => {
     const mcvId = await getMcvId();
 
@@ -1666,7 +1666,9 @@ export function getFollowedBrands() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      if (isSetDataLayer) {
+        setDataLayer(ADOBE_MY_ACCOUNT_BRANDS);
+      }
       dispatch(getFollowedBrandsSuccess(resultJson.data[0]));
     } catch (e) {
       dispatch(getFollowedBrandsFailure(e.message));
