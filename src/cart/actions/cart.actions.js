@@ -1733,7 +1733,11 @@ export function applyBankOffer(couponCode) {
           ADOBE_CALL_FOR_APPLY_COUPON_FAILURE,
           couponCode
         );
-        throw new Error(resultJsonStatus.message);
+        if (resultJson.couponMessage) {
+          throw new Error(resultJson.couponMessage);
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
       localStorage.setItem(BANK_COUPON_COOKIE, couponCode);
       setDataLayerForCheckoutDirectCalls(
@@ -2491,22 +2495,9 @@ export function createJusPayOrder(
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
         ) {
-          const redoCreateJusPayApi = () =>
-            dispatch(
-              createJusPayOrder(
-                token,
-                cartItem,
-                address,
-                cardDetails,
-                paymentMode,
-                false,
-                bankName
-              )
-            );
           dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
-              redoCreateJusPayApi,
               result: resultJson
             })
           );
@@ -2620,19 +2611,9 @@ export function createJusPayOrderForNetBanking(
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
         ) {
-          const redoCreateJusPayApi = () =>
-            dispatch(
-              createJusPayOrderForNetBanking(
-                paymentMethodType,
-                cartItem,
-                bankName,
-                pinCode
-              )
-            );
           dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
-              redoCreateJusPayApi,
               result: resultJson
             })
           );
@@ -2749,12 +2730,9 @@ export function createJusPayOrderForSavedCards(
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
         ) {
-          const redoCreateJusPayApi = () =>
-            dispatch(createJusPayOrderForSavedCards(cardDetails, cartItem));
           dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
-              redoCreateJusPayApi,
               result: resultJson
             })
           );
@@ -2851,7 +2829,6 @@ export function createJusPayOrderForCliqCash(
     cartId = JSON.parse(cartDetails).guid;
   }
 
-
   return async (dispatch, getState, { api }) => {
     dispatch(createJusPayOrderRequest());
 
@@ -2861,9 +2838,7 @@ export function createJusPayOrderForCliqCash(
           JSON.parse(userDetails).userName
         }/createJuspayOrder?state=&addressLine2=&lastName=&firstName=&addressLine3=&sameAsShipping=true&cardSaved=false&bankName=&cardFingerPrint=&platform=2&pincode=${pinCode}&city=&cartGuid=${cartId}&token=&cardRefNo=&country=&addressLine1=&access_token=${
           JSON.parse(customerCookie).access_token
-        }&juspayUrl=${encodeURIComponent(
-          jusPayUrl
-        )}&paymentMode=${CLIQ_CASH}`,
+        }&juspayUrl=${encodeURIComponent(jusPayUrl)}&paymentMode=${CLIQ_CASH}`,
         cartItem
       );
       const resultJson = await result.json();
@@ -2874,12 +2849,9 @@ export function createJusPayOrderForCliqCash(
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
           resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
         ) {
-          const redoCreateJusPayApi = () =>
-            dispatch(createJusPayOrderForCliqCash(pinCode, cartItem));
           dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
           return dispatch(
             showModal(INVALID_BANK_COUPON_POPUP, {
-              redoCreateJusPayApi,
               result: resultJson
             })
           );
@@ -3529,7 +3501,19 @@ export function updateTransactionDetailsForCOD(paymentMode, juspayOrderID) {
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 
       if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+        if (
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_1 ||
+          resultJson.errorCode === ERROR_CODE_FOR_BANK_OFFER_INVALID_2
+        ) {
+          dispatch(createJusPayOrderFailure(INVALID_COUPON_ERROR_MESSAGE));
+          return dispatch(
+            showModal(INVALID_BANK_COUPON_POPUP, {
+              result: resultJson
+            })
+          );
+        } else {
+          throw new Error(resultJsonStatus.message);
+        }
       }
 
       const oldUrl = window.location.href;
