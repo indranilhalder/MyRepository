@@ -229,6 +229,20 @@ class ProductReviewPage extends Component {
           .map(image => {
             return image[0].value;
           });
+      let seoDoublePrice = 0;
+      if (
+        this.props.productDetails.winningSellerPrice &&
+        this.props.productDetails.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = this.props.productDetails.winningSellerPrice
+          .doubleValue;
+      } else if (
+        this.props.productDetails.mrpPrice &&
+        this.props.productDetails.mrpPrice.doubleValue
+      ) {
+        seoDoublePrice = this.props.productDetails.mrpPrice.doubleValue;
+      }
+
       return (
         <PdpFrame
           {...this.props.productDetails}
@@ -236,7 +250,14 @@ class ProductReviewPage extends Component {
           gotoPreviousPage={() => this.goBack()}
         >
           {this.renderMetaTags()}
-          <div className={styles.base}>
+          <div
+            className={styles.base}
+            itemScope
+            itemType="http://schema.org/Product"
+          >
+            {this.props.productDetails.seo
+              ? renderMetaTags(this.props.productDetails)
+              : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
             <div className={styles.productBackground}>
               <ProductDetailsCard
                 productImage={mobileGalleryImages[0]}
@@ -248,6 +269,7 @@ class ProductReviewPage extends Component {
                   this.props.productDetails.winningSellerPrice
                     .formattedValueNoDecimal
                 }
+                seoDoublePrice={seoDoublePrice}
                 discountPrice={
                   this.props.productDetails &&
                   this.props.productDetails.mrpPrice &&

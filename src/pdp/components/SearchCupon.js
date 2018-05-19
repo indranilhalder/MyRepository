@@ -51,6 +51,7 @@ export default class SearchCupon extends React.Component {
             textStyle={{ fontSize: 14 }}
             height={35}
             disabled={true}
+            background="#fff"
           />
         </div>
       </div>

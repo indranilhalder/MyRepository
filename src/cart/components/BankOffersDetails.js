@@ -98,8 +98,8 @@ class BankOffersDetails extends Component {
     return (
       <div className={styles.base}>
         <SlideModal {...this.props}>
-          <div className={styles.couponHeader}>{COUPON_HEADER}</div>
-          <div>
+          <div className={styles.dataHolder}>
+            <div className={styles.couponHeader}>{COUPON_HEADER}</div>
             <div className={styles.searchHolder}>
               <SearchCupon
                 label={

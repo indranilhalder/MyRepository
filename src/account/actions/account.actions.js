@@ -1647,7 +1647,7 @@ export function getFollowedBrandsFailure(error) {
   };
 }
 
-export function getFollowedBrands() {
+export function getFollowedBrands(isSetDataLayer) {
   return async (dispatch, getState, { api }) => {
     const mcvId = await getMcvId();
 
@@ -1666,7 +1666,9 @@ export function getFollowedBrands() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      if (isSetDataLayer) {
+        setDataLayer(ADOBE_MY_ACCOUNT_BRANDS);
+      }
       dispatch(getFollowedBrandsSuccess(resultJson.data[0]));
     } catch (e) {
       dispatch(getFollowedBrandsFailure(e.message));
@@ -1977,9 +1979,8 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
       }
       if (fromCheckout) {
         dispatch(hideModal(GIFT_CARD_MODAL));
-        let guIdObject = new FormData();
-        guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
-        dispatch(getPaymentModes(guIdObject));
+
+        dispatch(getPaymentModes(JSON.parse(cartDetails).guid));
       }
       return dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {

@@ -10,7 +10,7 @@ import { setHeaderText } from "../../general/header.actions";
 const mapDispatchToProps = dispatch => {
   return {
     getFollowedBrands: () => {
-      dispatch(getFollowedBrands());
+      dispatch(getFollowedBrands(true)); // true is passing for set data layer on my account page
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
