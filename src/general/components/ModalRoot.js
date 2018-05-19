@@ -448,6 +448,7 @@ export default class ModalRoot extends React.Component {
           resendOtp={userName =>
             this.resendOtpForUpdateProfile(this.props.ownProps)
           }
+          onClickWrongNumber={() => this.handleClose()}
         />
       ),
       ForgotPasswordOtpVerification: (

@@ -233,6 +233,7 @@ export default class PdpApparel extends React.Component {
     ) {
       this.props.showSizeSelector({
         sizeSelected: this.checkIfSizeSelected(),
+        productName: this.props.productDetails.productName,
         productId: this.props.productDetails.productListingId,
         showSizeGuide: this.props.showSizeGuide,
         hasSizeGuide: this.props.productDetails.showSizeGuide,
@@ -412,10 +413,7 @@ export default class PdpApparel extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay
-              labelText="Not serviceable in you pincode,
-  please try another pincode"
-            >
+            <Overlay labelText="This item can't be delivered to your PIN code">
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}
