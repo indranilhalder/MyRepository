@@ -46,9 +46,6 @@ const mapStateToProps = (state, ownProps) => {
     isFilterOpen = true;
   }
 
-  console.log("PRODUCT LISTINGS");
-  console.log(state.productListings.productListings);
-
   return {
     onFilterClick: ownProps.onFilterClick,
     isFilterOpen,
