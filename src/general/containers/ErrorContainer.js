@@ -44,7 +44,7 @@ const mapStateToProps = state => {
     addUserAddressError: state.profile.addUserAddressError,
     followedBrandsError: state.profile.followedBrandsError,
     cliqCashUserDetailsError: state.profile.cliqCashUserDetailsError,
-    cliqCashVoucherDetailsError: state.profile.cliqCashUserDetailsError,
+    cliqCashVoucherDetailsError: state.profile.cliqCashVoucherDetailsError,
     returnPinCodeError: state.profile.returnPinCodeError,
     giftCardsError: state.profile.giftCardsError,
     giftCardDetailsError: state.profile.giftCardDetailsError,
