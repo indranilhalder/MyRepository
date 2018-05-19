@@ -195,8 +195,6 @@ class ProductListingsPage extends Component {
       return;
     }
     page = 0;
-    console.log("THIS.PROPS.LOCATION>STATE");
-    console.log(this.props.location.state);
     if (
       this.props.location.state &&
       this.props.location.state.isFilter === true
