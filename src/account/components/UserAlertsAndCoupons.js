@@ -47,12 +47,6 @@ export default class UserAlertsAndCoupons extends React.Component {
     }
   }
   componentDidUpdate() {
-    const { pathname } = this.props.history.location;
-    if (pathname === URL_PATH_ALERTS) {
-      setDataLayer(ADOBE_MY_ACCOUNT_ALERTS);
-    } else if (pathname === URL_PATH_COUPONS) {
-      setDataLayer(ADOBE_MY_ACCOUNT_COUPONS);
-    }
     this.props.setHeaderText(ALERTS_COUPON);
   }
   renderToAlerts() {
