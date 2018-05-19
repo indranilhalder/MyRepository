@@ -251,7 +251,9 @@ export default class OrderDetails extends React.Component {
                           ) / 100
                         : "0.00"
                     }
-                    cliqCashAmountDeducted={orderDetails.cliqCashAmountDeducted}
+                    cliqCashAmountDeducted={
+                      orderDetails && orderDetails.cliqCashAmountDeducted
+                    }
                   />
                 </div>
                 <OrderPaymentMethod
