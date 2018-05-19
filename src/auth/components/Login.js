@@ -39,7 +39,16 @@ class Login extends Component {
     };
   }
   componentDidMount() {
-    setDataLayer(ADOBE_LOGIN_AND_SIGN_UP_PAGE);
+    const digitalData = window.digitalData;
+    if (
+      digitalData &&
+      digitalData.page &&
+      digitalData.page &&
+      digitalData.page.pageInfo &&
+      digitalData.page.pageInfo.pageName !== "login"
+    ) {
+      setDataLayer(ADOBE_LOGIN_AND_SIGN_UP_PAGE);
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
