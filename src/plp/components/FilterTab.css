@@ -4,12 +4,12 @@
   background-color: #dedede;
   border-bottom: 1px solid #d0d0d0;
   position: relative;
-  line-height: 49px;
-  padding: 5px 40px 5px 15px;
+
+  padding: 10px 40px 10px 15px;
 }
 .selected {
   width: auto;
-  height: auto;
+  height: 25px;
   text-align: right;
   position: absolute;
   vertical-align: middle;
@@ -20,6 +20,7 @@
   margin: auto;
   text-align: center;
   padding: 0px 15px;
+  line-height: 25px;
 }
 .selectedActive {
   composes: base;

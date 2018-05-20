@@ -75,7 +75,7 @@ export default class HelpDetails extends React.Component {
             </div>
             Returns
           </div>
-          <div className={styles.helpCard}>
+          <div className={styles.helpCardCall}>
             <div className={styles.iconHolder}>
               <Icon image={customerCareIcon} size={25} />
             </div>
