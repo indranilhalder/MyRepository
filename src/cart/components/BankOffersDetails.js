@@ -9,7 +9,7 @@ import {
   RELEASE_BANK_OFFER_FAILURE,
   APPLY_BANK_OFFER_FAILURE
 } from "../actions/cart.actions";
-const COUPON_HEADER = "Bank promotions";
+const COUPON_HEADER = "Bank Offers";
 const REMOVE = "Remove";
 const APPLY = "Apply";
 class BankOffersDetails extends Component {
@@ -20,7 +20,6 @@ class BankOffersDetails extends Component {
       selectedBankOfferCode: props.selectedBankOfferCode
     };
   }
-
   async applyUserCoupon() {
     if (this.state.selectedBankOfferCode) {
       if (
@@ -110,6 +109,7 @@ class BankOffersDetails extends Component {
                     ? REMOVE
                     : APPLY
                 }
+                placeholder="Bank Offer Code"
                 couponCode={this.state.selectedBankOfferCode}
                 getValue={selectedBankOfferCode =>
                   this.setState({ selectedBankOfferCode })
@@ -117,7 +117,6 @@ class BankOffersDetails extends Component {
                 applyUserCoupon={() => this.applyUserCoupon()}
               />
             </div>
-
             <GridSelect
               elementWidthMobile={100}
               offset={0}

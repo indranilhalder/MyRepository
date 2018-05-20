@@ -28,7 +28,7 @@ export default class BrandsLandingPageDefault extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showFollowing: false,
+      showFollowing: true,
       currentActiveBrandType: 0,
       searchBy: null
     };
@@ -53,7 +53,9 @@ export default class BrandsLandingPageDefault extends React.Component {
     }
   }
   switchTab(val) {
-    this.setState({ currentActiveBrandType: val });
+    if (val && this.state.currentActiveBrandType !== val) {
+      this.setState({ currentActiveBrandType: val });
+    }
   }
   handleShowFollow() {
     const showFollowing = !this.state.showFollowing;
@@ -76,6 +78,13 @@ export default class BrandsLandingPageDefault extends React.Component {
     if (!brandsStores) {
       return null;
     }
+
+    var showFollowBrands =
+      this.props.followedBrands &&
+      this.props.followedBrands.filter(function(item) {
+        return item["isFollowing"] === "true";
+      });
+
     const brandList = map(brandsStores, brandName => {
       return brandName.subType;
     });
@@ -103,7 +112,6 @@ export default class BrandsLandingPageDefault extends React.Component {
       return list.brandName[0];
     });
     const parentBrandsLabel = Object.keys(currentActiveBrandList);
-
     return (
       <div className={styles.base}>
         <div className={styles.header}>
@@ -155,7 +163,9 @@ export default class BrandsLandingPageDefault extends React.Component {
             })}
         </div>
         {userDetails &&
-          customerCookie && (
+          customerCookie &&
+          showFollowBrands &&
+          showFollowBrands.length > 0 && (
             <div className={styles.following}>
               <div
                 className={

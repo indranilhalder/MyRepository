@@ -45,11 +45,12 @@ export default class SearchCupon extends React.Component {
         <div className={styles.inputHolder}>
           <Input2
             boxy={true}
-            placeholder="Enter Coupon code"
+            placeholder={this.props.placeholder}
             onChange={val => this.getValue(val)}
             value={this.state.couponCode}
             textStyle={{ fontSize: 14 }}
             height={35}
+            disabled={true}
             background="#fff"
           />
         </div>
@@ -59,9 +60,11 @@ export default class SearchCupon extends React.Component {
 }
 SearchCupon.propTypes = {
   label: PropTypes.string,
+  placeholder: PropTypes.string,
   getValue: PropTypes.func,
   onApply: PropTypes.func
 };
 SearchCupon.defaultProps = {
-  label: "Apply"
+  label: "Apply",
+  placeholder: "Bank Offer Code"
 };
