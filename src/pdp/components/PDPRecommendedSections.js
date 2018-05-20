@@ -54,6 +54,7 @@ class PDPRecommendedSections extends React.Component {
             {brandId && (
               <div className={styles.followButton}>
                 <FollowUnFollowButtonContainer
+                  color="#212121"
                   brandId={brandId}
                   isFollowing={this.props.aboutTheBrand.isFollowing}
                   pageType={PDP_FOLLOW_AND_UN_FOLLOW}
