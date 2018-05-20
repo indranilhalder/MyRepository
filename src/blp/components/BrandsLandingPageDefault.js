@@ -53,7 +53,9 @@ export default class BrandsLandingPageDefault extends React.Component {
     }
   }
   switchTab(val) {
-    this.setState({ currentActiveBrandType: val });
+    if (val && this.state.currentActiveBrandType !== val) {
+      this.setState({ currentActiveBrandType: val });
+    }
   }
   handleShowFollow() {
     const showFollowing = !this.state.showFollowing;
@@ -110,7 +112,6 @@ export default class BrandsLandingPageDefault extends React.Component {
       return list.brandName[0];
     });
     const parentBrandsLabel = Object.keys(currentActiveBrandList);
-
     return (
       <div className={styles.base}>
         <div className={styles.header}>
