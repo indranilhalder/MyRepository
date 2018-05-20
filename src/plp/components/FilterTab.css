@@ -9,7 +9,7 @@
 }
 .selected {
   width: auto;
-  height: auto;
+  height: 50px;
   text-align: right;
   position: absolute;
   vertical-align: middle;
