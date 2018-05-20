@@ -584,9 +584,17 @@ class CheckOutPage extends React.Component {
     );
   }
   changeDeliveryAddress = () => {
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
     if (this.state.captchaReseponseForCOD) {
       window.grecaptcha.reset();
     }
+    if(this.state.isCliqCashApplied)
+    {
+      this.removeCliqCash();
+    }
+    if (noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
+   }
     this.setState({
       cardDetails: {},
       bankCodeForNetBanking: null,
@@ -600,7 +608,8 @@ class CheckOutPage extends React.Component {
       confirmAddress: false,
       deliverMode: false,
       isSelectedDeliveryModes: false,
-      currentPaymentMode:null
+      currentPaymentMode:null,
+      isCliqCashApplied:false
     });
 
   };
@@ -1225,9 +1234,17 @@ class CheckOutPage extends React.Component {
     }
   }
   changeDeliveryModes = () => {
+    let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
     if (this.state.captchaReseponseForCOD) {
       window.grecaptcha.reset();
     }
+    if(this.state.isCliqCashApplied)
+    {
+      this.removeCliqCash();
+    }
+    if (noCostEmiCouponCode) {
+      this.removeNoCostEmi(noCostEmiCouponCode);
+   }
     this.setState({
       cardDetails: {},
       bankCodeForNetBanking: null,
@@ -1239,7 +1256,8 @@ class CheckOutPage extends React.Component {
       paymentModeSelected: null,
       binValidationCOD: false,
       deliverMode: false,
-      currentPaymentMode:null
+      currentPaymentMode:null,
+      isCliqCashApplied:false,
     });
 
   };
@@ -1384,7 +1402,7 @@ class CheckOutPage extends React.Component {
         );
       }
     }
-    if (!this.state.isRemainingAmount) {
+    if (!this.state.isRemainingAmount && this.state.isCliqCashApplied) {
       this.props.createJusPayOrderForCliqCash(
         localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
         true // for payment failure we need to use old cart id
