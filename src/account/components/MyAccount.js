@@ -165,7 +165,7 @@ export default class MyAccount extends React.Component {
                 <AccountUsefulLink>
                   <div className={styles.usefulLinkText}>
                     <div className={styles.callClass}>
-                      <a href="tel:02262313777">Call Tata CLIQ Care</a>
+                      <a href="tel:9029108282">Call Tata CLIQ Care</a>
                     </div>
                   </div>
                 </AccountUsefulLink>
