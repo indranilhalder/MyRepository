@@ -22,7 +22,9 @@ export default class OrderPaymentMethod extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.paymentHolder}>
-          <div className={styles.paymentMethod}>Payment Method</div>
+          {this.props.paymentMethod && (
+            <div className={styles.paymentMethod}>Payment Method</div>
+          )}
           {this.props.isInvoiceAvailable &&
             isDelivered && (
               <div className={styles.requestHolder}>

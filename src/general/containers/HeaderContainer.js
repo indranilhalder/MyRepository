@@ -20,7 +20,9 @@ const mapStateToProps = state => {
   return {
     headerText: state.header.text,
     isPlpFilterOpen: state.productListings.isFilterOpen,
-    bagCount: state.header.bagCount
+    bagCount: state.header.bagCount,
+    orderConfirmationDetails: state.cart.orderConfirmationDetails,
+    cliqCashJusPayDetails: state.cart.cliqCashJusPayDetails
   };
 };
 

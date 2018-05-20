@@ -50,7 +50,7 @@ export default class SearchCupon extends React.Component {
             value={this.state.couponCode}
             textStyle={{ fontSize: 14 }}
             height={35}
-            disabled={true}
+            disabled={this.props.disableManualType}
             background="#fff"
           />
         </div>
