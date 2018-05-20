@@ -25,7 +25,7 @@ const mapStateToProps = (state, ownProps) => {
         ? FOLLOWING
         : FOLLOW,
     type: "hollow",
-    color: "#fff"
+    color: ownProps.color ? ownProps.color : "#fff"
   };
 };
 
