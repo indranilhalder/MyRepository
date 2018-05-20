@@ -101,6 +101,10 @@ const productListings = (
         toUpdate.paginatedLoading = false;
         toUpdate.loading = true;
       }
+
+      if (!action.isPaginated && !action.isFilter) {
+        toUpdate.productListings = null;
+      }
       return Object.assign({}, state, toUpdate);
     case plpActions.PRODUCT_LISTINGS_SUCCESS:
       toUpdate = {
