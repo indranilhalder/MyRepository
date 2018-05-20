@@ -215,11 +215,7 @@ export default class AllDescription extends React.Component {
             )}
           </React.Fragment>
         )}
-        <div
-          className={
-            !this.state.showAll ? styles.buttonHolder : styles.noBackground
-          }
-        >
+        <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button
               type="hollow"
