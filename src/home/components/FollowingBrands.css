@@ -29,3 +29,6 @@
   vertical-align: bottom;
   padding: 0px 10px;
 }
+.dummyCaurousel::-webkit-scrollbar {
+  display: none;
+}
