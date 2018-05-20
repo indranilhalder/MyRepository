@@ -142,9 +142,6 @@ class ErrorDisplay extends React.Component {
     if (message !== FAILED_TO_FETCH) {
       this.props.displayToast(message);
       delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
-    } else {
-      this.props.displayToast("");
-      delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
     }
   }
 
