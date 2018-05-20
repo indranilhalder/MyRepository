@@ -2,10 +2,23 @@ import React from "react";
 import styles from "./ReviewPage.css";
 import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating";
+import format from "date-fns/format";
+
 const INVALID_DATE = "Invalid Date";
 export default class ReviewPage extends React.Component {
   render() {
-    const date = new Date(this.props.date).toDateString();
+    let formattedDate;
+    if (this.props.date && this.props.date.indexOf("T") > -1) {
+      let dateOfBirth = new Date(this.props.date.split("T").join());
+      formattedDate = format(dateOfBirth, "YYYY-MM-DD");
+    } else if (this.props.date) {
+      formattedDate = this.props.date
+        .split("/")
+        .reverse()
+        .join("-");
+    }
+    let date = Date(formattedDate, "MM-dd-YYYY");
+    date = new Date(date).toDateString();
     return (
       <div className={styles.base}>
         {this.props.rating && (
@@ -19,8 +32,8 @@ export default class ReviewPage extends React.Component {
         {this.props.text && (
           <div className={styles.text}>{this.props.text}</div>
         )}
-        {this.props.date &&
-          this.props.date !== INVALID_DATE && (
+        {date &&
+          date !== INVALID_DATE && (
             <div className={styles.dateTimeBox}>{date}</div>
           )}
       </div>
