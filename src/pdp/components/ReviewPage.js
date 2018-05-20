@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./ReviewPage.css";
 import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating";
+const INVALID_DATE = "Invalid Date";
 export default class ReviewPage extends React.Component {
   render() {
     const date = new Date(this.props.date).toDateString();
@@ -18,7 +19,10 @@ export default class ReviewPage extends React.Component {
         {this.props.text && (
           <div className={styles.text}>{this.props.text}</div>
         )}
-        {this.props.date && <div className={styles.dateTimeBox}>{date}</div>}
+        {this.props.date &&
+          this.props.date !== INVALID_DATE && (
+            <div className={styles.dateTimeBox}>{date}</div>
+          )}
       </div>
     );
   }
