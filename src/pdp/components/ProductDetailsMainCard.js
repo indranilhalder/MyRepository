@@ -115,7 +115,9 @@ export default class ProductDetailsMainCard extends React.Component {
                   itemType="http://schema.org/AggregateRating"
                 >
                   Rating
-                  <span itemProp="ratingValue">{averageRating}</span>/5
+                  <span className={styles.ratingOffset} itemProp="ratingValue">
+                    {averageRating}
+                  </span>/5
                   <meta
                     itemProp="reviewCount"
                     content={this.props.totalNoOfReviews}

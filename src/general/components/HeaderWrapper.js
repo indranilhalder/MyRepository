@@ -51,20 +51,21 @@ class HeaderWrapper extends React.Component {
     }
 
     if (productCode) {
-      if (this.props.location.state.isComingFromPlp) {
+      if (
+        this.props.location.state &&
+        this.props.location.state.isComingFromPlp
+      ) {
         this.props.setIsGoBackFromPDP();
       }
     }
 
+    // here in case of checkout page after payment  success or failure
+    // if user click on back button then we have to take user on home page
     const parsedQueryString = queryString.parse(this.props.location.search);
-    const value = parsedQueryString.status;
-
-    if (
-      value === JUS_PAY_CHARGED ||
-      value === JUS_PAY_PENDING ||
-      value === JUS_PAY_AUTHENTICATION_FAILED
-    ) {
-      window.history.go(-2);
+    const paymentStatus = parsedQueryString.status;
+    if (paymentStatus) {
+      this.props.history.push(HOME_ROUTER);
+      return;
     } else {
       this.props.history.goBack();
     }

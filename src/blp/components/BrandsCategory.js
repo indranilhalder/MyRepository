@@ -6,10 +6,7 @@ export default class BrandsCategory extends React.Component {
     return (
       <div className={styles.base}>
         <div className={styles.brandIndex}>{this.props.index}</div>
-        <div className={styles.listHolder}>
-          <div className={styles.catagoryText}>{this.props.catagory}</div>
-          {this.props.children}
-        </div>
+        <div className={styles.listHolder}>{this.props.children}</div>
       </div>
     );
   }
