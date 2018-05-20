@@ -107,15 +107,18 @@ export default class ReturnSummary extends React.Component {
               </div>
             )}
           </OrderCard>
-          <ReturnsToBank
-            cartNumber={
-              this.props.orderDetails &&
-              this.props.orderDetails.paymentCardDigit
-            }
-            cardLogo={this.getCardLogo(
-              this.props.orderDetails && this.props.orderDetails.paymentCard
+          {this.props.orderDetails &&
+            this.props.orderDetails.paymentCardDigit && (
+              <ReturnsToBank
+                cartNumber={
+                  this.props.orderDetails &&
+                  this.props.orderDetails.paymentCardDigit
+                }
+                cardLogo={this.getCardLogo(
+                  this.props.orderDetails && this.props.orderDetails.paymentCard
+                )}
+              />
             )}
-          />
         </div>
       </ReturnsFrame>
     );

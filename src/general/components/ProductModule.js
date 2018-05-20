@@ -35,7 +35,11 @@ export default class ProductModule extends React.Component {
     }
 
     if (this.props.onClick) {
-      this.props.onClick(urlSuffix);
+      this.props.onClick(
+        urlSuffix,
+        null,
+        `ProductModule-${this.props.productId}`
+      );
     }
   };
   handleConnect = () => {
@@ -50,7 +54,11 @@ export default class ProductModule extends React.Component {
     }
 
     return (
-      <div className={styles.base} onClick={this.onClick}>
+      <div
+        className={styles.base}
+        onClick={this.onClick}
+        id={`ProductModule-${this.props.productId}`}
+      >
         <div
           className={
             this.props.view === "grid"

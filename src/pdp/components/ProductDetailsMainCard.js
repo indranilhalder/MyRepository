@@ -110,8 +110,16 @@ export default class ProductDetailsMainCard extends React.Component {
                 <div
                   className={styles.ratingText}
                   onClick={() => this.handleClick()}
+                  itemProp="aggregateRating"
+                  itemScope
+                  itemType="http://schema.org/AggregateRating"
                 >
-                  Rating {`${averageRating}`}/5
+                  Rating
+                  <span itemProp="ratingValue">{averageRating}</span>/5
+                  <meta
+                    itemProp="reviewCount"
+                    content={this.props.totalNoOfReviews}
+                  />
                 </div>
               )}
               <div className={styles.arrowHolder}>

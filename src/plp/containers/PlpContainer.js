@@ -6,7 +6,8 @@ import { setHeaderText } from "../../general/header.actions";
 import {
   showFilter,
   hideFilter,
-  setIfFilterHasBeenClicked
+  setIfFilterHasBeenClicked,
+  setProductModuleRef
 } from "../../plp/actions/plp.actions.js";
 import { displayToast } from "../../general/toast.actions";
 
@@ -32,6 +33,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     setIfFilterHasBeenClicked: () => {
       dispatch(setIfFilterHasBeenClicked());
+    },
+    setProductModuleRef: ref => {
+      dispatch(setProductModuleRef(ref));
     }
   };
 };
