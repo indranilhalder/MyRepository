@@ -14,7 +14,7 @@
   font-size: 9px;
   font-family: regular;
   position: absolute;
-  right: 14px;
+  right: -3px;
   text-align: center;
   color: #fff;
   line-height: 14px;
@@ -37,6 +37,7 @@
   width: 25px;
   height: 25px;
   display: inline-block;
+  position: relative;
 }
 .footerText {
   width: 100%;

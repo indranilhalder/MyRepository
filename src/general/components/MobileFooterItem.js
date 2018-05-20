@@ -11,10 +11,6 @@ export default class MobileFooterItem extends React.Component {
   render() {
     return (
       <div className={styles.base} onClick={() => this.handleSelect()}>
-        {this.props.bagCount > 0 && (
-          <div className={styles.count}>{this.props.bagCount}</div>
-        )}
-
         <div
           className={
             this.props.selected !== this.props.value
@@ -23,6 +19,9 @@ export default class MobileFooterItem extends React.Component {
           }
         >
           <div className={styles.iconHolder}>
+            {this.props.bagCount > 0 && (
+              <div className={styles.count}>{this.props.bagCount}</div>
+            )}
             <Icon image={this.props.basicIcon} size={25} />
           </div>
           <div className={styles.footerText}>{this.props.text}</div>
