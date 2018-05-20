@@ -51,7 +51,10 @@ class HeaderWrapper extends React.Component {
     }
 
     if (productCode) {
-      if (this.props.location.state.isComingFromPlp) {
+      if (
+        this.props.location.state &&
+        this.props.location.state.isComingFromPlp
+      ) {
         this.props.setIsGoBackFromPDP();
       }
     }
