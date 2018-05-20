@@ -49,6 +49,9 @@
   -webkit-margin-before: inherit;
   -webkit-margin-after: inherit;
   font-weight: inherit;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .searchHolder {
   position: absolute;

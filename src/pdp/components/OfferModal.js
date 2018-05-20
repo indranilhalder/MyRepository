@@ -10,9 +10,13 @@ export default class OfferModal extends React.Component {
           <div className={styles.header}>Offers</div>
           {this.props.potentialPromotions && (
             <div className={styles.content}>
-              <div className={styles.headingText}>
-                {this.props.potentialPromotions.title}
-              </div>
+              <div
+                className={styles.headingText}
+                dangerouslySetInnerHTML={{
+                  __html: this.props.potentialPromotions.title
+                }}
+              />
+
               {this.props.potentialPromotions.description && (
                 <div className={styles.section}>
                   <div
@@ -38,9 +42,13 @@ export default class OfferModal extends React.Component {
           {this.props.secondaryPromotions && (
             <div className={styles.content}>
               <div className={styles.border} />
-              <div className={styles.headingText}>
-                {this.props.secondaryPromotions.messageID}
-              </div>
+              <div
+                className={styles.headingText}
+                dangerouslySetInnerHTML={{
+                  __html: this.props.secondaryPromotions.messageID
+                }}
+              />
+
               {this.props.secondaryPromotions.messageDetails && (
                 <div className={styles.section}>
                   <div
