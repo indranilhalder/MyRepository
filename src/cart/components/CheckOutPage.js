@@ -584,11 +584,25 @@ class CheckOutPage extends React.Component {
     );
   }
   changeDeliveryAddress = () => {
+    if (this.state.captchaReseponseForCOD) {
+      window.grecaptcha.reset();
+    }
     this.setState({
+      cardDetails: {},
+      bankCodeForNetBanking: null,
+      savedCardDetails: null,
+      captchaReseponseForCOD: null,
+      noCostEmiBankName: null,
+      noCostEmiDiscount: "0.00",
+      isNoCostEmiProceeded: false,
+      paymentModeSelected: null,
+      binValidationCOD: false,
       confirmAddress: false,
       deliverMode: false,
-      isSelectedDeliveryModes: false
+      isSelectedDeliveryModes: false,
+      currentPaymentMode:null
     });
+
   };
 
   componentWillReceiveProps(nextProps) {
@@ -1211,7 +1225,23 @@ class CheckOutPage extends React.Component {
     }
   }
   changeDeliveryModes = () => {
-    this.setState({ deliverMode: false });
+    if (this.state.captchaReseponseForCOD) {
+      window.grecaptcha.reset();
+    }
+    this.setState({
+      cardDetails: {},
+      bankCodeForNetBanking: null,
+      savedCardDetails: null,
+      captchaReseponseForCOD: null,
+      noCostEmiBankName: null,
+      noCostEmiDiscount: "0.00",
+      isNoCostEmiProceeded: false,
+      paymentModeSelected: null,
+      binValidationCOD: false,
+      deliverMode: false,
+      currentPaymentMode:null
+    });
+
   };
 
   onChange(val) {
@@ -1858,6 +1888,7 @@ class CheckOutPage extends React.Component {
       (this.state.confirmAddress && !this.state.deliverMode) ||
       this.state.isGiftCard
     ) {
+
       labelForButton = PROCEED;
     } else if (
       this.state.currentPaymentMode === CASH_ON_DELIVERY_PAYMENT_MODE
