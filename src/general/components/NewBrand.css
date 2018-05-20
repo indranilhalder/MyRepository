@@ -19,11 +19,6 @@
 .brandOverlay {
   composes: imageHolder;
   text-align: center;
-  background-image: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 75) 0,
-    rgba(0, 0, 0, 0) 60%
-  );
 }
 
 .brandTextHolder {
@@ -33,7 +28,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px 110px 30px 20px;
+  padding: 20px 120px 30px 20px;
 }
 
 .brandLogo {
@@ -59,7 +54,7 @@
   font-size: 14px;
   font-family: regular;
   display: inline-block;
-  vertical-align: top;
+  vertical-align: bottom;
   line-height: normal;
   white-space: normal;
 }
