@@ -24,7 +24,8 @@ const mapStateToProps = (state, ownProps) => {
       ownProps.isFollowing === "true" || ownProps.isFollowing === true
         ? FOLLOWING
         : FOLLOW,
-    type: "tertiary"
+    type: "hollow",
+    color: "#fff"
   };
 };
 
