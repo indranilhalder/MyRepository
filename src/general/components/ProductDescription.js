@@ -83,15 +83,37 @@ export default class ProductDescription extends Component {
             this.props.minPrice &&
             this.props.maxPrice && (
               <div className={styles.description}>
-                {this.props.minPrice.toString().includes(RUPEE_SYMBOL)
-                  ? this.props.minPrice
-                  : `${RUPEE_SYMBOL}${this.props.minPrice}`}{" "}
                 {this.props.maxPrice !== this.props.minPrice && (
                   <React.Fragment>
+                    {this.props.minPrice.toString().includes(RUPEE_SYMBOL)
+                      ? this.props.minPrice
+                      : `${RUPEE_SYMBOL}${this.props.minPrice}`}{" "}
                     -{" "}
                     {this.props.maxPrice.toString().includes(RUPEE_SYMBOL)
                       ? this.props.maxPrice
                       : `${RUPEE_SYMBOL}${this.props.maxPrice}`}
+                  </React.Fragment>
+                )}
+                {this.props.maxPrice === this.props.minPrice && (
+                  <React.Fragment>
+                    {" "}
+                    {this.props.discountPrice &&
+                      this.props.discountPrice !== this.props.price && (
+                        <div className={styles.discount}>
+                          {this.props.discountPrice
+                            .toString()
+                            .includes(RUPEE_SYMBOL)
+                            ? this.props.discountPrice
+                            : `${RUPEE_SYMBOL}${this.props.discountPrice}`}
+                        </div>
+                      )}
+                    {this.props.price && (
+                      <div className={priceClass}>
+                        {this.props.price.toString().includes(RUPEE_SYMBOL)
+                          ? this.props.price
+                          : `${RUPEE_SYMBOL}${this.props.price}`}
+                      </div>
+                    )}{" "}
                   </React.Fragment>
                 )}
               </div>

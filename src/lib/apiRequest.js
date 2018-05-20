@@ -13,7 +13,7 @@ import { CUSTOMER_ACCESS_TOKEN, GLOBAL_ACCESS_TOKEN } from "../lib/constants";
 import { USER_CART_PATH } from "../cart/actions/cart.actions";
 let API_URL_ROOT = "https://uat2.tataunistore.com/marketplacewebservices";
 let MIDDLEWARE_API_URL_ROOT =
-  "http://tmppprd.tataque.com/marketplacewebservices";
+  "https://tmppprd.tataunistore.com/marketplacewebservices";
 export let TATA_CLIQ_ROOT = /https?:[\/]{2}\S*?(\/\S*)/;
 export const TOKEN_PATH = "oauth/token";
 export let URL_ROOT = "";
@@ -28,13 +28,14 @@ if (
     "https://uat2.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "tmpprod") {
   API_URL_ROOT = "https://tmppprd.tataunistore.com/marketplacewebservices";
-  MIDDLEWARE_API_URL_ROOT = "http://tmppprd.tataque.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT =
+    "https://tmppprd.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
-  MIDDLEWARE_API_URL_ROOT = "https://app.tatacliq.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "p2") {
   API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
-  MIDDLEWARE_API_URL_ROOT = "https://p2app.tatacliq.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "stage") {
   API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
   MIDDLEWARE_API_URL_ROOT = "https://stg.tatacliq.com/marketplacewebservices";
