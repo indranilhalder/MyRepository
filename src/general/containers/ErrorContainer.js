@@ -5,7 +5,7 @@ import React from "react";
 import delay from "lodash.delay";
 import keys from "lodash.keys";
 import each from "lodash.foreach";
-
+const FAILED_TO_FETCH = "Failed to fetch";
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
 // The errors for user, pdp and plp are universal errors
@@ -139,8 +139,10 @@ class ErrorDisplay extends React.Component {
   }
 
   displayError(message) {
-    this.props.displayToast(message);
-    delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
+    if (message !== FAILED_TO_FETCH) {
+      this.props.displayToast(message);
+      delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
+    }
   }
 
   render() {

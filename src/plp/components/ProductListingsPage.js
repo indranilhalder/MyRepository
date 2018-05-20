@@ -10,6 +10,7 @@ import {
   BRAND_PRODUCT_LISTINGS_WITH_PAGE,
   BRAND_PAGE_WITH_SLUG
 } from "../../lib/constants.js";
+import delay from "lodash.delay";
 import {
   CATEGORY_CAPTURE_REGEX,
   BRAND_REGEX,
@@ -24,6 +25,7 @@ const SKU_SUFFIX = `&isFilter=false&channel=mobile`;
 const PAGE_REGEX = /page-(\d+)/;
 const MAX_PRICE_FROM_API = "and Above";
 const MAX_PRICE_FROM_UI = "-₹9,999,999";
+
 class ProductListingsPage extends Component {
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
@@ -81,6 +83,18 @@ class ProductListingsPage extends Component {
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
     ) {
+      return;
+    }
+
+    if (this.props.isGoBackFromPdpPage) {
+      if (this.props.clickedProductModuleRef) {
+        const clickedElement = document.getElementById(
+          this.props.clickedProductModuleRef
+        );
+        if (clickedElement) {
+          delay(() => clickedElement.scrollIntoView(true), 50);
+        }
+      }
       return;
     }
 
@@ -165,6 +179,18 @@ class ProductListingsPage extends Component {
 
   componentDidUpdate() {
     let page = null;
+    if (this.props.isGoBackFromPdpPage) {
+      if (this.props.clickedProductModuleRef) {
+        const clickedElement = document.getElementById(
+          this.props.clickedProductModuleRef
+        );
+        if (clickedElement) {
+          delay(() => clickedElement.scrollIntoView(), 50);
+        }
+      }
+      return;
+    }
+
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;
       const searchText = `:relevance:collectionIds:${skuId}`;

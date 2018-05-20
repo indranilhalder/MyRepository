@@ -2,7 +2,7 @@
   width: 100%;
   height: auto;
   background: #fff;
-  padding: 15px 30px 15px 10px;
+  padding: 15px 40px 15px 10px;
   position: relative;
 }
 .linkArrow {
@@ -10,7 +10,7 @@
   height: 12px;
   position: absolute;
   top: 0px;
-  right: 10px;
+  right: 25px;
   bottom: 0;
   margin: auto;
   transform: rotate(-90deg);

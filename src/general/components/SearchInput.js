@@ -26,6 +26,7 @@ export default class SearchInput extends React.Component {
         placeholder={this.props.placeholder}
         onChange={val => this.handleOnChange(val)}
         value={this.state.value}
+        type="search"
         rightChild={
           <div className={styles.searchIcon}>
             <Icon image={searchIcon} size={15} />

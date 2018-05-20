@@ -35,7 +35,7 @@ class ProductReviewPage extends Component {
     this.state = {
       visible: false,
       sort: "byDate",
-      orderBy: "asc",
+      orderBy: "desc",
       sortValue: ""
     };
     this.filterOptions = [
@@ -287,7 +287,7 @@ class ProductReviewPage extends Component {
                     label={
                       this.state.sortValue
                         ? this.state.sortValue
-                        : "Oldest First"
+                        : "Newest First"
                     }
                     onChange={changedValue =>
                       this.changeFilterValues(changedValue)
