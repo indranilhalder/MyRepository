@@ -32,7 +32,6 @@ export default class FollowingBrands extends React.Component {
   };
 
   render() {
-    console.log(this.props);
     const followWidgetData = this.props.feedComponentData;
 
     return (
