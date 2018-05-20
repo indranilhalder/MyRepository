@@ -5,21 +5,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0">
   <meta name="theme-color" content="#000000">
-  <!--
+  <% if(htmlWebpackPlugin.options.stage === "production") { %>
+    <meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
+    <% } %>
+      <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+      <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+      <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 
-  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2" as="font" crossorigin="anonymous">
-  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff2" as="font" crossorigin="anonymous">
+      <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2" as="font" crossorigin="anonymous">
+      <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff2" as="font" crossorigin="anonymous">
 
-  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff2" as="font" crossorigin="anonymous">
-  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff" as="font" crossorigin="anonymous">
-  <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff" as="font" crossorigin="anonymous">
+      <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff2" as="font" crossorigin="anonymous">
+      <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff" as="font" crossorigin="anonymous">
+      <link rel="preload" href="https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff" as="font" crossorigin="anonymous">
 
-  <!--
+      <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -30,58 +33,58 @@
     -->
 
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: regular;
-    }
+      <style>
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: regular;
+        }
 
-    @font-face {
-      font-family: regular;
-      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff') format('woff'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff') format('woff')
-    }
+        @font-face {
+          font-family: regular;
+          src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff') format('woff'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-regular.woff') format('woff')
+        }
 
-    @font-face {
-      font-family: semibold;
-      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff') format('woff')
-    }
+        @font-face {
+          font-family: semibold;
+          src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-500.woff') format('woff')
+        }
 
-    @font-face {
-      font-family: bolder;
-      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff') format('woff')
-    }
+        @font-face {
+          font-family: bolder;
+          src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-700.woff') format('woff')
+        }
 
-    @font-face {
-      font-family: light;
-      src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2') format('woff')
-    }
+        @font-face {
+          font-family: light;
+          src: url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2') format('woff2'), url('https://pwassets.tatacliq.com/fonts/rubik-v7-latin-300.woff2') format('woff')
+        }
 
-    #root {
-      width: 100%;
-      overflow: hidden;
-    }
+        #root {
+          width: 100%;
+          overflow: hidden;
+        }
 
 
-    #modal-root {
-      width: 100vw;
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
+        #modal-root {
+          width: 100vw;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
 
-    #modal-root>div {
-      width: 100%;
-    }
+        #modal-root>div {
+          width: 100%;
+        }
 
-    h1,
-    h2,
-    h3 {
-      margin: 0px;
-      font-size: inherit;
-      font-weight: normal
-    }
-  </style>
+        h1,
+        h2,
+        h3 {
+          margin: 0px;
+          font-size: inherit;
+          font-weight: normal
+        }
+      </style>
 </head>
 
 <body>
