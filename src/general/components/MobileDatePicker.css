@@ -48,6 +48,15 @@
   padding: 0 10px;
   font-family: regular;
   background: #fff;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+input[type="date"],
+input[type="time"] {
+  -webkit-appearance: none;
+  -webkit-min-logical-width: calc(100% - 16px);
 }
 .placeholder {
   width: 100%;
