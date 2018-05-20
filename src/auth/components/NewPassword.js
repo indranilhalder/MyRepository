@@ -48,11 +48,19 @@ export default class NewPassword extends React.Component {
     } else {
       this.setState({ error: false });
       if (this.props.onContinue) {
-        this.props.onContinue({
-          newPassword: this.state.newPassword,
-          username: this.props.userObj.userName,
-          otp: this.props.userObj.otpDetails
-        });
+        if (this.props.userObj && this.props.userObj.userName) {
+          this.props.onContinue({
+            newPassword: this.state.newPassword,
+            username: this.props.userObj.userName,
+            otp: this.props.userObj.otpDetails
+          });
+        } else {
+          this.props.onContinue({
+            newPassword: this.state.newPassword,
+            username: this.props.userName,
+            otp: this.props.otpDetails
+          });
+        }
       }
     }
   }
