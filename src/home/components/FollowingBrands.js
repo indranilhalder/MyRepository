@@ -33,40 +33,21 @@ export default class FollowingBrands extends React.Component {
 
   render() {
     const followWidgetData = this.props.feedComponentData;
-    const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
-    const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-
-    if (followWidgetData.data && followWidgetData.data) {
-      let gotoMoreBands = followWidgetData.data;
-
-      if (gotoMoreBands) {
-        gotoMoreBands.push({
-          imageURL: plusButton,
-          isFollowing: "true",
-          fit: "1",
-          webURL: DEFAULT_BRANDS_LANDING_PAGE
-        });
-      }
-    }
 
     return (
       <div>
-        {userDetails &&
-          customerCookie &&
-          followWidgetData &&
+        {followWidgetData &&
           followWidgetData.data &&
           followWidgetData.data.filter(val => {
             return val.isFollowing === "true";
           }).length > 1 && (
             <div className={styles.base}>
-              <Carousel
-                header={
-                  this.props.feedComponentData.title
-                    ? this.props.feedComponentData.title
-                    : "Following Brands"
-                }
-                elementWidthMobile={30}
-              >
+              <div className={styles.header}>
+                {this.props.feedComponentData.title
+                  ? this.props.feedComponentData.title
+                  : "Following Brands"}
+              </div>
+              <div className={styles.dummyCaurousel}>
                 {followWidgetData.data &&
                   followWidgetData.data
                     .filter(val => {
@@ -74,17 +55,30 @@ export default class FollowingBrands extends React.Component {
                     })
                     .map((datum, i) => {
                       return (
-                        <BrandImage
-                          key={i}
-                          image={datum.imageURL}
-                          value={datum.webURL}
-                          fit={datum.fit}
-                          isFollowing={datum.isFollowing}
-                          onClick={this.handleBrandImageClick}
-                        />
+                        <div className={styles.element}>
+                          <BrandImage
+                            key={i}
+                            image={datum.imageURL}
+                            value={datum.webURL}
+                            fit={datum.fit}
+                            isFollowing={datum.isFollowing}
+                            onClick={this.handleBrandImageClick}
+                          />
+                        </div>
                       );
                     })}
-              </Carousel>
+                <React.Fragment>
+                  <div className={styles.element}>
+                    <BrandImage
+                      image={plusButton}
+                      value={DEFAULT_BRANDS_LANDING_PAGE}
+                      fit="1"
+                      isFollowing={true}
+                      onClick={this.handleBrandImageClick}
+                    />
+                  </div>
+                </React.Fragment>
+              </div>
             </div>
           )}
       </div>

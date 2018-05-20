@@ -4,7 +4,7 @@
 }
 
 .reviewText {
-  width: 30%;
+  width: 35%;
   text-align: right;
   text-decoration: underline;
   color: #181818;
@@ -13,7 +13,7 @@
   padding: 10px 0px;
   background: #fff;
   vertical-align: top;
-  margin-left: 20%;
+  margin-left: 10%;
   display: inline-block;
 }
 
