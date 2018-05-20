@@ -138,6 +138,7 @@ class ProductCouponDetails extends Component {
                   ? REMOVE
                   : APPLY
               }
+              disableManualType={false}
               placeholder="Enter Coupon code"
               couponCode={this.state.selectedCouponCode}
               getValue={selectedCouponCode =>
