@@ -13,9 +13,14 @@
   position: absolute;
   left: 0;
   top: 0;
-  transition: 300ms;
+  opacity: 0;
+  transition: 400ms;
   background-position: center;
   background-repeat: no-repeat;
+}
+.loaded {
+  composes: actual;
+  opacity: 1;
 }
 .failed {
   composes: actual;
