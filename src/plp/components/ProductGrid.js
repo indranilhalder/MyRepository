@@ -97,9 +97,6 @@ export default class ProductGrid extends React.Component {
     // }
   };
   render() {
-    console.log(this.props);
-
-    debugger;
     return (
       <div className={styles.base}>
         <div className={styles.header}>
