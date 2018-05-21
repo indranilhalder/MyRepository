@@ -54,6 +54,11 @@ export default class AuthFrame extends React.Component {
               T&C
             </div>
           </div>
+          <div className={styles.linkLabelMiddle}>
+            <div className={styles.callUs}>
+              <a href="tel:9029108282">Call Us</a>
+            </div>
+          </div>
           <div className={styles.linkLabelRight}>
             <div
               className={styles.link}
