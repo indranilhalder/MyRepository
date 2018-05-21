@@ -16,13 +16,12 @@ export default class AccountNavigationComponent extends Component {
           particularPage = status.linkName;
         }
       });
-
     return (
       <div className={styles.navigationHolder}>
         {particularPage ? (
           <SelectBoxMobile2
             value={particularPage}
-            label={this.props.feedComponentData.nodeList.linkName}
+            label={particularPage}
             height={40}
             options={this.props.feedComponentData.nodeList.map((val, i) => {
               return {
