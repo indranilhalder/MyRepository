@@ -64,6 +64,7 @@ export default class ProductGrid extends React.Component {
           data.price.minPrice.formattedValueNoDecimal
         }
         isPlp={true}
+        originUrl={window.location.origin}
         productImage={data.imageURL}
         title={data.brandname}
         price={data.price.mrpPrice.formattedValueNoDecimal}
@@ -96,6 +97,9 @@ export default class ProductGrid extends React.Component {
     // }
   };
   render() {
+    console.log(this.props);
+
+    debugger;
     return (
       <div className={styles.base}>
         <div className={styles.header}>
