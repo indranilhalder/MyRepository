@@ -23,8 +23,7 @@ export default class ProductModule extends React.Component {
       this.props.onDownload();
     }
   };
-
-  onClick = () => {
+  getProductURL() {
     let urlSuffix;
     if (this.props.webURL) {
       urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "$1");
@@ -33,10 +32,12 @@ export default class ProductModule extends React.Component {
     } else if (this.props.productListingId) {
       urlSuffix = `/p-${this.props.productListingId.toLowerCase()}`;
     }
-
+    return urlSuffix;
+  }
+  onClick = () => {
     if (this.props.onClick) {
       this.props.onClick(
-        urlSuffix,
+        this.getProductURL(),
         null,
         `ProductModule-${this.props.productId}`
       );
@@ -59,28 +60,35 @@ export default class ProductModule extends React.Component {
         onClick={this.onClick}
         id={`ProductModule-${this.props.productId}`}
       >
-        <div
-          className={
-            this.props.view === "grid"
-              ? styles.imageHolder
-              : styles.ListimageHolder
-          }
+        {/* Need this atag for SEO stuff.The click event for this exists at the component level.The click on the atag is halted using pointer events  */}
+        <a
+          href={this.getProductURL()}
+          className={styles.aTag}
+          style={{ pointerEvents: "none" }}
         >
-          <ProductImage image={this.props.productImage} />
-          {this.props.onConnect && (
-            <ConnectButton onClick={this.handleConnect} />
-          )}
+          <div
+            className={
+              this.props.view === "grid"
+                ? styles.imageHolder
+                : styles.ListimageHolder
+            }
+          >
+            <ProductImage image={this.props.productImage} />
+            {this.props.onConnect && (
+              <ConnectButton onClick={this.handleConnect} />
+            )}
 
-          <div className={styles.flagHolder}>
-            <ProductFlags
-              discountPercent={this.props.discountPercent}
-              isOfferExisting={this.props.isOfferExisting}
-              onlineExclusive={this.props.onlineExclusive}
-              outOfStock={this.props.outOfStock}
-              newProduct={this.props.newProduct}
-            />
+            <div className={styles.flagHolder}>
+              <ProductFlags
+                discountPercent={this.props.discountPercent}
+                isOfferExisting={this.props.isOfferExisting}
+                onlineExclusive={this.props.onlineExclusive}
+                outOfStock={this.props.outOfStock}
+                newProduct={this.props.newProduct}
+              />
+            </div>
           </div>
-        </div>
+        </a>
         <div
           className={
             this.props.view === "grid" ? styles.content : styles.Listcontent
