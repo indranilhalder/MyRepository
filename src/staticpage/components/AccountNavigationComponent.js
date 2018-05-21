@@ -9,11 +9,13 @@ export default class AccountNavigationComponent extends Component {
   };
   render() {
     let particularPage;
-    this.props.feedComponentData.nodeList.forEach(status => {
-      if (status.url.trim() === this.props.location.pathname.trim()) {
-        particularPage = status.linkName;
-      }
-    });
+    this.props.feedComponentData &&
+      this.props.feedComponentData.nodeList &&
+      this.props.feedComponentData.nodeList.forEach(status => {
+        if (status.url.trim() === this.props.location.pathname.trim()) {
+          particularPage = status.linkName;
+        }
+      });
     return (
       <div className={styles.navigationHolder}>
         <SelectBoxMobile2
