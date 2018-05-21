@@ -5,7 +5,8 @@ import styles from "./StaticPage.css";
 import {
   BLP_OR_CLP_FEED_TYPE,
   NOT_FOUND,
-  REQUESTING
+  REQUESTING,
+  SUCCESS
 } from "../../lib/constants";
 import { Redirect } from "react-router-dom";
 
@@ -29,7 +30,7 @@ export default class StaticPage extends Component {
       this.props.feedType === BLP_OR_CLP_FEED_TYPE &&
       this.props.data &&
       this.props.data.length === 0 &&
-      this.props.status !== REQUESTING
+      this.props.status === SUCCESS
     ) {
       return this.navigateTo404();
     }
