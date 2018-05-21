@@ -36,7 +36,8 @@ class ProductReviewPage extends Component {
       visible: false,
       sort: "byDate",
       orderBy: "desc",
-      sortValue: ""
+      sortValue: "byDate_desc",
+      sortLabel: "Newest First"
     };
     this.filterOptions = [
       { label: "Oldest First", value: "byDate_asc" },
@@ -192,7 +193,8 @@ class ProductReviewPage extends Component {
     this.setState({
       sort: filterValues[0],
       orderBy: filterValues[1],
-      sortValue: val.label
+      sortValue: val.value,
+      sortLabel: val.label
     });
 
     this.props.getProductReviews(
@@ -284,11 +286,8 @@ class ProductReviewPage extends Component {
               <div className={styles.dropdown}>
                 <div className={styles.dropDownBox}>
                   <SelectBoxMobile2
-                    label={
-                      this.state.sortValue
-                        ? this.state.sortValue
-                        : "Newest First"
-                    }
+                    value={this.state.sortValue}
+                    label={this.state.sortLabel}
                     onChange={changedValue =>
                       this.changeFilterValues(changedValue)
                     }
