@@ -59,7 +59,12 @@ export default class ProductModule extends React.Component {
         onClick={this.onClick}
         id={`ProductModule-${this.props.productId}`}
       >
-        <a href={this.props.webURL} className={styles.aTag}>
+        {/* Need this atag for SEO stuff.The click event for this exists at the component level.The click on the atag is halted using pointer events  */}
+        <a
+          href={this.props.webURL}
+          className={styles.aTag}
+          style={{ pointerEvents: "none" }}
+        >
           <div
             className={
               this.props.view === "grid"
