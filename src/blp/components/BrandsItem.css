@@ -27,6 +27,7 @@
 .active {
   composes: base;
   color: #ff1744;
+  opacity: 1;
 }
 .active::before {
   content: "";
