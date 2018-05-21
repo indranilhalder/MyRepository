@@ -91,6 +91,8 @@
     "build": "REACT_APP_STAGE=p2 node scripts/build.js",
     "p2": "REACT_APP_STAGE=p2 node scripts/build.js",
     "production": "REACT_APP_STAGE=production node scripts/build.js",
+    "production-cdn":
+      "REACT_APP_STAGE=production PUBLIC_URL=https://pwassets.tatacliq.com node scripts/build.js",
     "test": "cross-env node scripts/test.js --env=jsdom",
     "lint": "eslint 'src/**/*.js'",
     "pre-build":
