@@ -21,14 +21,14 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   MY_ACCOUNT_PAGE,
-  JUS_PAY_CHARGED,
-  JUS_PAY_PENDING,
-  JUS_PAY_AUTHENTICATION_FAILED,
   CHECKOUT_ROUTER,
   CHECKOUT_ROUTER_THANKYOU,
   APP_VIEW
 } from "../../../src/lib/constants";
-import { setIsGoBackFromPDP } from "../../plp/actions/plp.actions.js";
+import {
+  setIsGoBackFromPDP,
+  setIsNotGoBackFromPDP
+} from "../../plp/actions/plp.actions.js";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
@@ -57,6 +57,8 @@ class HeaderWrapper extends React.Component {
       ) {
         this.props.setIsGoBackFromPDP();
       }
+    } else {
+      this.props.setIsNotGoBackFromPDP();
     }
 
     // here in case of checkout page after payment  success or failure
@@ -257,6 +259,9 @@ const mapDispatchToProps = dispatch => {
   return {
     setIsGoBackFromPDP: () => {
       dispatch(setIsGoBackFromPDP());
+    },
+    setIsNotGoBackFromPDP: () => {
+      dispatch(setIsNotGoBackFromPDP());
     }
   };
 };
