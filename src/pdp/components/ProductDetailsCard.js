@@ -14,6 +14,7 @@ export default class ProductDetailsCard extends React.Component {
   handleLinkClick = e => {
     e.preventDefault();
   };
+
   render() {
     return (
       <div className={styles.base}>
@@ -78,23 +79,22 @@ export default class ProductDetailsCard extends React.Component {
           </div>
           <div
             className={styles.displayRating}
-            itemprop="aggregateRating"
-            itemscope
-            itemtype="http://schema.org/AggregateRating"
+            itemProp="aggregateRating"
+            itemScope
+            itemType="http://schema.org/AggregateRating"
           >
             <meta
               itemProp="ratingValue"
               content={this.props.averageRating ? this.props.averageRating : 0}
             />
+            <meta
+              itemProp="reviewCount"
+              content={
+                this.props.numberOfReviews ? this.props.numberOfReviews : 0
+              }
+            />
             {this.props.averageRating && (
-              <StarRating averageRating={this.props.averageRating}>
-                {this.props.totalNoOfReviews && (
-                  <div
-                    className={styles.noOfReviews}
-                    itemProp="reviewCount"
-                  >{`(${this.props.totalNoOfReviews})`}</div>
-                )}
-              </StarRating>
+              <StarRating averageRating={this.props.averageRating} />
             )}
           </div>
           {this.props.averageRating && (
