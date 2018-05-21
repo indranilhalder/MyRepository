@@ -23,7 +23,17 @@ export default class ProductModule extends React.Component {
       this.props.onDownload();
     }
   };
-
+  getProductURL() {
+    let urlSuffix;
+    if (this.props.webURL) {
+      urlSuffix = this.props.webURL.replace(TATA_CLIQ_ROOT, "$1");
+    } else if (this.props.productId) {
+      urlSuffix = `/p-${this.props.productId.toLowerCase()}`;
+    } else if (this.props.productListingId) {
+      urlSuffix = `/p-${this.props.productListingId.toLowerCase()}`;
+    }
+    return urlSuffix;
+  }
   onClick = () => {
     let urlSuffix;
     if (this.props.webURL) {
@@ -61,7 +71,7 @@ export default class ProductModule extends React.Component {
       >
         {/* Need this atag for SEO stuff.The click event for this exists at the component level.The click on the atag is halted using pointer events  */}
         <a
-          href={this.props.webURL}
+          href={this.getProductURL()}
           className={styles.aTag}
           style={{ pointerEvents: "none" }}
         >
