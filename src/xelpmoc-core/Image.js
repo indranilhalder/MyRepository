@@ -41,7 +41,6 @@ export default class Image extends React.Component {
     return (
       <div className={className} style={{ backgroundColor: this.props.color }}>
         {this.renderImage()}
-
         <div
           className={
             this.state.imageStatus === LOADED
@@ -53,7 +52,6 @@ export default class Image extends React.Component {
             backgroundSize: fit
           }}
         />
-        {/* )} */}
         {this.state.imageStatus === ERROR && (
           <div className={this.styles.failed} />
         )}
