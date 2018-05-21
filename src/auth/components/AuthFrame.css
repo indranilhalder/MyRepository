@@ -1,6 +1,6 @@
 .base {
   width: 100%;
-  padding: 5vh 40px;
+  padding: 3vh 40px;
   min-height: 100vh;
   background: url(./img/background.jpg) no-repeat;
   background-size: cover;
@@ -33,7 +33,7 @@
   text-align: center;
   display: inline-block;
   width: 100%;
-  margin-top: 8vh;
+  margin-top: 4vh;
   text-decoration: underline;
 }
 
@@ -61,8 +61,16 @@
   font-family: regular;
   display: inline-block;
 }
+.callUs {
+  composes: link;
+  padding-left: 10px;
+}
+.callUs a {
+  text-decoration: none;
+  color: #fff !important;
+}
 .linkLabelLeft {
-  width: 50%;
+  width: 33.33%;
   height: auto;
   display: inline-block;
   text-align: left;
@@ -70,4 +78,11 @@
 .linkLabelRight {
   composes: linkLabelLeft;
   text-align: right;
+  width: 35%;
+}
+.linkLabelMiddle {
+  composes: linkLabelLeft;
+
+  padding-left: 10px;
+  width: 30%;
 }

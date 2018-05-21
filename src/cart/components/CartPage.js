@@ -406,9 +406,8 @@ class CartPage extends React.Component {
                       productName={product.productName}
                       color={product.color}
                       size={product.size}
-                      price={
-                        product.offerPrice ? product.offerPrice : product.price
-                      }
+                      price={product.price}
+                      offerPrice={product.offerPrice}
                       isGiveAway={product.isGiveAway}
                       index={i}
                       entryNumber={product.entryNumber}

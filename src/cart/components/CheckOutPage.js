@@ -428,7 +428,8 @@ class CheckOutPage extends React.Component {
                   isGiveAway={val.isGiveAway}
                   //productDetails={val.productBrand}
                   productName={val.productName}
-                  price={val.offerPrice ? val.offerPrice : val.price}
+                  price={val.price}
+                  offerPrice={val.offerPrice}
                   deliveryInformation={val.elligibleDeliveryMode}
                   showDelivery={true}
                   deliveryInfoToggle={false}
