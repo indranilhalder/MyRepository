@@ -9,10 +9,7 @@ export default class SearchResultItem extends React.Component {
   }
   render() {
     let suggestedText = this.props.suggestedText;
-    if (
-      this.props.singleWord &&
-      this.props.suggestedText.trim().includes(" ")
-    ) {
+    if (this.props.singleWord && this.props.suggestedText.includes(" ")) {
       suggestedText = this.props.suggestedText.slice(
         0,
         this.props.suggestedText.indexOf(" ")

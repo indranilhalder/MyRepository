@@ -70,7 +70,7 @@ export default class SearchPage extends React.Component {
   }
   checkIfSingleWordinSearchString() {
     return this.state.searchString
-      ? this.state.searchString.split(" ").length === 1
+      ? this.state.searchString.trim().split(" ").length === 1
       : true;
   }
   handleOnSearchString(searchString) {
