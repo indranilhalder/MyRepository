@@ -3,9 +3,13 @@ import styles from "./NoResultPage.css";
 import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import { HOME_ROUTER } from "../../lib/constants";
+import { setDataLayerForNotFound } from "../../lib/adobeUtils";
 export default class NoResultPage extends React.Component {
   redirectToHome() {
     this.props.history.push(HOME_ROUTER);
+  }
+  componentDidMount() {
+    setDataLayerForNotFound();
   }
   render() {
     return (

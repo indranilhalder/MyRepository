@@ -38,7 +38,11 @@ export default class OrderCard extends React.Component {
               <div className={styles.price}>
                 {this.props.isEgvOrder && this.props.egvCardNumber
                   ? this.props.egvCardNumber
-                  : `${RUPEE_SYMBOL} ${this.props.price}`}
+                  : this.props.isGiveAway === NO &&
+                    !this.props.isEgvOrder &&
+                    this.props.productName === "Gift Card"
+                    ? "Gift card detail will be sent you on your specified email id shortly."
+                    : `${RUPEE_SYMBOL} ${this.props.price}`}
               </div>
               {this.props.discountPrice &&
                 this.props.discountPrice !== this.props.price && (
@@ -60,11 +64,12 @@ export default class OrderCard extends React.Component {
               </div>
             </div>
           )}
-          {this.props.children && (
-            <div className={styles.additionalContent}>
-              {this.props.children}
-            </div>
-          )}
+          {this.props.children &&
+            this.props.productName !== "Gift Card" && (
+              <div className={styles.additionalContent}>
+                {this.props.children}
+              </div>
+            )}
         </div>
       </div>
     );
