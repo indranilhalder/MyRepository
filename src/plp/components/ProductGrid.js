@@ -41,7 +41,7 @@ export default class ProductGrid extends React.Component {
 
   goToProductDescription = (url, productObj, productModuleId) => {
     // change this
-    setDataLayerForPlpDirectCalls({});
+    setDataLayerForPlpDirectCalls(productObj);
     this.props.setProductModuleRef(productModuleId);
     this.props.history.push(url, {
       isComingFromPlp: true
