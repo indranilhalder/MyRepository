@@ -63,7 +63,11 @@ class HeaderWrapper extends React.Component {
     // if user click on back button then we have to take user on home page
     const parsedQueryString = queryString.parse(this.props.location.search);
     const paymentStatus = parsedQueryString.status;
-    if (paymentStatus) {
+    if (
+      paymentStatus ||
+      this.props.cliqCashJusPayDetails ||
+      this.props.orderConfirmationDetails
+    ) {
       this.props.history.push(HOME_ROUTER);
       return;
     } else {

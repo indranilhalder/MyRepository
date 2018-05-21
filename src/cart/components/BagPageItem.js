@@ -9,7 +9,7 @@ import {
   YES
 } from "../../lib/constants";
 
-const NOT_SERVICEABLE = "Service Not Available";
+const NOT_SERVICEABLE = "Not available at your PIN code";
 const OUT_OF_STOCK = "Product is out of stock";
 const NO_SIZE = "NO SIZE";
 export default class BagPageItem extends React.Component {

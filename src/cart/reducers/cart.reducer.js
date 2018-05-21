@@ -648,10 +648,19 @@ const cart = (
       });
     case cartActions.APPLY_BANK_OFFER_SUCCESS:
       const currentCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      const paymentFailureOrderDetails = cloneDeep(
+        state.paymentFailureOrderDetails
+      );
       currentCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
+      if (paymentFailureOrderDetails) {
+        paymentFailureOrderDetails.cliqCashPaidAmount =
+          action.bankOffer.cliqCashPaidAmount;
+      }
+
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
         cartDetailsCNC: currentCartDetailCNC,
+        paymentFailureOrderDetails,
         bankOffer: action.bankOffer,
         loading: false
       });
@@ -667,8 +676,14 @@ const cart = (
         loading: true
       });
     case cartActions.RELEASE_BANK_OFFER_SUCCESS:
-      cloneCartDetailCNC = cloneCartDetailCNC?cloneDeep(state.cartDetailsCNC):{};
-      if ( cloneCartDetailCNC && cloneCartDetailCNC.cartAmount && action.bankOffer) {
+      cloneCartDetailCNC = cloneCartDetailCNC
+        ? cloneDeep(state.cartDetailsCNC)
+        : {};
+      if (
+        cloneCartDetailCNC &&
+        cloneCartDetailCNC.cartAmount &&
+        action.bankOffer
+      ) {
         cloneCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
       } else {
         Object.assign(cloneCartDetailCNC, {
@@ -1322,20 +1337,18 @@ const cart = (
       });
 
     case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
-
-    if(state.cartDetailsCNC)
-    {
-      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
-    }
-    else{
-      cloneCartDetailCNC={};
-    }
+      if (state.cartDetailsCNC) {
+        cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      } else {
+        cloneCartDetailCNC = {};
+      }
       if (
         cloneCartDetailCNC.cartAmount &&
         action.paymentFailureOrderDetails &&
         action.paymentFailureOrderDetails.cartAmount
       ) {
-        cloneCartDetailCNC.cartAmount = action.paymentFailureOrderDetails.cartAmount;
+        cloneCartDetailCNC.cartAmount =
+          action.paymentFailureOrderDetails.cartAmount;
       } else {
         Object.assign(cloneCartDetailCNC, {
           cartAmount: action.paymentFailureOrderDetails.cartAmount
