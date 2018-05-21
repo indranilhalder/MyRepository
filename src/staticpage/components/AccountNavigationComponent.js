@@ -16,21 +16,38 @@ export default class AccountNavigationComponent extends Component {
           particularPage = status.linkName;
         }
       });
+
     return (
       <div className={styles.navigationHolder}>
-        <SelectBoxMobile2
-          value={particularPage}
-          label={this.props.feedComponentData.nodeList.linkName}
-          height={40}
-          options={this.props.feedComponentData.nodeList.map((val, i) => {
-            return {
-              value: val.url.replace("/", ""),
-              label: val.linkName
-            };
-          })}
-          backgroundColor="#fff"
-          onChange={this.handleItemClick}
-        />
+        {particularPage ? (
+          <SelectBoxMobile2
+            value={particularPage}
+            label={this.props.feedComponentData.nodeList.linkName}
+            height={40}
+            options={this.props.feedComponentData.nodeList.map((val, i) => {
+              return {
+                value: val.url.replace("/", ""),
+                label: val.linkName
+              };
+            })}
+            backgroundColor="#fff"
+            onChange={this.handleItemClick}
+          />
+        ) : (
+          <SelectBoxMobile2
+            placeholder={"Select"}
+            label={this.props.feedComponentData.nodeList.linkName}
+            height={40}
+            options={this.props.feedComponentData.nodeList.map((val, i) => {
+              return {
+                value: val.url.replace("/", ""),
+                label: val.linkName
+              };
+            })}
+            backgroundColor="#fff"
+            onChange={this.handleItemClick}
+          />
+        )}
       </div>
     );
   }
