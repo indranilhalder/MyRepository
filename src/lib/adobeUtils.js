@@ -92,7 +92,7 @@ const ADOBE_INTERNAL_SEARCH_NULL = "null_search";
 // end of const or adobe call for internal search call
 
 const ADOBE_NOT_FOUND = "404_error";
-
+const ADOBE_FOR_CLICK_ON_PRODUCT_ON_PLP = "internal_search_link_clicks";
 // internal search Adobe call const
 export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT =
   "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT";
@@ -1040,18 +1040,20 @@ export function getDigitalDataForSearchPageForNullResult(response) {
 export function setDataLayerForPlpDirectCalls(response) {
   const data = window.digitalData;
   let badge;
-  if (response.outOfStock) {
-    badge = "out of stock";
-  } else if (response.discountPercent && response.discountPercent !== "0") {
-    badge = `${response.discountPercent}% off`;
-  } else if (response.isOfferExisting) {
-    badge = "on offer";
-  } else if (response.onlineExclusive) {
-    badge = "exclusive";
-  } else if (response.newProduct) {
-    badge = "new";
+  if (response) {
+    if (response.outOfStock) {
+      badge = "out of stock";
+    } else if (response.discountPercent && response.discountPercent !== "0") {
+      badge = `${response.discountPercent}% off`;
+    } else if (response.isOfferExisting) {
+      badge = "on offer";
+    } else if (response.onlineExclusive) {
+      badge = "exclusive";
+    } else if (response.newProduct) {
+      badge = "new";
+    }
   }
-  if (badge) {
+  if (badge && data) {
     if (data.cpj && data.cpj.product) {
       Object.assign(data.cpj.product, { badge });
     } else if (data.cpj) {
@@ -1061,6 +1063,7 @@ export function setDataLayerForPlpDirectCalls(response) {
     }
     window.digitalData = data;
   }
+  window._satellite.track(ADOBE_FOR_CLICK_ON_PRODUCT_ON_PLP);
 }
 export function setDataLayerForLogin(type) {
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
