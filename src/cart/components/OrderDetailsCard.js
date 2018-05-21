@@ -68,6 +68,7 @@ export default class OrderDetailsCard extends React.Component {
           isEgvOrder={this.props.orderDetails.isEgvOrder}
           onViewDetails={() => this.onViewDetails()}
           price={this.props.orderDetails.finalAmount}
+          status={this.props.orderDetails.status}
         />
         {!this.props.orderDetails.isEgvOrder && (
           <div className={styles.informationDataHolder}>
