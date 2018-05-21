@@ -2,7 +2,6 @@ import React from "react";
 import DumbCarousel from "../../general/components/DumbCarousel.js";
 import ProductModule from "../../general/components/ProductModule.js";
 import { transformData } from "../../home/components/utils.js";
-import Logo from "../../general/components/Logo.js";
 import Button from "../../general/components/Button.js";
 import { withRouter } from "react-router-dom";
 import Observer from "@researchgate/react-intersection-observer";
@@ -47,9 +46,12 @@ class PDPRecommendedSections extends React.Component {
           <h3 className={styles.brandHeader}>About the Brand</h3>
           <div className={styles.brandLogoSection}>
             {this.props.aboutTheBrand.brandLogo && (
-              <div className={styles.brandLogoHolder}>
-                <Logo image={this.props.aboutTheBrand.brandLogo} />
-              </div>
+              <div
+                className={styles.brandLogoHolder}
+                style={{
+                  backgroundImage: `url(${this.props.aboutTheBrand.brandLogo})`
+                }}
+              />
             )}
             {brandId && (
               <div className={styles.followButton}>
