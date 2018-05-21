@@ -319,6 +319,7 @@ export function homeFeedFailure(error) {
 
 export function homeFeedBackUp() {
   return async (dispatch, getState, { api }) => {
+    dispatch(homeFeedBackUpRequest());
     try {
       const result = await api.get(
         `v2/mpl/cms/defaultpage?pageId=defaulthomepage`
@@ -399,6 +400,7 @@ export function homeFeed(brandIdOrCategoryId: null) {
 
         delay(() => {
           const isHomeFeedLoading = getState().home.loading;
+          console.log(isHomeFeedLoading);
           if (isHomeFeedLoading) {
             dispatch(homeFeedBackUp());
           }
@@ -416,8 +418,12 @@ export function homeFeed(brandIdOrCategoryId: null) {
         feedTypeRequest = HOME_FEED_TYPE;
       }
 
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson}`);
+      if (
+        !resultJson ||
+        !resultJson.content ||
+        resultJson.status === "FAILURE"
+      ) {
+        throw new Error("No Data");
       }
 
       let parsedResultJson = JSON.parse(resultJson.content);
