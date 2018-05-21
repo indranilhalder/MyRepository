@@ -227,7 +227,6 @@ export default class ModalRoot extends React.Component {
   }
   submitOtpForgotPassword(otpDetails) {
     this.props.forgotPasswordOtpVerification(otpDetails, this.props.ownProps);
-
   }
   applyBankOffer = couponCode => {
     return this.props.applyBankOffer(couponCode);
@@ -426,7 +425,7 @@ export default class ModalRoot extends React.Component {
       ),
       NewPassword: (
         <NewPassword
-          {...this.props.ownProps}
+          userObj={this.props.ownProps}
           displayToast={message => this.props.displayToast(message)}
           handleCancel={() => this.handleClose()}
           onContinue={userDetails => this.resetPassword(userDetails)}
@@ -449,6 +448,7 @@ export default class ModalRoot extends React.Component {
           resendOtp={userName =>
             this.resendOtpForUpdateProfile(this.props.ownProps)
           }
+          onClickWrongNumber={() => this.handleClose()}
         />
       ),
       ForgotPasswordOtpVerification: (
@@ -576,6 +576,7 @@ export default class ModalRoot extends React.Component {
         <GiftCardModal
           closeModal={() => this.handleClose()}
           addGiftCard={val => this.addGiftCard(val)}
+          loading={this.props.loading}
         />
       ),
       OfferModal: (

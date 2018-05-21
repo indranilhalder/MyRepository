@@ -6,8 +6,11 @@ import {
   BRAND_AND_CATEGORY_PAGE,
   SKU_PAGE,
   CATEGORY_PAGE_WITH_SLUG_WITH_QUERY_PARAMS,
-  CATEGORY_PAGE_WITH_SLUG
+  CATEGORY_PAGE_WITH_SLUG,
+  BRAND_PRODUCT_LISTINGS_WITH_PAGE,
+  BRAND_PAGE_WITH_SLUG
 } from "../../lib/constants.js";
+import delay from "lodash.delay";
 import {
   CATEGORY_CAPTURE_REGEX,
   BRAND_REGEX,
@@ -22,6 +25,7 @@ const SKU_SUFFIX = `&isFilter=false&channel=mobile`;
 const PAGE_REGEX = /page-(\d+)/;
 const MAX_PRICE_FROM_API = "and Above";
 const MAX_PRICE_FROM_UI = "-₹9,999,999";
+
 class ProductListingsPage extends Component {
   getSearchTextFromUrl() {
     const parsedQueryString = queryString.parse(this.props.location.search);
@@ -48,10 +52,23 @@ class ProductListingsPage extends Component {
       if (searchText) {
         searchText = searchText.replace(
           ":relevance",
-          `:relevance:category:${this.props.match.params[0].toUpperCase()}`
+          `:relevance:brand:${this.props.match.params[0].toUpperCase()}`
         );
       } else {
         searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
+      }
+    }
+    if (
+      this.props.match.path === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === BRAND_PAGE_WITH_SLUG
+    ) {
+      if (searchText) {
+        searchText = searchText.replace(
+          ":relevance",
+          `:relevance:brand:${this.props.match.params[0].toUpperCase()}`
+        );
+      } else {
+        searchText = `:relevance:brand:${this.props.match.params[0].toUpperCase()}`;
       }
     }
     if (searchText) {
@@ -66,6 +83,18 @@ class ProductListingsPage extends Component {
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
     ) {
+      return;
+    }
+
+    if (this.props.isGoBackFromPdpPage) {
+      if (this.props.clickedProductModuleRef) {
+        const clickedElement = document.getElementById(
+          this.props.clickedProductModuleRef
+        );
+        if (clickedElement) {
+          delay(() => clickedElement.scrollIntoView(true), 50);
+        }
+      }
       return;
     }
 
@@ -86,6 +115,17 @@ class ProductListingsPage extends Component {
     if (
       this.props.match.path === CATEGORY_PRODUCT_LISTINGS_WITH_PAGE ||
       this.props.match.path === CATEGORY_PAGE_WITH_SLUG
+    ) {
+      page = this.props.match.params[1];
+
+      let searchText = this.getSearchTextFromUrl();
+
+      this.props.getProductListings(searchText, SUFFIX, page - 1);
+      return;
+    }
+    if (
+      this.props.match.path === BRAND_PRODUCT_LISTINGS_WITH_PAGE ||
+      this.props.match.path === BRAND_PAGE_WITH_SLUG
     ) {
       page = this.props.match.params[1];
 
@@ -125,10 +165,31 @@ class ProductListingsPage extends Component {
 
       this.props.getProductListings(searchText, SUFFIX, page);
     }
+
+    if (!this.props.location.state) {
+      const searchText = this.getSearchTextFromUrl();
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
+      }
+      this.props.getProductListings(searchText, SUFFIX, page);
+    }
   }
 
   componentDidUpdate() {
     let page = null;
+    if (this.props.isGoBackFromPdpPage) {
+      if (this.props.clickedProductModuleRef) {
+        const clickedElement = document.getElementById(
+          this.props.clickedProductModuleRef
+        );
+        if (clickedElement) {
+          delay(() => clickedElement.scrollIntoView(), 50);
+        }
+      }
+      return;
+    }
 
     if (this.props.match.path === SKU_PAGE) {
       const skuId = this.props.match.params.slug;
@@ -176,6 +237,16 @@ class ProductListingsPage extends Component {
       this.props.location.state &&
       this.props.location.state.isFilter === false
     ) {
+      const searchText = this.getSearchTextFromUrl();
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
+      }
+      this.props.getProductListings(searchText, SUFFIX, page);
+    }
+
+    if (!this.props.location.state) {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {

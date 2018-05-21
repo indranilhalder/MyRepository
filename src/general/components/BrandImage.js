@@ -20,7 +20,7 @@ export default class BrandImage extends React.Component {
           <Image
             image={this.props.image}
             color="transparent"
-            fit={this.props.fit === "1" ? "auto 30px" : "contain"}
+            fit={this.props.fit === "1" ? "auto 25px" : "contain"}
           />
         </div>
       </div>

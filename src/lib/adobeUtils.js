@@ -281,7 +281,10 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_OVERVIEW);
   }
   if (type === ADOBE_MY_ACCOUNT_SAVED_LIST) {
-    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_LIST);
+    window.digitalData = getDigitalDataForMyAccount(
+      MY_ACCOUNT_SAVED_LIST,
+      response
+    );
   }
   if (type === ADOBE_MY_ACCOUNT_ADDRESS_BOOK) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ADDRESS_BOOK);
@@ -425,11 +428,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = currentDigitalData;
   }
 
-  // we don't have to trigger virtual page load on first time .
-  // thats why we are checking page previous digital data
-  if (previousDigitalData) {
-    window._satellite.track(ADOBE_SATELLITE_CODE);
-  }
+  window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
@@ -604,14 +603,16 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     } = getProductData;
     Object.assign(data, {
       cpj: {
         product: {
           id: productIdsArray,
           quantity: productQuantityArray,
-          price: productPriceArray
+          price: productPriceArray,
+          category: categoryArray
         },
         brand: {
           name: productBrandArray
@@ -646,14 +647,16 @@ function getDigitalDataForOrderConfirmation(type, response) {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     } = getProductData;
     Object.assign(data, {
       cpj: {
         product: {
           id: productIdsArray,
           quantity: productQuantityArray,
-          price: productPriceArray
+          price: productPriceArray,
+          category: categoryArray
         },
         brand: {
           name: productBrandArray
@@ -675,13 +678,18 @@ function getProductsDigitalData(response) {
     let productIdsArray = [],
       productQuantityArray = [],
       productPriceArray = [],
-      productBrandArray = [];
+      productBrandArray = [],
+      categoryArray = [];
     response.products.forEach(function(product) {
       productIdsArray.push(
         product.productcode && product.productcode.toLowerCase()
       );
       productQuantityArray.push(
-        product.qtySelectedByUser ? product.qtySelectedByUser : product.quantity
+        product.qtySelectedByUser
+          ? product.qtySelectedByUser
+          : product.quantity
+            ? product.quantity
+            : null
       );
       productPriceArray.push(
         product.offerPrice
@@ -690,18 +698,29 @@ function getProductsDigitalData(response) {
             ? product.pricevalue
             : product.price
               ? product.price
-              : null
+              : product.mrp && product.mrp.value
+                ? product.mrp.value
+                : null
       );
       productBrandArray.push(
         product.productBrand &&
           product.productBrand.replace(/ /g, "_").toLowerCase()
+      );
+      categoryArray.push(
+        product.categoryHierarchy &&
+          product.categoryHierarchy[0] &&
+          product.categoryHierarchy[0].category_name &&
+          product.categoryHierarchy[0].category_name
+            .replace(/ /g, "_")
+            .toLowerCase()
       );
     });
     return {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     };
   } else {
     return null;
@@ -1043,7 +1062,7 @@ export function setDataLayerForPlpDirectCalls(response) {
 export function setDataLayerForLogin(type) {
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
   const data = {};
-  if (ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
+  if (type === ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
     if (userDetails) {
       if (userDetails.loginType === LOGIN_WITH_EMAIL) {
         Object.assign(data, {
@@ -1142,7 +1161,7 @@ export function setDataLayerForLogin(type) {
     window.digitalData.flag = ADOBE_LOGIN_SUCCESS;
     window._satellite.track(ADOBE_LOGIN_SUCCESS);
   }
-  if (ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
+  if (type === ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
     window.digitalData.flag = ADOBE_LOGIN_FAILURE;
     window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
@@ -1391,7 +1410,7 @@ export function setDataLayerForMyAccountDirectCalls(
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
 }
-export function getDigitalDataForMyAccount(pageTitle) {
+export function getDigitalDataForMyAccount(pageTitle, response) {
   const data = {
     page: {
       pageInfo: { pageName: pageTitle },
@@ -1399,6 +1418,29 @@ export function getDigitalDataForMyAccount(pageTitle) {
       display: { hierarchy: `home|my_tata_cliq|${pageTitle}` }
     }
   };
+  if (response) {
+    const getProductData = getProductsDigitalData(response);
+    if (getProductData) {
+      let {
+        productIdsArray,
+        productQuantityArray,
+        productPriceArray,
+        productBrandArray
+      } = getProductData;
+      Object.assign(data, {
+        cpj: {
+          product: {
+            id: productIdsArray,
+            quantity: productQuantityArray,
+            price: productPriceArray
+          },
+          brand: {
+            name: productBrandArray
+          }
+        }
+      });
+    }
+  }
   return data;
 }
 export function getDigitalDataForBLP(response) {

@@ -17,6 +17,9 @@ export default class SizeGuideMain extends React.Component {
     if (this.props.sizeData && this.props.sizeData.sizeGuideList) {
       return (
         <div className={styles.base}>
+          <div className={styles.header}>
+            {this.props.productName} Size Guide
+          </div>
           <div className={styles.imageHolder}>
             <div className={styles.image}>
               <Image fit="contain" image={this.props.sizeData.imageURL} />

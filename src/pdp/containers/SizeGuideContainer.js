@@ -8,7 +8,8 @@ const mapStateToProps = state => {
     sizeData: state.productDescription.sizeGuide.data,
     loading: state.productDescription.sizeGuide.loading,
     productCode: state.productDescription.productDetails.productListingId,
-    category: state.productDescription.productDetails.rootCategory
+    category: state.productDescription.productDetails.rootCategory,
+    productName: state.productDescription.productDetails.productName
   };
 };
 

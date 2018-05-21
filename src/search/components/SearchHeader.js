@@ -116,6 +116,7 @@ export default class SearchHeader extends React.Component {
                   textStyle={{ fontSize: 14 }}
                   height={30}
                   isWhite={true}
+                  type="search"
                   borderColor={"#212121"}
                   borderBottom={"0px solid #212121"}
                   onKeyUp={event => this.handleKeyUp(event.key)}

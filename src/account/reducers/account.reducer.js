@@ -688,7 +688,8 @@ const account = (
       return Object.assign({}, state, {
         cliqCashVoucherDetailsStatus: action.status,
         cliqCashVoucherDetailsError: action.error,
-        loading: false
+        loading: false,
+        error: action.error
       });
 
     case accountActions.NEW_RETURN_INITIATE_REQUEST:
@@ -857,6 +858,13 @@ const account = (
         changePasswordError: null
       });
     }
+    case accountActions.CLEAR_PIN_CODE_STATUS: {
+      return Object.assign({}, state, {
+        getPinCodeStatus: null,
+        getPinCodeError: null
+      });
+    }
+
     default:
       return state;
   }

@@ -44,6 +44,19 @@ export default class OrderViewPaymentDetails extends React.Component {
             </div>
           )}
         </div>
+
+        <div className={styles.subTotalsHolder}>
+          <div className={styles.labelText}>Cliq Cash Applied</div>
+
+          <div className={styles.infoText}>
+            {`${RUPEE_SYMBOL}${
+              this.props.cliqCashAmountDeducted
+                ? this.props.cliqCashAmountDeducted
+                : "0.0"
+            }`}
+          </div>
+        </div>
+
         <div className={styles.totalHolder}>
           <div className={styles.labelTextTotal}>Total Amount</div>
 

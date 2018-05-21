@@ -60,7 +60,8 @@ export default class AddDeliveryAddress extends React.Component {
       isOtherLandMarkSelected: false,
       selectedLandmarkLabel: "Landmark",
       landmarkList: [],
-      userEmailId: ""
+      userEmailId: "",
+      isEnable: false
     };
   }
   handleOnFocusInput() {
@@ -78,9 +79,17 @@ export default class AddDeliveryAddress extends React.Component {
   getPinCodeDetails = val => {
     let landmarkList = [];
     if (val.length <= 6) {
-      this.setState({ postalCode: val, state: "", town: "", landmarkList });
+      this.setState({
+        postalCode: val,
+        state: "",
+        town: "",
+        landmarkList,
+        isEnable: false,
+        line2: ""
+      });
     }
     if (val.length === 6 && this.props.getPinCode) {
+      this.setState({ isEnable: true });
       this.props.getPinCode(val);
     }
   };
@@ -186,6 +195,10 @@ export default class AddDeliveryAddress extends React.Component {
   }
   onSelectLandmark = landmark => {
     if (landmark.value === OTHER_LANDMARK) {
+      if (this.props.clearPinCodeStatus) {
+        this.props.clearPinCodeStatus();
+      }
+
       this.setState({
         isOtherLandMarkSelected: true,
         selectedLandmarkLabel: landmark.value
@@ -282,7 +295,8 @@ export default class AddDeliveryAddress extends React.Component {
       addressType: "",
       defaultFlag: false,
       landmarkList: [],
-      emailId: ""
+      emailId: "",
+      isEnable: false
     });
   };
   onChangeSalutation(val) {
@@ -391,6 +405,7 @@ export default class AddDeliveryAddress extends React.Component {
                   };
                 })
               }
+              isEnable={this.state.isEnable}
               onChange={landmark => this.onSelectLandmark(landmark)}
             />
           </div>
@@ -428,7 +443,11 @@ export default class AddDeliveryAddress extends React.Component {
             <Input2
               boxy={true}
               placeholder="City/district*"
-              value={this.props.town ? this.props.town : this.state.town}
+              value={
+                this.props.town && this.props.town !== ""
+                  ? this.props.town
+                  : this.state.town
+              }
               onChange={town => this.onChange({ town })}
               textStyle={{ fontSize: 14 }}
               height={33}
@@ -440,7 +459,11 @@ export default class AddDeliveryAddress extends React.Component {
           <div className={styles.content}>
             <Input2
               placeholder="State*"
-              value={this.props.state ? this.props.state : this.state.state}
+              value={
+                this.props.state && this.props.state !== ""
+                  ? this.props.state
+                  : this.state.state
+              }
               boxy={true}
               onChange={state => this.onChange({ state })}
               textStyle={{ fontSize: 14 }}

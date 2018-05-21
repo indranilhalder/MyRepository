@@ -7,8 +7,16 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class OfferWidget extends React.Component {
   handleClick = webUrl => {
-    const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
-    this.props.history.push(urlSuffix);
+    if (webUrl) {
+      const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1").trim();
+      const urlPath = new URL(webUrl).pathname;
+      if (urlPath.indexOf("/que") > -1) {
+        window.open(urlSuffix, "_blank");
+        window.focus();
+      } else {
+        this.props.history.push(urlSuffix);
+      }
+    }
   };
   render() {
     let { feedComponentData, rest } = this.props;

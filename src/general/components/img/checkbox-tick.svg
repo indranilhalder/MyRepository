@@ -1,29 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="50px" height="50px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
-<g id="Desktop_x2F_-PLP">
-	<g id="_x30_1-PLP" transform="translate(-145.000000, -1062.000000)">
-		<g id="Group-11-Copy-2" transform="translate(125.000000, 272.000000)">
-			<g id="Group-15" transform="translate(0.000000, 654.000000)">
-				<g id="Group-9" transform="translate(20.000000, 17.000000)">
-					<g id="Group-5" transform="translate(0.000000, 88.000000)">
-						<g id="UI_x2F_-Checkbox-selected" transform="translate(0.000000, 31.000000)">
-							<g id="Tick-Copy-2">
-								<path id="Oval-2" fill="none" stroke="#EE2849" stroke-width="1.4" d="M25,1c13.262,0,24,10.739,24,24
-									c0,13.262-10.738,24-24,24C11.739,49,1,38.262,1,25C1,11.739,11.739,1,25,1z"/>
-								<g id="noun_x5F_786082-_x28_1_x29_" transform="translate(5.000000, 6.000000)">
-									<path id="Shape" fill="#EE2849" d="M13.722,27.056c0.464,0.424,1.052,0.617,1.64,0.617c0.604,0,1.191-0.227,1.641-0.617
-										L30.88,14.029c0.926-0.844,0.926-2.225,0-3.069c-0.895-0.845-2.352-0.845-3.248,0l-12.27,11.47l-2.98-2.796
-										c-0.91-0.845-2.368-0.845-3.277,0c-0.895,0.844-0.895,2.224,0,3.069L13.722,27.056z"/>
-								</g>
-							</g>
-						</g>
-					</g>
-				</g>
-			</g>
-		</g>
-	</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Tick Copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="4-Delivery-Mode" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-302.000000, -348.000000)">
+        <g id="Choose-delivery-mode--01" transform="translate(16.000000, 196.000000)" fill="#FF1744" fill-rule="nonzero">
+            <g id="Delivery-01" transform="translate(0.000000, 139.000000)">
+                <g id="Tick-Copy" transform="translate(286.000000, 13.000000)">
+                    <path d="M11,21.8625 C16.995,21.8625 21.8625,16.995 21.8625,11 C21.8625,5.005 16.995,0.1375 11,0.1375 C5.005,0.1375 0.1375,5.005 0.1375,11 C0.1375,16.995 5.005,21.8625 11,21.8625 Z M11,2.0625 C15.9225,2.0625 19.9375,6.0775 19.9375,11 C19.9375,15.9225 15.9225,19.9375 11,19.9375 C6.0775,19.9375 2.0625,15.9225 2.0625,11 C2.0625,6.0775 6.0775,2.0625 11,2.0625 Z" id="Shape"></path>
+                    <path d="M9.1025,14.41 C9.295,14.6025 9.5425,14.685 9.79,14.685 C10.0375,14.685 10.2575,14.6025 10.45,14.41 L16.1425,8.9925 C16.5275,8.635 16.555,8.03 16.17,7.645 C15.8125,7.26 15.2075,7.2325 14.8225,7.6175 L9.79,12.375 L7.1775,9.7625 C6.7925,9.3775 6.1875,9.3775 5.8025,9.7625 C5.4175,10.1475 5.4175,10.7525 5.8025,11.1375 L9.1025,14.41 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>

@@ -34,6 +34,7 @@
   font-style: italic;
   line-height: normal;
   background: #fff;
+  word-break: break-word;
 }
 .displayAmountHolder {
   width: 100%;
@@ -167,7 +168,7 @@
   text-align: center;
 }
 .amountSign {
-  background: url(./img/59.svg)no-repeat;
+  background: url(./img/59.svg) no-repeat;
   background-size: auto 40px;
   background-position: left center;
   padding-left: 30px;
@@ -183,7 +184,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  background: url(./img/59.svg)no-repeat;
+  background: url(./img/59.svg) no-repeat;
   background-size: auto 40px;
   background-position: 4px -2px;
 }

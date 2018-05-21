@@ -35,8 +35,9 @@ class ProductReviewPage extends Component {
     this.state = {
       visible: false,
       sort: "byDate",
-      orderBy: "asc",
-      sortValue: ""
+      orderBy: "desc",
+      sortValue: "byDate_desc",
+      sortLabel: "Newest First"
     };
     this.filterOptions = [
       { label: "Oldest First", value: "byDate_asc" },
@@ -192,7 +193,8 @@ class ProductReviewPage extends Component {
     this.setState({
       sort: filterValues[0],
       orderBy: filterValues[1],
-      sortValue: val.label
+      sortValue: val.value,
+      sortLabel: val.label
     });
 
     this.props.getProductReviews(
@@ -229,9 +231,19 @@ class ProductReviewPage extends Component {
           .map(image => {
             return image[0].value;
           });
-
-      console.log("PRODUCT REVIEW PAGE");
-      console.log(this.props.productDetails);
+      let seoDoublePrice = 0;
+      if (
+        this.props.productDetails.winningSellerPrice &&
+        this.props.productDetails.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = this.props.productDetails.winningSellerPrice
+          .doubleValue;
+      } else if (
+        this.props.productDetails.mrpPrice &&
+        this.props.productDetails.mrpPrice.doubleValue
+      ) {
+        seoDoublePrice = this.props.productDetails.mrpPrice.doubleValue;
+      }
 
       return (
         <PdpFrame
@@ -240,7 +252,14 @@ class ProductReviewPage extends Component {
           gotoPreviousPage={() => this.goBack()}
         >
           {this.renderMetaTags()}
-          <div className={styles.base}>
+          <div
+            className={styles.base}
+            itemScope
+            itemType="http://schema.org/Product"
+          >
+            {this.props.productDetails.seo
+              ? renderMetaTags(this.props.productDetails)
+              : renderMetaTagsWithoutSeoObject(this.props.productDetails)}
             <div className={styles.productBackground}>
               <ProductDetailsCard
                 productImage={mobileGalleryImages[0]}
@@ -252,6 +271,7 @@ class ProductReviewPage extends Component {
                   this.props.productDetails.winningSellerPrice
                     .formattedValueNoDecimal
                 }
+                seoDoublePrice={seoDoublePrice}
                 discountPrice={
                   this.props.productDetails &&
                   this.props.productDetails.mrpPrice &&
@@ -266,11 +286,8 @@ class ProductReviewPage extends Component {
               <div className={styles.dropdown}>
                 <div className={styles.dropDownBox}>
                   <SelectBoxMobile2
-                    label={
-                      this.state.sortValue
-                        ? this.state.sortValue
-                        : "Oldest First"
-                    }
+                    value={this.state.sortValue}
+                    label={this.state.sortLabel}
                     onChange={changedValue =>
                       this.changeFilterValues(changedValue)
                     }

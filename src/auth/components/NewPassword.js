@@ -5,6 +5,8 @@ import Button from "../../xelpmoc-core/Button";
 import PasswordInput from "../../auth/components/PasswordInput";
 import { default as styles } from "./AuthPopUp.css";
 import { default as ownStyles } from "./RestorePassword.css";
+import lockIcon from "./img/otpLock.svg";
+import Icon from "../../xelpmoc-core/Icon";
 const MINIMUM_PASSWORD_LENGTH = 8;
 const NEW_PASSWORD_TEXT = "Please enter password";
 const PASSWORD_LENGTH_TEXT = "Password length should be minimum 8 character";
@@ -46,21 +48,45 @@ export default class NewPassword extends React.Component {
     } else {
       this.setState({ error: false });
       if (this.props.onContinue) {
-        this.props.onContinue({
-          newPassword: this.state.newPassword,
-          username: this.props.userName,
-          otp: this.props.otpDetails
-        });
+        if (this.props.userObj && this.props.userObj.userName) {
+          this.props.onContinue({
+            newPassword: this.state.newPassword,
+            username: this.props.userObj.userName,
+            otp: this.props.userObj.otpDetails
+          });
+        } else {
+          this.props.onContinue({
+            newPassword: this.state.newPassword,
+            username: this.props.userName,
+            otp: this.props.otpDetails
+          });
+        }
       }
     }
   }
   render() {
+    let emailIdOrMobileNumber;
+    if (this.props.userObj && this.props.userObj.userName) {
+      emailIdOrMobileNumber = this.props.userObj.userName;
+    } else {
+      emailIdOrMobileNumber = "";
+    }
     return (
       <AuthPopUp>
-        <div className={styles.header}>Create new password</div>
-        {/* <div className={styles.content}>
-          Please enter your Email or phone number to restore the password
-        </div> */}
+        <div className={ownStyles.lockIcon}>
+          <Icon image={lockIcon} size={50} />
+        </div>
+        <div className={ownStyles.content}>
+          <div className={ownStyles.password}>
+            Password reset for
+            <span className={styles.header}>
+              {" "}
+              {emailIdOrMobileNumber.indexOf("@") !== -1
+                ? emailIdOrMobileNumber
+                : `+91${emailIdOrMobileNumber}`}
+            </span>
+          </div>
+        </div>
         <div className={styles.input}>
           <PasswordInput
             hollow={true}

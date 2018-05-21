@@ -75,11 +75,11 @@ export default class HelpDetails extends React.Component {
             </div>
             Returns
           </div>
-          <div className={styles.helpCard}>
+          <div className={styles.helpCardCall}>
             <div className={styles.iconHolder}>
               <Icon image={customerCareIcon} size={25} />
             </div>
-            <a href="tel:02262313777">Call Customer care</a>
+            <a href="tel:9029108282">Call Customer care</a>
           </div>
 
           <div

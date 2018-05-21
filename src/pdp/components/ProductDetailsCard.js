@@ -34,9 +34,9 @@ export default class ProductDetailsCard extends React.Component {
             itemType="http://schema.org/Organization"
           >
             {this.props.brandName && (
-              <h1 className={styles.brandName}>
+              <h2 className={styles.brandName}>
                 <span itemProp="name">{this.props.brandName}</span>
-              </h1>
+              </h2>
             )}
           </div>
           <a
@@ -51,15 +51,19 @@ export default class ProductDetailsCard extends React.Component {
           <div
             className={styles.productPrice}
             itemProp="offers"
-            itemScope=""
-            itemType="http://schema.org/Offer"
+            itemScope
+            itemType="http://schema.org/AggregateOffer"
           >
             {this.props.price && (
-              <span itemType="price" className={styles.onPrice}>
-                {this.props.price.toString().includes(RUPEE_SYMBOL)
-                  ? this.props.price
-                  : `${RUPEE_SYMBOL}${this.props.price}`}
-              </span>
+              <React.Fragment>
+                <meta itemProp="priceCurrency" content={RUPEE_SYMBOL} />
+                <meta itemProp="lowPrice" content={this.props.seoDoublePrice} />
+                <span className={styles.onPrice}>
+                  {this.props.price.toString().includes(RUPEE_SYMBOL)
+                    ? this.props.price
+                    : `${RUPEE_SYMBOL}${this.props.price}`}
+                </span>
+              </React.Fragment>
             )}
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
@@ -72,20 +76,34 @@ export default class ProductDetailsCard extends React.Component {
                 </del>
               )}
           </div>
-          <div className={styles.displayRating}>
+          <div
+            className={styles.displayRating}
+            itemprop="aggregateRating"
+            itemscope
+            itemtype="http://schema.org/AggregateRating"
+          >
+            <meta
+              itemProp="ratingValue"
+              content={this.props.averageRating ? this.props.averageRating : 0}
+            />
             {this.props.averageRating && (
               <StarRating averageRating={this.props.averageRating}>
                 {this.props.totalNoOfReviews && (
-                  <div className={styles.noOfReviews}>{`(${
-                    this.props.totalNoOfReviews
-                  })`}</div>
+                  <div
+                    className={styles.noOfReviews}
+                    itemProp="reviewCount"
+                  >{`(${this.props.totalNoOfReviews})`}</div>
                 )}
               </StarRating>
             )}
           </div>
           {this.props.averageRating && (
             <div className={styles.displayRatingText}>
-              Rating <span>{this.props.averageRating}/5</span>
+              Rating{" "}
+              <span>
+                {" "}
+                <span>{Math.floor(this.props.averageRating)}</span>/5
+              </span>
             </div>
           )}
         </div>
