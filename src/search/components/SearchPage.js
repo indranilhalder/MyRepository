@@ -68,6 +68,11 @@ export default class SearchPage extends React.Component {
   redirectToHome() {
     this.props.history.push(HOME_ROUTER);
   }
+  checkIfSingleWordinSearchString() {
+    return this.state.searchString
+      ? this.state.searchString.split(" ").length === 1
+      : true;
+  }
   handleOnSearchString(searchString) {
     this.props.history.push(
       `/search/?searchCategory=all&text=${searchString}`,
@@ -109,6 +114,7 @@ export default class SearchPage extends React.Component {
                   <SearchResultItem
                     key={i}
                     suggestedText={data.suggestionText[0]}
+                    singleWord={this.checkIfSingleWordinSearchString()}
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
@@ -124,6 +130,7 @@ export default class SearchPage extends React.Component {
                   <SearchResultItem
                     key={i}
                     suggestedText={data.suggestionText[0]}
+                    singleWord={this.checkIfSingleWordinSearchString()}
                     text={val.categoryName}
                     value={val.categoryCode}
                     onClick={() => {
