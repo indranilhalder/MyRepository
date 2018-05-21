@@ -400,7 +400,6 @@ export function homeFeed(brandIdOrCategoryId: null) {
 
         delay(() => {
           const isHomeFeedLoading = getState().home.loading;
-          console.log(isHomeFeedLoading);
           if (isHomeFeedLoading) {
             dispatch(homeFeedBackUp());
           }
