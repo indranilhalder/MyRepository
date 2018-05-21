@@ -20,7 +20,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    sortList: state.productListings.productListings.sorts
+    sortList: state.productListings.productListings
+      ? state.productListings.productListings.sorts
+      : null
   };
 };
 
