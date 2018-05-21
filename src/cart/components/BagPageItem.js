@@ -47,7 +47,13 @@ export default class BagPageItem extends React.Component {
           {this.props.isGiveAway === NO &&
             this.props.price && (
               <div className={styles.informationText}>
-                {` ${RUPEE_SYMBOL}${this.props.price}`}
+                {` ${RUPEE_SYMBOL}${this.props.price}`}{" "}
+                {this.props.offerPrice && (
+                  <span className={styles.offerPrice}>
+                    {" "}
+                    {` ${RUPEE_SYMBOL}${this.props.offerPrice}`}
+                  </span>
+                )}
               </div>
             )}
           {this.props.isGiveAway === YES && (
