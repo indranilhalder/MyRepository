@@ -34,10 +34,40 @@
   display: inline-block;
   width: 100%;
   margin-top: 8vh;
+  text-decoration: underline;
 }
 
 .socialButtons {
   display: inline-block;
   width: 100%;
   margin-top: 5px;
+}
+.legalLinkHolder {
+  width: calc(100% - 80px);
+  height: auto;
+  padding: 0px 5px;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.link {
+  width: auto;
+  height: auto;
+  color: #fff;
+  font-size: 12px;
+  text-decoration: underline;
+  font-family: regular;
+  display: inline-block;
+}
+.linkLabelLeft {
+  width: 50%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+}
+.linkLabelRight {
+  composes: linkLabelLeft;
+  text-align: right;
 }
