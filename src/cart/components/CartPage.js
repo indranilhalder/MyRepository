@@ -5,7 +5,12 @@ import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
-import { SUCCESS, HOME_ROUTER, NO } from "../../lib/constants";
+import {
+  SUCCESS,
+  HOME_ROUTER,
+  NO,
+  BANK_COUPON_COOKIE
+} from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
 import filter from "lodash.filter";
 import { Redirect } from "react-router-dom";
@@ -88,6 +93,11 @@ class CartPage extends React.Component {
           JSON.parse(globalCookie).access_token
         );
       }
+    }
+    // delete bank coupon localstorage if it is exits.
+    // because we user can not have bank offer cookie on cart page
+    if (localStorage.getItem(BANK_COUPON_COOKIE)) {
+      localStorage.removeItem(BANK_COUPON_COOKIE);
     }
   }
 
