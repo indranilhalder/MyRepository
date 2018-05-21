@@ -112,7 +112,7 @@ const home = (
       }
       return state;
     case homeActions.HOME_FEED_FAILURE:
-      if (!state.useBackUpData) {
+      if (!state.useBackUpHomeFeed) {
         return Object.assign({}, state, {
           status: action.status,
           error: action.error
