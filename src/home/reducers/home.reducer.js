@@ -38,7 +38,7 @@ const home = (
     case homeActions.HOME_FEED_BACK_UP_REQUEST:
       return Object.assign({}, state, {
         loading: true,
-        useBackUpData: true,
+        useBackUpHomeFeed: true,
         status: action.status
       });
     case homeActions.HOME_FEED_BACK_UP_SUCCESS:
@@ -112,11 +112,10 @@ const home = (
       }
       return state;
     case homeActions.HOME_FEED_FAILURE:
-      if (!state.useBackUpData) {
+      if (!state.useBackUpHomeFeed) {
         return Object.assign({}, state, {
           status: action.status,
-          error: action.error,
-          loading: false
+          error: action.error
         });
       }
       return state;

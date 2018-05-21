@@ -278,7 +278,7 @@ class ProductReviewPage extends Component {
                   this.props.productDetails.mrpPrice.formattedValueNoDecimal
                 }
                 averageRating={this.props.productDetails.averageRating}
-                totalNoOfReviews={this.props.productDetails.productReviewsCount}
+                numberOfReviews={this.props.productDetails.numberOfReviews}
               />
               <RatingHolder ratingData={this.props.ratingData} />
             </div>
