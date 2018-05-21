@@ -2006,9 +2006,9 @@ export function binValidationForNetBanking(paymentMode, bankName) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      if (resultJson.bankName) {
-        localStorage.setItem(SELECTED_BANK_NAME, resultJson.bankName);
-      }
+
+      localStorage.setItem(SELECTED_BANK_NAME, bankName);
+
       dispatch(binValidationSuccess(resultJson));
     } catch (e) {
       dispatch(binValidationFailure(e.message));
