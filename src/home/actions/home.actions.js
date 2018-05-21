@@ -350,11 +350,17 @@ export function homeFeed(brandIdOrCategoryId: null) {
 
     try {
       let url, result, feedTypeRequest, resultJson;
+
       if (brandIdOrCategoryId) {
-        result = await api.getMiddlewareUrl(
-          `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
-        );
         feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
+        try {
+          result = await api.getMiddlewareUrl(
+            `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
+          );
+        } catch (e) {
+          dispatch(homeFeedSuccess([], feedTypeRequest));
+        }
+
         resultJson = await result.json();
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
