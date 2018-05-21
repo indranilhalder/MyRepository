@@ -62,7 +62,7 @@ export default class ProductModule extends React.Component {
       >
         {/* Need this atag for SEO stuff.The click event for this exists at the component level.The click on the atag is halted using pointer events  */}
         <a
-          href={`${this.props.originUrl}${this.getProductURL()}`}
+          href={`${window.location.origin}${this.getProductURL()}`}
           className={styles.aTag}
           style={{ pointerEvents: "none" }}
         >
