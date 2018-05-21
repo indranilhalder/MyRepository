@@ -61,14 +61,14 @@ import {
   STATIC_PAGE,
   SKU_PAGE_FILTER,
   PRODUCT_LISTINGS_WITHOUT_SLASH,
-  HELP_URL
+  HELP_URL,
+  NOT_FOUND
 } from "../src/lib/constants";
 import Loadable from "react-loadable";
 
 import StaticPageContainer from "./staticpage/containers/StaticPageContainer.js";
 import PlpBrandCategoryWrapperContainer from "./plp/containers/PlpBrandCategoryWrapperContainer";
 import ProductDescriptionPageWrapperContainer from "./pdp/containers/ProductDescriptionPageWrapperContainer";
-import NoResultPage from "./errorsPage/components/NoResultPage";
 
 const Loader = () => {
   return (
@@ -197,6 +197,12 @@ const ProductSellerContainer = Loadable({
   }
 });
 
+const NoResultPage = Loadable({
+  loader: () => import("./errorsPage/components/NoResultPage"),
+  loading() {
+    return <Loader />;
+  }
+});
 class App extends Component {
   async componentDidMount() {
     let globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -315,7 +321,7 @@ class App extends Component {
             />
             <Route path={RETURNS} component={ReturnFlowContainer} />
             <Route
-              path={`${SHORT_URL_ORDER_DETAIL}`}
+              path={SHORT_URL_ORDER_DETAIL}
               component={OrderDetailsContainer}
             />
             <Route
@@ -441,8 +447,13 @@ class App extends Component {
             />
             <Route exact path={HELP_URL} component={HelpDetailsContainer} />
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
+            <Route
+              exact
+              path={NOT_FOUND}
+              render={() => <NoResultPage {...this.props} />}
+            />
             <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
-            <Route component={NoResultPage} />
+            <Route render={() => <NoResultPage {...this.props} />} />
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />

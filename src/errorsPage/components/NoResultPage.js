@@ -4,10 +4,9 @@ import Button from "../../general/components/Button.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import { HOME_ROUTER } from "../../lib/constants";
 export default class NoResultPage extends React.Component {
-  redirectToHelp = url => {
-    const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
-    this.props.history.push(urlSuffix);
-  };
+  redirectToHome() {
+    this.props.history.push(HOME_ROUTER);
+  }
   render() {
     return (
       <div className={styles.base}>
@@ -29,7 +28,7 @@ export default class NoResultPage extends React.Component {
               label="Continue Shopping"
               width={210}
               textStyle={{ color: "#FFF", fontSize: 16 }}
-              onClick={() => this.redirectToHome(HOME_ROUTER)}
+              onClick={() => this.redirectToHome()}
             />
           </div>
         </div>
