@@ -6,7 +6,9 @@
   height: auto;
   position: relative;
 }
-
+.aTag {
+  pointer-events: none;
+}
 .content {
   margin-top: 20px;
 }
