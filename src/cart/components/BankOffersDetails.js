@@ -110,6 +110,7 @@ class BankOffersDetails extends Component {
                     : APPLY
                 }
                 placeholder="Bank Offer Code"
+                disableManualType={true}
                 couponCode={this.state.selectedBankOfferCode}
                 getValue={selectedBankOfferCode =>
                   this.setState({ selectedBankOfferCode })

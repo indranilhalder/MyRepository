@@ -213,6 +213,7 @@ export const HELP = "Help";
 // COPY
 //STATIC PAGE
 export const STATIC_PAGE = "/:slug";
+export const NOT_FOUND = "/404-not-found";
 export const REVIEW_SUBMIT_TOAST_TEXT =
   "Your review has been submitted and will be displayed after moderation";
 
@@ -220,11 +221,11 @@ export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
 export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
 
-export const TERMS_AND_CONDITION_URL = "/tncPayment";
+export const TERMS_AND_CONDITION_URL = "/payments-faq";
 export const ABOUT_US_URL = "/aboutus";
 export const PRIVACY_POLICY_URL = "/privacy-policy";
-export const CANCEL_URL = "/cancellation";
-export const RETURN_URL = "/returns";
+export const CANCEL_URL = "/cancellation-faq";
+export const RETURN_URL = "/returns-faq";
 export const FAQ_URL = "/faq-page";
 export const HELP_URL = "/help";
 

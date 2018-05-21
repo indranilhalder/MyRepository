@@ -648,10 +648,19 @@ const cart = (
       });
     case cartActions.APPLY_BANK_OFFER_SUCCESS:
       const currentCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      const paymentFailureOrderDetails = cloneDeep(
+        state.paymentFailureOrderDetails
+      );
       currentCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
+      if (paymentFailureOrderDetails) {
+        paymentFailureOrderDetails.cliqCashPaidAmount =
+          action.bankOffer.cliqCashPaidAmount;
+      }
+
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
         cartDetailsCNC: currentCartDetailCNC,
+        paymentFailureOrderDetails,
         bankOffer: action.bankOffer,
         loading: false
       });

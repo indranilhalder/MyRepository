@@ -138,6 +138,7 @@ class ProductCouponDetails extends Component {
                   ? REMOVE
                   : APPLY
               }
+              disableManualType={false}
               placeholder="Enter Coupon code"
               couponCode={this.state.selectedCouponCode}
               getValue={selectedCouponCode =>
@@ -146,9 +147,7 @@ class ProductCouponDetails extends Component {
               applyUserCoupon={() => this.applyUserCoupon()}
             />
           </div>
-          <div className={styles.disclaimer}>
-            <span>Note:</span> {USER_COUPON_NOTE}
-          </div>
+          <div className={styles.disclaimer}>{USER_COUPON_NOTE}</div>
           {!showLogOutUserCoupon && (
             <div className={styles.link} onClick={() => this.navigateToLogin()}>
               <div className={styles.linkArrow}>
