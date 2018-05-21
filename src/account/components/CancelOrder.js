@@ -40,6 +40,7 @@ export default class CancelOrder extends React.Component {
     cancelProductDetails.ticketTypeCode = "C";
     cancelProductDetails.reasonCode = reason.cancelReasonCode;
     cancelProductDetails.refundType = "";
+    cancelProductDetails.reasonLabel = reason.reason;
     let orderDetails = {};
     orderDetails.cancelProductDetails = cancelProductDetails;
     orderDetails.productDetails =

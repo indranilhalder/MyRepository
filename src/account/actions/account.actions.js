@@ -48,7 +48,8 @@ import {
   AODBE_MY_ACCOUNT_SETTINGS,
   ADOBE_MY_ACCOUNT_ORDER_DETAILS,
   setDataLayerForFollowAndUnFollowBrand,
-  ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS
+  ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+  ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS
 } from "../../lib/adobeUtils";
 import {
   showSecondaryLoader,
@@ -344,7 +345,12 @@ export function cancelProduct(cancelProductDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
       dispatch(displayToast(SUCCESS_MESSAGE_IN_CANCELING_ORDER));
+      setDataLayerForMyAccountDirectCalls(
+        ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS,
+        cancelProductDetails
+      );
       return dispatch(cancelProductSuccess(resultJson));
     } catch (e) {
       return dispatch(cancelProductFailure(e.message));

@@ -1391,9 +1391,9 @@ export function setDataLayerForMyAccountDirectCalls(
   let data = cloneDeep(window.digitalData);
   if (type === ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS) {
     data = Object.assign(data, {
-      cpj: {
-        product: {
-          id: productDetails.productcode
+      order: {
+        cancellation: {
+          reason: productDetails ? productDetails.reasonLabel : ""
         }
       }
     });
