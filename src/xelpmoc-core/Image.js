@@ -41,15 +41,19 @@ export default class Image extends React.Component {
     return (
       <div className={className} style={{ backgroundColor: this.props.color }}>
         {this.renderImage()}
-        {this.state.imageStatus === LOADED && (
-          <div
-            className={this.styles.actual}
-            style={{
-              backgroundImage: `url(${this.props.image})`,
-              backgroundSize: fit
-            }}
-          />
-        )}
+
+        <div
+          className={
+            this.state.imageStatus === LOADED
+              ? this.styles.loaded
+              : this.styles.actual
+          }
+          style={{
+            backgroundImage: `url(${this.props.image})`,
+            backgroundSize: fit
+          }}
+        />
+        {/* )} */}
         {this.state.imageStatus === ERROR && (
           <div className={this.styles.failed} />
         )}
