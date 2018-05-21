@@ -32,7 +32,7 @@ if (
     "https://tmppprd.tataunistore.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "production") {
   API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
-  MIDDLEWARE_API_URL_ROOT = "https://www.tatacliq.com/marketplacewebservices";
+  MIDDLEWARE_API_URL_ROOT = "https://www.tataque.com/marketplacewebservices";
 } else if (process.env.REACT_APP_STAGE === "p2") {
   API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
   MIDDLEWARE_API_URL_ROOT = "https://p2.tatacliq.com/marketplacewebservices";
