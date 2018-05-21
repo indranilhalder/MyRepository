@@ -78,7 +78,8 @@ import {
   SELECT_ADDRESS_TYPE,
   ISO_CODE,
   OTHER_LANDMARK,
-  BANK_COUPON_COOKIE
+  BANK_COUPON_COOKIE,
+  SELECTED_BANK_NAME
 } from "../../lib/constants";
 import {
   EMAIL_REGULAR_EXPRESSION,
@@ -1401,8 +1402,9 @@ class CheckOutPage extends React.Component {
       } else {
         this.props.createJusPayOrderForNetBanking(
           NET_BANKING,
-          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE),
-          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE))
+          JSON.parse(localStorage.getItem(CART_ITEM_COOKIE)),
+          localStorage.getItem(SELECTED_BANK_NAME),
+          localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
         );
       }
     }
