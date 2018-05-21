@@ -221,7 +221,7 @@ export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
 export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
 
-export const TERMS_AND_CONDITION_URL = "/payments-faq";
+export const TERMS_AND_CONDITION_URL = "/terms-of-use";
 export const ABOUT_US_URL = "/aboutus";
 export const PRIVACY_POLICY_URL = "/privacy-policy";
 export const CANCEL_URL = "/cancellation-faq";

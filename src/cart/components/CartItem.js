@@ -90,6 +90,7 @@ export default class CartItem extends React.Component {
             productName={this.props.productName}
             productDetails={this.props.productDetails}
             price={this.props.price}
+            offerPrice={this.props.offerPrice}
             color={this.props.color}
             size={this.props.size}
             isGiveAway={this.props.isGiveAway}

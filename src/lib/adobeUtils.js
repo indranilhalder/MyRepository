@@ -91,6 +91,8 @@ const ADOBE_INTERNAL_SEARCH_SUCCESS = "internal_search";
 const ADOBE_INTERNAL_SEARCH_NULL = "null_search";
 // end of const or adobe call for internal search call
 
+const ADOBE_NOT_FOUND = "404_error";
+
 // internal search Adobe call const
 export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT =
   "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT";
@@ -336,6 +338,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === ADOBE_STATIC_PAGE) {
     window.digitalData = getDigitalDataForStatic(response);
   }
+
   if (icidType === ICID2) {
     window.digitalData.flag = INTERNAL_CAMPAIGN;
     window.digitalData.internal = {
@@ -1627,4 +1630,8 @@ function getDigitalDataForStatic(response) {
     });
   }
   return data;
+}
+
+export function setDataLayerForNotFound() {
+  window._satellite.track(ADOBE_NOT_FOUND);
 }
