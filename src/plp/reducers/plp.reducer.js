@@ -2,7 +2,6 @@ import * as plpActions from "../actions/plp.actions";
 import concat from "lodash.concat";
 import cloneDeep from "lodash.clonedeep";
 import { CLEAR_ERROR } from "../../general/error.actions";
-import { returnProductDetailsFailure } from "../../account/actions/account.actions";
 const productListings = (
   state = {
     status: null,
