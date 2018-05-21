@@ -59,7 +59,7 @@ export default class ProfileMenuGrid extends React.Component {
         url: MY_ACCOUNT_ALERTS_PAGE
       },
       { image: giftCards, text: "Gift Card", url: MY_ACCOUNT_GIFT_CARD_PAGE },
-      { image: cliqCash, text: "Cliq Cash", url: MY_ACCOUNT_CLIQ_CASH_PAGE },
+      { image: cliqCash, text: "CLiQ Cash", url: MY_ACCOUNT_CLIQ_CASH_PAGE },
       { image: settings, text: "Settings", url: MY_ACCOUNT_UPDATE_PROFILE_PAGE }
     ];
 
