@@ -49,6 +49,7 @@ export default class ProductGrid extends React.Component {
   };
 
   renderComponent = data => {
+    console.log(data);
     // if (data.type === PRODUCT) {
     return (
       <ProductModule
@@ -72,6 +73,7 @@ export default class ProductGrid extends React.Component {
         discountPercent={data.discountPercent}
         isOfferExisting={data.isOfferExisting}
         onlineExclusive={data.onlineExclusive}
+        webURL={data.webURL}
         outOfStock={!data.cumulativeStockLevel}
         onOffer={data.isOfferExisting}
         newProduct={data.newProduct}

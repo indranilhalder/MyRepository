@@ -59,28 +59,30 @@ export default class ProductModule extends React.Component {
         onClick={this.onClick}
         id={`ProductModule-${this.props.productId}`}
       >
-        <div
-          className={
-            this.props.view === "grid"
-              ? styles.imageHolder
-              : styles.ListimageHolder
-          }
-        >
-          <ProductImage image={this.props.productImage} />
-          {this.props.onConnect && (
-            <ConnectButton onClick={this.handleConnect} />
-          )}
+        <a href={this.props.webURL} className={styles.aTag}>
+          <div
+            className={
+              this.props.view === "grid"
+                ? styles.imageHolder
+                : styles.ListimageHolder
+            }
+          >
+            <ProductImage image={this.props.productImage} />
+            {this.props.onConnect && (
+              <ConnectButton onClick={this.handleConnect} />
+            )}
 
-          <div className={styles.flagHolder}>
-            <ProductFlags
-              discountPercent={this.props.discountPercent}
-              isOfferExisting={this.props.isOfferExisting}
-              onlineExclusive={this.props.onlineExclusive}
-              outOfStock={this.props.outOfStock}
-              newProduct={this.props.newProduct}
-            />
+            <div className={styles.flagHolder}>
+              <ProductFlags
+                discountPercent={this.props.discountPercent}
+                isOfferExisting={this.props.isOfferExisting}
+                onlineExclusive={this.props.onlineExclusive}
+                outOfStock={this.props.outOfStock}
+                newProduct={this.props.newProduct}
+              />
+            </div>
           </div>
-        </div>
+        </a>
         <div
           className={
             this.props.view === "grid" ? styles.content : styles.Listcontent
