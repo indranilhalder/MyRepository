@@ -49,7 +49,6 @@ export default class ProductGrid extends React.Component {
   };
 
   renderComponent = data => {
-    console.log(data);
     // if (data.type === PRODUCT) {
     return (
       <ProductModule
