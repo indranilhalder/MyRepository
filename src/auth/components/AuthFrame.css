@@ -1,17 +1,21 @@
 .base {
   width: 100%;
   padding: 3vh 40px;
-  min-height: 100vh;
+  height: auto;
+  min-height: 540px;
   background: url(./img/background.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-  position: relative;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .center {
   width: 100%;
   height: auto;
   text-align: center;
-  margin-bottom: 4vh;
 }
 .logo {
   display: inline-block;
@@ -33,24 +37,19 @@
   text-align: center;
   display: inline-block;
   width: 100%;
-  margin-top: 4vh;
+  margin-top: 3vh;
   text-decoration: underline;
 }
 
 .socialButtons {
   display: inline-block;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 15px;
 }
 .legalLinkHolder {
-  width: calc(100% - 80px);
+  width: 100%;
   height: auto;
-  padding: 0px 5px;
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  margin: auto;
+  margin-top: 35px;
 }
 .link {
   width: auto;
