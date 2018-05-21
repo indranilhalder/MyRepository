@@ -1053,7 +1053,7 @@ export function setDataLayerForPlpDirectCalls(response) {
       badge = "new";
     }
   }
-  if (badge) {
+  if (badge && data) {
     if (data.cpj && data.cpj.product) {
       Object.assign(data.cpj.product, { badge });
     } else if (data.cpj) {
