@@ -16,7 +16,6 @@ export default class ProductDetailsCard extends React.Component {
   };
 
   render() {
-    console.log(this.props.numberOfReviews);
     return (
       <div className={styles.base}>
         <div className={styles.productImageHolder}>

@@ -244,7 +244,7 @@ class ProductReviewPage extends Component {
       ) {
         seoDoublePrice = this.props.productDetails.mrpPrice.doubleValue;
       }
-      console.log(this.props);
+
       return (
         <PdpFrame
           {...this.props.productDetails}
