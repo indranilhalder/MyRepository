@@ -38,7 +38,7 @@ class ProductListingsPage extends Component {
       searchCategory !== "" &&
       searchCategory !== SEARCH_CATEGORY_TO_IGNORE
     ) {
-      searchText = `:category:${searchCategory}`;
+      searchText = `:brand:${searchCategory}`;
     }
 
     if (!searchText) {
@@ -52,7 +52,7 @@ class ProductListingsPage extends Component {
       if (searchText) {
         searchText = searchText.replace(
           ":relevance",
-          `:relevance:brand:${this.props.match.params[0].toUpperCase()}`
+          `:relevance:category:${this.props.match.params[0].toUpperCase()}`
         );
       } else {
         searchText = `:relevance:category:${this.props.match.params[0].toUpperCase()}`;
