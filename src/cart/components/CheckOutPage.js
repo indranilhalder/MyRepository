@@ -895,9 +895,43 @@ class CheckOutPage extends React.Component {
 
     if (nextProps.cart.justPayPaymentDetails !== null) {
       if (nextProps.cart.justPayPaymentDetails.payment) {
-        window.location.replace(
-          nextProps.cart.justPayPaymentDetails.payment.authentication.url
-        );
+        console.log(nextProps.cart.justPayPaymentDetails);
+        if (
+          nextProps.cart.justPayPaymentDetails &&
+          nextProps.cart.justPayPaymentDetails.payment &&
+          nextProps.cart.justPayPaymentDetails.payment.authentication.method ===
+            "GET"
+        ) {
+          window.location.replace(
+            nextProps.cart.justPayPaymentDetails.payment.authentication.url
+          );
+        } else {
+          var juspayResponse = nextProps.cart.justPayPaymentDetails; // assuming that `res` holds the data return by JusPay API
+          var url = juspayResponse.payment.authentication.url;
+          var method = juspayResponse.payment.authentication.method;
+
+          var frm = document.createElement("form");
+          frm.style.display = "none"; // ensure that the form is hidden from the user
+          frm.setAttribute("method", method);
+          frm.setAttribute("action", url);
+
+          if (method === "POST") {
+            var params = juspayResponse.payment.authentication.params;
+            for (var key in params) {
+              var value = params[key];
+              var field = document.createElement("input");
+              field.setAttribute("type", "hidden");
+              field.setAttribute("name", key);
+              field.setAttribute("value", value);
+              frm.appendChild(field);
+            }
+          }
+
+          document.body.appendChild(frm);
+          // form is now ready
+          frm.submit();
+          console.log(nextProps.cart.justPayPaymentDetails);
+        }
       }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
