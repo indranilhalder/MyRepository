@@ -17,8 +17,7 @@ export default class ReviewPage extends React.Component {
         .reverse()
         .join("-");
     }
-    let date = Date(formattedDate, "MM-dd-YYYY");
-    date = new Date(date).toDateString();
+    let date = new Date(formattedDate).toDateString();
     return (
       <div className={styles.base}>
         {this.props.rating && (
@@ -32,10 +31,21 @@ export default class ReviewPage extends React.Component {
         {this.props.text && (
           <div className={styles.text}>{this.props.text}</div>
         )}
-        {date &&
-          date !== INVALID_DATE && (
-            <div className={styles.dateTimeBox}>{date}</div>
-          )}
+        {date && date !== INVALID_DATE ? (
+          <div className={styles.dateTimeBox}>
+            {this.props.name &&
+              this.props.name.charAt(0).toUpperCase() +
+                this.props.name.slice(1).toLowerCase()}
+            {"  "}
+            {date}
+          </div>
+        ) : (
+          <div className={styles.dateTimeBox}>
+            {this.props.name &&
+              this.props.name.charAt(0).toUpperCase() +
+                this.props.name.slice(1).toLowerCase()}
+          </div>
+        )}
       </div>
     );
   }
