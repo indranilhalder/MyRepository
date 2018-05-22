@@ -39,6 +39,7 @@ export default class BrandsLandingPageDefault extends React.Component {
       this.props.history.push(urlSuffix);
     }
   };
+
   componentDidMount() {
     this.props.getFollowedBrands();
     this.props.getAllBrands();
