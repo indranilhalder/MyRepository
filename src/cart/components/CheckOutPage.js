@@ -79,7 +79,8 @@ import {
   ISO_CODE,
   OTHER_LANDMARK,
   BANK_COUPON_COOKIE,
-  SELECTED_BANK_NAME
+  SELECTED_BANK_NAME,
+  MY_ACCOUNT_CART_PAGE
 } from "../../lib/constants";
 import {
   EMAIL_REGULAR_EXPRESSION,
@@ -225,6 +226,42 @@ class CheckOutPage extends React.Component {
       binValidationCOD: false
     });
   };
+  navigateToJusPayOnGET(url) {
+    window.location.replace(url);
+  }
+  navigateToJusPayOnPOST(juspayResponse) {
+    if (
+      !juspayResponse ||
+      !juspayResponse.payment ||
+      !juspayResponse.payment.authentication ||
+      !juspayResponse.payment.authentication.url
+    ) {
+      return this.props.displayToast("Opps some thing went wrong");
+    }
+    var url = juspayResponse.payment.authentication.url;
+    var method = juspayResponse.payment.authentication.method;
+
+    var frm = document.createElement("form");
+    frm.style.display = "none"; // ensure that the form is hidden from the user
+    frm.setAttribute("method", method);
+    frm.setAttribute("action", url);
+
+    if (method === "POST") {
+      var params = juspayResponse.payment.authentication.params;
+      for (var key in params) {
+        var value = params[key];
+        var field = document.createElement("input");
+        field.setAttribute("type", "hidden");
+        field.setAttribute("name", key);
+        field.setAttribute("value", value);
+        frm.appendChild(field);
+      }
+    }
+
+    document.body.appendChild(frm);
+    // form is now ready
+    frm.submit();
+  }
   changeSubEmiOption(currentSelectedEMIType) {
     let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
     if (noCostEmiCouponCode) {
@@ -895,9 +932,34 @@ class CheckOutPage extends React.Component {
 
     if (nextProps.cart.justPayPaymentDetails !== null) {
       if (nextProps.cart.justPayPaymentDetails.payment) {
-        window.location.replace(
-          nextProps.cart.justPayPaymentDetails.payment.authentication.url
-        );
+        if (
+          nextProps.cart.justPayPaymentDetails &&
+          nextProps.cart.justPayPaymentDetails.payment &&
+          nextProps.cart.justPayPaymentDetails.payment.authentication &&
+          nextProps.cart.justPayPaymentDetails.payment.authentication.method ===
+            "GET"
+        ) {
+          if (nextProps.cart.justPayPaymentDetails.payment.authentication.url) {
+            this.navigateToJusPayOnGET(
+              nextProps.cart.justPayPaymentDetails.payment.authentication.url
+            );
+          } else {
+            this.props.displayToast("Opps Some thing went wrong");
+          }
+        } else if (
+          nextProps.cart.justPayPaymentDetails &&
+          nextProps.cart.justPayPaymentDetails.payment &&
+          nextProps.cart.justPayPaymentDetails.payment.authentication &&
+          nextProps.cart.justPayPaymentDetails.payment.authentication.method ===
+            "POST"
+        ) {
+          var juspayResponse = nextProps.cart.justPayPaymentDetails; // assuming that `res` holds the data return by JusPay API
+          this.navigateToJusPayOnPOST(juspayResponse);
+        } else {
+          window.location.replace(
+            nextProps.cart.justPayPaymentDetails.payment.authentication.url
+          );
+        }
       }
     }
     if (nextProps.cart.orderConfirmationDetailsStatus === SUCCESS) {
