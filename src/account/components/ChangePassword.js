@@ -36,8 +36,9 @@ class ChangePassword extends Component {
         {...this.props}
         showSocialButtons={false}
         showCrossIcon={false}
+        showLogo={false}
       >
-        <div>
+        <div className={styles.base}>
           <div>
             <div className={styles.input}>
               <PasswordInput
