@@ -2,7 +2,7 @@ import React from "react";
 import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
 import Loader from "../../general/components/Loader";
 import ProductListingsContainer from "../containers/ProductListingsContainer";
-import { BLP_OR_CLP_FEED_TYPE } from "../../lib/constants";
+import { BLP_OR_CLP_FEED_TYPE, NOT_FOUND } from "../../lib/constants";
 import queryString from "query-string";
 
 export const CATEGORY_REGEX = /c-msh*/;
@@ -22,44 +22,52 @@ export default class PlpBrandCategoryWrapper extends React.Component {
   }
 
   componentWillMount() {
-    const url = this.props.location.pathname;
+    try {
+      const url = this.props.location.pathname;
 
-    let categoryOrBrandId = null;
+      let categoryOrBrandId = null;
 
-    if (CATEGORY_REGEX.test(url)) {
-      categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
+      if (CATEGORY_REGEX.test(url)) {
+        categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
+      }
+
+      if (BRAND_REGEX.test(url)) {
+        categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
+      }
+
+      categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
+
+      this.props.homeFeed(categoryOrBrandId);
+    } catch (e) {
+      this.props.history.replace(NOT_FOUND);
     }
-
-    if (BRAND_REGEX.test(url)) {
-      categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
-    }
-
-    categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
-
-    this.props.homeFeed(categoryOrBrandId);
   }
 
   componentDidUpdate() {
-    const url = this.props.location.pathname;
+    try {
+      const url = this.props.location.pathname;
 
-    let categoryOrBrandId = null;
+      let categoryOrBrandId = null;
 
-    if (CATEGORY_REGEX.test(url)) {
-      categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
-    }
+      if (CATEGORY_REGEX.test(url)) {
+        categoryOrBrandId = url.match(CATEGORY_CAPTURE_REGEX)[0];
+      }
 
-    if (BRAND_REGEX.test(url)) {
-      categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
-    }
+      if (BRAND_REGEX.test(url)) {
+        categoryOrBrandId = url.match(BRAND_CAPTURE_REGEX)[0];
+      }
 
-    categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
+      categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
-    if (
-      this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
-      this.pathname !== this.props.location.pathname
-    ) {
-      this.pathname = this.props.location.pathname;
-      this.props.homeFeed(categoryOrBrandId);
+      if (
+        this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
+        this.pathname !== this.props.location.pathname
+      ) {
+        this.pathname = this.props.location.pathname;
+        this.props.homeFeed(categoryOrBrandId);
+      }
+    } catch (e) {
+      this.props.history.replace(NOT_FOUND);
     }
   }
   renderLoader() {
