@@ -13,15 +13,15 @@ export default class AccountNavigationComponent extends Component {
       this.props.feedComponentData.nodeList &&
       this.props.feedComponentData.nodeList.forEach(status => {
         if (status.url.trim() === this.props.location.pathname.trim()) {
-          particularPage = status.linkName;
+          particularPage = status;
         }
       });
     return (
       <div className={styles.navigationHolder}>
         {particularPage ? (
           <SelectBoxMobile2
-            value={particularPage}
-            label={particularPage}
+            value={particularPage.url.replace("/", "")}
+            label={particularPage.linkName}
             height={40}
             options={this.props.feedComponentData.nodeList.map((val, i) => {
               return {
