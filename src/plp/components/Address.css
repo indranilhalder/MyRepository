@@ -21,6 +21,8 @@
   color: #181818;
   font-size: 14px;
   line-height: 20px;
+  max-height: 200px;
+  overflow: hidden;
   white-space: initial;
   margin: auto;
   word-wrap: break-word;
