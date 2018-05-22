@@ -76,6 +76,7 @@ export default class ReturnsStoreConfirmation extends React.Component {
       <ReturnsFrame
         headerText="Return to store"
         onContinue={this.props.onContinue}
+        onCancel={this.props.cancel}
       >
         <OrderReturnAddressDetails />
         <div className={styles.card}>
@@ -94,15 +95,18 @@ export default class ReturnsStoreConfirmation extends React.Component {
               <div>Qty {data.orderProductWsDTO[0].quantity}</div>
             )}
           </OrderCard>
-          <ReturnsToBank
-            cartNumber={
-              this.props.orderDetails &&
-              this.props.orderDetails.paymentCardDigit
-            }
-            cardLogo={this.getCardLogo(
-              this.props.orderDetails && this.props.orderDetails.paymentCard
+          {this.props.orderDetails &&
+            this.props.orderDetails.paymentCardDigit && (
+              <ReturnsToBank
+                cartNumber={
+                  this.props.orderDetails &&
+                  this.props.orderDetails.paymentCardDigit
+                }
+                cardLogo={this.getCardLogo(
+                  this.props.orderDetails && this.props.orderDetails.paymentCard
+                )}
+              />
             )}
-          />
         </div>
       </ReturnsFrame>
     );
