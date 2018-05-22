@@ -33,11 +33,16 @@ export default class NetBanking extends React.Component {
     super(props);
     this.state = {
       bankName: "",
-      bankCode: ""
+      bankCode: "",
+      selectedFromDropDown: false
     };
   }
   handleSelectForIcon(val) {
-    this.setState({ bankCode: val, bankName: val });
+    this.setState({
+      bankCode: val,
+      bankName: val,
+      selectedFromDropDown: false
+    });
     if (this.props.binValidationForNetBank) {
       this.props.binValidationForNetBank(val);
     }
@@ -46,7 +51,11 @@ export default class NetBanking extends React.Component {
   handleSelect(val) {
     const bankCode = val.value;
     const bankName = val.label;
-    this.setState({ bankCode: bankCode, bankName: bankName });
+    this.setState({
+      bankCode: bankCode,
+      bankName: bankName,
+      selectedFromDropDown: true
+    });
     if (this.props.binValidationForNetBank) {
       this.props.binValidationForNetBank(bankName);
     }
@@ -144,6 +153,7 @@ export default class NetBanking extends React.Component {
                   return { value: val.bankCode, label: val.bankName };
                 })
             }
+            isEnable={this.state.selectedFromDropDown}
             onChange={val => this.handleSelect(val)}
           />
         </div>
