@@ -50,6 +50,7 @@ export default class ProductGrid extends React.Component {
 
   renderComponent = data => {
     // if (data.type === PRODUCT) {
+    console.log(data);
     return (
       <ProductModule
         isRange={data.price.isRange}
@@ -66,8 +67,16 @@ export default class ProductGrid extends React.Component {
         isPlp={true}
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.price.mrpPrice.formattedValueNoDecimal}
-        discountPrice={data.price.sellingPrice.formattedValueNoDecimal}
+        price={
+          data.price.mrpPrice
+            ? data.price.mrpPrice.formattedValueNoDecimal
+            : null
+        }
+        discountPrice={
+          data.price.sellingPrice
+            ? data.price.sellingPrice.formattedValueNoDecimal
+            : null
+        }
         description={data.productname}
         discountPercent={data.discountPercent}
         isOfferExisting={data.isOfferExisting}
