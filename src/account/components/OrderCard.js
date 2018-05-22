@@ -42,12 +42,20 @@ export default class OrderCard extends React.Component {
                     !this.props.isEgvOrder &&
                     this.props.productName === "Gift Card"
                     ? "Gift card detail will be sent you on your specified email id shortly."
-                    : `${RUPEE_SYMBOL} ${this.props.price}`}
+                    : `${RUPEE_SYMBOL} ${
+                        this.props.price
+                          ? Math.round(this.props.price * 100) / 100
+                          : "0.00"
+                      }`}
               </div>
               {this.props.discountPrice &&
                 this.props.discountPrice !== this.props.price && (
                   <div className={styles.discountPrice}>
-                    {`${RUPEE_SYMBOL} ${this.props.discountPrice}`}
+                    {`${RUPEE_SYMBOL} ${
+                      this.props.discountPrice
+                        ? Math.round(this.props.discountPrice * 100) / 100
+                        : "0.00"
+                    }`}
                   </div>
                 )}
             </div>

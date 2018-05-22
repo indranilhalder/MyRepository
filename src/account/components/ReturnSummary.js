@@ -75,10 +75,28 @@ export default class ReturnSummary extends React.Component {
         <div className={styles.card}>
           <OrderReturnAddressDetails
             addressType={this.props.selectedAddress.addressType}
-            address={this.props.selectedAddress.formattedAddress}
-            subAddress={`${this.props.selectedAddress.state} ${
+            address={`${
+              this.props.selectedAddress.line1
+                ? this.props.selectedAddress.line1
+                : ""
+            }, ${
+              this.props.selectedAddress.landmark
+                ? this.props.selectedAddress.landmark
+                : ""
+            }`}
+            subAddress={`${
+              this.props.selectedAddress.state
+                ? this.props.selectedAddress.state
+                : ""
+            } ${
               this.props.selectedAddress.city
-            } ${this.props.selectedAddress.postalCode}`}
+                ? this.props.selectedAddress.city
+                : ""
+            } ${
+              this.props.selectedAddress.postalCode
+                ? this.props.selectedAddress.postalCode
+                : ""
+            }`}
           />
           <OrderReturnDateAndTimeDetails
             date={this.props.dateSelected}
