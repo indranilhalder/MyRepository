@@ -366,11 +366,6 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <TextWithUnderLine
-              defaultPinCode={
-                defaultPinCode && defaultPinCode !== "undefined"
-                  ? defaultPinCode
-                  : null
-              }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
               checkPinCodeAvailability={pinCode =>
@@ -442,7 +437,6 @@ class CartPage extends React.Component {
               cartDetails.cartAmount && (
                 <Checkout
                   disabled={!this.state.isServiceable}
-                  hasPinCode={defaultPinCode && defaultPinCode !== "undefined"}
                   amount={
                     cartDetails.cartAmount.paybleAmount.value
                       ? Math.round(
