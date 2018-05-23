@@ -11,6 +11,7 @@ import {
 } from "../../lib/constants.js";
 import delay from "lodash.delay";
 import { getSearchTextFromUrlForCategoryProductListings } from "./SortUtils";
+import { BRAND_REGEX, CATEGORY_REGEX } from "../../home/actions/home.actions";
 const SEARCH_CATEGORY_TO_IGNORE = "all";
 const SUFFIX = `&isTextSearch=false&isFilter=false`;
 const SKU_SUFFIX = `&isFilter=false&channel=mobile`;
@@ -30,7 +31,11 @@ class ProductListingsPage extends Component {
       searchCategory !== "" &&
       searchCategory !== SEARCH_CATEGORY_TO_IGNORE
     ) {
-      searchText = `:brand:${searchCategory}`;
+      if (searchCategory === BRAND_REGEX) {
+        searchText = `:brand:${searchCategory}`;
+      } else if (searchCategory === CATEGORY_REGEX) {
+        searchText = `:category:${searchCategory}`;
+      }
     }
 
     if (!searchText) {
