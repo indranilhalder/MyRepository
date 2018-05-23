@@ -98,13 +98,12 @@ export default class Input2 extends React.Component {
               placeholder={this.props.placeholder}
               className={styles.inputBox}
               focus={this.props.focused}
-              onFocus={event => this.handleFocus(event)}
               onBlur={event => this.handleBlur(event)}
               onChange={event => this.handleChange(event)}
               style={{ ...this.props.textStyle }}
               onKeyUp={event => this.handleKeyUp(event)}
               value={this.props.value}
-              maxlength={this.props.maxLength}
+              maxLength={this.props.maxLength}
               disabled={this.props.disabled}
               autoFocus={this.props.autoFocus}
               onKeyPress={event => this.handleKeyPress(event)}
@@ -140,7 +139,6 @@ Input2.propTypes = {
   rightChild: PropTypes.element,
   isWhite: PropTypes.bool,
   onFocus: PropTypes.func,
-  focused: PropTypes.bool,
   onBlur: PropTypes.func,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,

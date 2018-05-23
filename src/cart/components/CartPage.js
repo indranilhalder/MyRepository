@@ -366,14 +366,6 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <TextWithUnderLine
-              // heading={
-              //   defaultPinCode && defaultPinCode !== "undefined"
-              //     ? defaultPinCode
-              //     : "Enter Pincode"
-              // }
-              // boxShadow={
-              //   defaultPinCode && defaultPinCode !== "undefined" ? true : false
-              // }
               defaultPinCode={
                 defaultPinCode && defaultPinCode !== "undefined"
                   ? defaultPinCode
