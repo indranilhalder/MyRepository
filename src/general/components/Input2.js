@@ -94,6 +94,7 @@ export default class Input2 extends React.Component {
           >
             <input
               type={this.props.type}
+              id={this.props.id}
               placeholder={this.props.placeholder}
               className={styles.inputBox}
               onFocus={event => this.handleFocus(event)}
@@ -130,6 +131,7 @@ export default class Input2 extends React.Component {
   }
 }
 Input2.propTypes = {
+  id: PropTypes.string,
   hollow: PropTypes.bool,
   boxy: PropTypes.bool,
   type: PropTypes.string,
@@ -148,6 +150,7 @@ Input2.propTypes = {
 };
 
 Input2.defaultProps = {
+  id: null,
   height: 40,
   type: "text",
   textStyle: {

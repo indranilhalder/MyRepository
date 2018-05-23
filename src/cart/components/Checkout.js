@@ -4,7 +4,10 @@ import styles from "./Checkout.css";
 import Button from "../../general/components/Button.js";
 import infoIcon from "./img/Info.svg";
 import Icon from "../../xelpmoc-core/Icon";
-import { RUPEE_SYMBOL } from "../../lib/constants.js";
+import {
+  RUPEE_SYMBOL,
+  DEFAULT_PIN_CODE_LOCAL_STORAGE
+} from "../../lib/constants.js";
 export default class Checkout extends React.Component {
   constructor(props) {
     super(props);
@@ -25,12 +28,20 @@ export default class Checkout extends React.Component {
       this.setState({ showDetails: nextProps.showDetails });
     }
   }
+  handleFocusOnPinCode() {
+    document.getElementById("searchAndUpdateInput").focus();
+  }
+
   render() {
     let classOffers = styles.informationAnswerHolder;
     if (this.props.offers) {
       classOffers = styles.apply;
     }
-
+    const defaultPinCode =
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) &&
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) !== "undefined"
+        ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        : null;
     return (
       <React.Fragment>
         <div className={styles.hiddenBase}>
@@ -126,18 +137,33 @@ export default class Checkout extends React.Component {
         </div>
         <div className={styles.base}>
           <div className={styles.totalPriceButtonHolder}>
-            <div className={styles.checkoutButtonHolder}>
-              <Button
-                disabled={this.props.disabled}
-                type="primary"
-                backgroundColor="#ff1744"
-                height={40}
-                label={this.props.label}
-                width={120}
-                textStyle={{ color: "#FFF", fontSize: 14 }}
-                onClick={() => this.handleClick()}
-              />
-            </div>
+            {defaultPinCode && (
+              <div className={styles.checkoutButtonHolder}>
+                <Button
+                  disabled={this.props.disabled}
+                  type="primary"
+                  backgroundColor="#ff1744"
+                  height={40}
+                  label={this.props.label}
+                  width={120}
+                  textStyle={{ color: "#FFF", fontSize: 14 }}
+                  onClick={() => this.handleClick()}
+                />
+              </div>
+            )}
+            {!defaultPinCode && (
+              <div className={styles.checkoutButtonHolder}>
+                <Button
+                  type="primary"
+                  backgroundColor="#ff1744"
+                  height={40}
+                  label={this.props.label}
+                  width={120}
+                  textStyle={{ color: "#FFF", fontSize: 14 }}
+                  onClick={() => this.handleFocusOnPinCode()}
+                />
+              </div>
+            )}
             <div className={styles.totalPriceHeading}>Total</div>
             <div className={styles.amountHolder}>
               <div className={styles.amount}>

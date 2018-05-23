@@ -366,26 +366,14 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <TextWithUnderLine
-              heading={
-                defaultPinCode && defaultPinCode !== "undefined"
-                  ? defaultPinCode
-                  : "Enter Pincode"
-              }
-              boxShadow={
-                defaultPinCode && defaultPinCode !== "undefined" ? true : false
-              }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
+              checkPinCodeAvailability={pinCode =>
+                this.checkPinCodeAvailability(pinCode)
+              }
             />
           </div>
-
-          <div
-            className={
-              !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-                ? styles.disabled
-                : styles.content
-            }
-          >
+          <div className={styles.content}>
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
