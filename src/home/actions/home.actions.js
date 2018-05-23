@@ -436,12 +436,19 @@ export function homeFeed(brandIdOrCategoryId: null) {
       parsedResultJson = parsedResultJson.items;
 
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
-      setDataLayer(
-        ADOBE_HOME_TYPE,
-        null,
-        getState().icid.value,
-        getState().icid.icidType
-      );
+      if (
+        window.digitalData &&
+        window.digitalData.page &&
+        window.digitalData.page.pageInfo &&
+        window.digitalData.page.pageInfo.pageName !== "homepage"
+      ) {
+        setDataLayer(
+          ADOBE_HOME_TYPE,
+          null,
+          getState().icid.value,
+          getState().icid.icidType
+        );
+      }
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }
