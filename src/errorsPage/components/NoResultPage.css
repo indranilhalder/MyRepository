@@ -1,0 +1,47 @@
+.base {
+  width: 100%;
+  height: calc(100vh - 50px);
+  position: relative;
+  background: url(./img/error.png) no-repeat;
+  background-size: cover;
+}
+.headerWithTextHolder {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  top: 30px;
+}
+.pageTitle {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  text-align: center;
+  font-size: 38px;
+  font-family: regular;
+  margin-bottom: 25px;
+}
+.infoText {
+  width: 100%;
+  height: auto;
+  color: #fff;
+  font-family: regular;
+  line-height: normal;
+  font-size: 18px;
+  text-align: center;
+}
+.buttonFooter {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  margin: auto;
+  text-align: center;
+}
+.buttonHolder {
+  width: auto;
+  height: auto;
+  display: inline-block;
+}

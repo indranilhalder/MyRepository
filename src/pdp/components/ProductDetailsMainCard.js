@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./ProductDetailsMainCard.css";
 import StarRating from "../../general/components/StarRating.js";
 import Icon from "../../xelpmoc-core/Icon";
+import { RUPEE_SYMBOL } from "../../lib/constants.js";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import arrowIcon from "../../general/components/img/arrow.svg";
 import PropTypes from "prop-types";
@@ -19,7 +20,11 @@ export default class ProductDetailsMainCard extends React.Component {
       this.props.history.push(urlSuffix);
     }
   }
-
+  handleRatingLink() {
+    if (this.props.goToReviewPage) {
+      this.props.goToReviewPage();
+    }
+  }
   renderSchemaTags = () => {
     return (
       <MetaTags>
@@ -74,12 +79,14 @@ export default class ProductDetailsMainCard extends React.Component {
           </div>
           <div
             itemProp="offers"
-            itemScope=""
-            itemType="http://schema.org/Offer"
+            itemScope
+            itemType="http://schema.org/AggregateOffer"
             className={styles.productPriceSection}
           >
             <div className={styles.price}>
-              <span itemType="price">{displayPrice}</span>
+              <meta itemProp="priceCurrency" content={RUPEE_SYMBOL} />
+              <meta itemProp="lowPrice" content={this.props.doublePrice} />
+              <span>{displayPrice}</span>
             </div>
             {this.props.discountPrice &&
               this.props.discountPrice !== this.props.price && (
@@ -94,22 +101,34 @@ export default class ProductDetailsMainCard extends React.Component {
         </div>
 
         {this.props.averageRating && (
-          <StarRating averageRating={this.props.averageRating}>
-            {this.props.averageRating && (
-              <div
-                itemprop="aggregateRating"
-                itemscope
-                itemtype="http://schema.org/AggregateRating"
-                className={styles.ratingText}
-                onClick={() => this.handleClick()}
-              >
-                Rating {`${averageRating}`} /5
+          <div
+            className={styles.ratingHolder}
+            onClick={() => this.handleRatingLink()}
+          >
+            <StarRating averageRating={this.props.averageRating}>
+              {this.props.averageRating && (
+                <div
+                  className={styles.ratingText}
+                  onClick={() => this.handleClick()}
+                  itemProp="aggregateRating"
+                  itemScope
+                  itemType="http://schema.org/AggregateRating"
+                >
+                  Rating
+                  <span className={styles.ratingOffset} itemProp="ratingValue">
+                    {averageRating}
+                  </span>/5
+                  <meta
+                    itemProp="reviewCount"
+                    content={this.props.totalNoOfReviews}
+                  />
+                </div>
+              )}
+              <div className={styles.arrowHolder}>
+                <Icon image={arrowIcon} size={15} />
               </div>
-            )}
-            <div className={styles.arrowHolder}>
-              <Icon image={arrowIcon} size={15} />
-            </div>
-          </StarRating>
+            </StarRating>
+          </div>
         )}
       </div>
     );

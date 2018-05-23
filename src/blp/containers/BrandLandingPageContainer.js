@@ -11,7 +11,7 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    homeFeedData: state.feed.homeFeed,
+    homeFeedData: state.feed.secondaryFeed,
     loading: state.feed.loading,
     isOnBrandLandingPage: true,
     feedType: SECONDARY_FEED_TYPE

@@ -1,17 +1,21 @@
 .base {
   width: 100%;
-  padding: 5vh 40px;
-  min-height: 100vh;
+  padding: 3vh 40px;
+  height: auto;
+  min-height: 540px;
   background: url(./img/background.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-  position: relative;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .center {
   width: 100%;
   height: auto;
   text-align: center;
-  margin-bottom: 4vh;
 }
 .logo {
   display: inline-block;
@@ -33,11 +37,51 @@
   text-align: center;
   display: inline-block;
   width: 100%;
-  margin-top: 8vh;
+  margin-top: 3vh;
+  text-decoration: underline;
 }
 
 .socialButtons {
   display: inline-block;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 15px;
+}
+.legalLinkHolder {
+  width: 100%;
+  height: auto;
+  margin-top: 35px;
+}
+.link {
+  width: auto;
+  height: auto;
+  color: #fff;
+  font-size: 12px;
+  text-decoration: underline;
+  font-family: regular;
+  display: inline-block;
+}
+.callUs {
+  composes: link;
+  padding-left: 10px;
+}
+.callUs a {
+  text-decoration: none;
+  color: #fff !important;
+}
+.linkLabelLeft {
+  width: 33.33%;
+  height: auto;
+  display: inline-block;
+  text-align: left;
+}
+.linkLabelRight {
+  composes: linkLabelLeft;
+  text-align: right;
+  width: 35%;
+}
+.linkLabelMiddle {
+  composes: linkLabelLeft;
+
+  padding-left: 10px;
+  width: 30%;
 }

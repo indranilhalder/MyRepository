@@ -72,6 +72,18 @@
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   border-radius: 50%;
 }
+.multiColorIndicator {
+  composes: colourIndicator;
+  background: linear-gradient(
+    to bottom,
+    #5bc0eb,
+    #fde74c 14%,
+    #9bc53d 33%,
+    #34e59b 55%,
+    #75c7b8 81%,
+    #ec7c51
+  );
+}
 .count {
   font-size: 14px;
   font-family: regular;

@@ -90,7 +90,7 @@ const AUTO_PRODUCT_RECOMMENDATION_COMPONENT =
 // TODO Followed Widget
 
 const ADOBE_TARGET_HOME_FEED_MBOX_NAME = "mboxPOCTest1"; // for local/devxelp/uat2tmpprod
-const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "PROD_Mobile_Homepage_Mbox";
+const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
 const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
 export const CATEGORY_REGEX = /msh*/;
 export const BRAND_REGEX = /mbh*/;
@@ -203,7 +203,7 @@ export function getItems(positionInFeed, itemIds, feedType) {
         productCodes = `${itemId},${productCodes}`;
       });
       const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
-      const result = await api.get(url);
+      const result = await api.getMiddlewareUrl(url);
       const resultJson = await result.json();
 
       if (resultJson.status === "FAILURE") {
@@ -287,6 +287,7 @@ export function homeFeedFailure(error) {
 
 export function homeFeedBackUp() {
   return async (dispatch, getState, { api }) => {
+    dispatch(homeFeedBackUpRequest());
     try {
       const result = await api.get(
         `v2/mpl/cms/defaultpage?pageId=defaulthomepage`
@@ -318,9 +319,17 @@ export function getFeed(pageId: null) {
 
     try {
       let url, result, feedTypeRequest, resultJson;
+
       if (pageId) {
-        result = await api.get(`v2/mpl/cms/defaultpage?pageId=${pageId}`);
         feedTypeRequest = SECONDARY_FEED_TYPE;
+        try {
+          result = await api.getMiddlewareUrl(
+            `v2/mpl/cms/defaultpage?pageId=${pageId}`
+          );
+        } catch (e) {
+          dispatch(homeFeedSuccess([], feedTypeRequest));
+        }
+
         resultJson = await result.json();
         if (resultJson.errors) {
           dispatch(homeFeedSuccess([], feedTypeRequest));
@@ -380,8 +389,12 @@ export function getFeed(pageId: null) {
         feedTypeRequest = HOME_FEED_TYPE;
       }
 
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson}`);
+      if (
+        !resultJson ||
+        !resultJson.content ||
+        resultJson.status === "FAILURE"
+      ) {
+        throw new Error("No Data");
       }
 
       let parsedResultJson = JSON.parse(resultJson.content);
@@ -389,12 +402,19 @@ export function getFeed(pageId: null) {
       parsedResultJson = parsedResultJson.items;
 
       dispatch(homeFeedSuccess(parsedResultJson, feedTypeRequest));
-      setDataLayer(
-        ADOBE_HOME_TYPE,
-        null,
-        getState().icid.value,
-        getState().icid.icidType
-      );
+      if (
+        window.digitalData &&
+        window.digitalData.page &&
+        window.digitalData.page.pageInfo &&
+        window.digitalData.page.pageInfo.pageName !== "homepage"
+      ) {
+        setDataLayer(
+          ADOBE_HOME_TYPE,
+          null,
+          getState().icid.value,
+          getState().icid.icidType
+        );
+      }
     } catch (e) {
       dispatch(homeFeedFailure(e.message));
     }

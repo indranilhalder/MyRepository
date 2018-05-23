@@ -71,8 +71,8 @@ const MY_ACCOUNT_OVERVIEW = "myaccount_overview";
 const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
 const MY_ACCOUNT_ADDRESS_BOOK = "myaccount_address_book";
 const MY_ACCOUNT_BRANDS = "myaccount_brands";
-const MY_ACCOUNT_ORDER_HISTORY = "myaccount_order_history";
-const MY_ACCOUNT_ORDER_DETAIL = "myaacount_order_details_page";
+const MY_ACCOUNT_ORDER_HISTORY = "order history page";
+const MY_ACCOUNT_ORDER_DETAIL = "order details page";
 const MY_ACCOUNT_SAVED_PAYMENTS = "myaccount_payment_details";
 const MY_ACCOUNT_ALERTS = "myaccount_alerts";
 const MY_ACCOUNT_COUPONS = "myaccount_coupons";
@@ -91,6 +91,8 @@ const ADOBE_INTERNAL_SEARCH_SUCCESS = "internal_search";
 const ADOBE_INTERNAL_SEARCH_NULL = "null_search";
 // end of const or adobe call for internal search call
 
+const ADOBE_NOT_FOUND = "404_error";
+const ADOBE_FOR_CLICK_ON_PRODUCT_ON_PLP = "internal_search_link_clicks";
 // internal search Adobe call const
 export const ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT =
   "ADOBE_INTERNAL_SEARCH_CALL_ON_GET_PRODUCT";
@@ -281,7 +283,10 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_OVERVIEW);
   }
   if (type === ADOBE_MY_ACCOUNT_SAVED_LIST) {
-    window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_SAVED_LIST);
+    window.digitalData = getDigitalDataForMyAccount(
+      MY_ACCOUNT_SAVED_LIST,
+      response
+    );
   }
   if (type === ADOBE_MY_ACCOUNT_ADDRESS_BOOK) {
     window.digitalData = getDigitalDataForMyAccount(MY_ACCOUNT_ADDRESS_BOOK);
@@ -333,6 +338,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
   if (type === ADOBE_STATIC_PAGE) {
     window.digitalData = getDigitalDataForStatic(response);
   }
+
   if (icidType === ICID2) {
     window.digitalData.flag = INTERNAL_CAMPAIGN;
     window.digitalData.internal = {
@@ -425,11 +431,7 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
     window.digitalData = currentDigitalData;
   }
 
-  // we don't have to trigger virtual page load on first time .
-  // thats why we are checking page previous digital data
-  if (previousDigitalData) {
-    window._satellite.track(ADOBE_SATELLITE_CODE);
-  }
+  window._satellite.track(ADOBE_SATELLITE_CODE);
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
@@ -544,7 +546,7 @@ function getDigitalDataForCart(type, cartResponse) {
         primaryCategory: "cart"
       },
       pageInfo: {
-        pageName: "cart"
+        pageName: "cart page"
       }
     }
   };
@@ -604,14 +606,16 @@ function getDigitalDataForCheckout(type, CheckoutResponse) {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     } = getProductData;
     Object.assign(data, {
       cpj: {
         product: {
           id: productIdsArray,
           quantity: productQuantityArray,
-          price: productPriceArray
+          price: productPriceArray,
+          category: categoryArray
         },
         brand: {
           name: productBrandArray
@@ -635,7 +639,7 @@ function getDigitalDataForOrderConfirmation(type, response) {
         primaryCategory: "orderconfirmation"
       },
       pageInfo: {
-        pageName: "order confirmation page"
+        pageName: "order confirmation"
       }
     }
   };
@@ -646,14 +650,16 @@ function getDigitalDataForOrderConfirmation(type, response) {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     } = getProductData;
     Object.assign(data, {
       cpj: {
         product: {
           id: productIdsArray,
           quantity: productQuantityArray,
-          price: productPriceArray
+          price: productPriceArray,
+          category: categoryArray
         },
         brand: {
           name: productBrandArray
@@ -675,13 +681,18 @@ function getProductsDigitalData(response) {
     let productIdsArray = [],
       productQuantityArray = [],
       productPriceArray = [],
-      productBrandArray = [];
+      productBrandArray = [],
+      categoryArray = [];
     response.products.forEach(function(product) {
       productIdsArray.push(
         product.productcode && product.productcode.toLowerCase()
       );
       productQuantityArray.push(
-        product.qtySelectedByUser ? product.qtySelectedByUser : product.quantity
+        product.qtySelectedByUser
+          ? product.qtySelectedByUser
+          : product.quantity
+            ? product.quantity
+            : null
       );
       productPriceArray.push(
         product.offerPrice
@@ -690,19 +701,29 @@ function getProductsDigitalData(response) {
             ? product.pricevalue
             : product.price
               ? product.price
-              : null
+              : product.mrp && product.mrp.value
+                ? product.mrp.value
+                : null
       );
       productBrandArray.push(
         product.productBrand &&
           product.productBrand.replace(/ /g, "_").toLowerCase()
       );
+      categoryArray.push(
+        product.categoryHierarchy &&
+          product.categoryHierarchy[0] &&
+          product.categoryHierarchy[0].category_name &&
+          product.categoryHierarchy[0].category_name
+            .replace(/ /g, "_")
+            .toLowerCase()
+      );
     });
-    productIdsArray = productIdsArray.join(",").toLowerCase();
     return {
       productIdsArray,
       productQuantityArray,
       productPriceArray,
-      productBrandArray
+      productBrandArray,
+      categoryArray
     };
   } else {
     return null;
@@ -726,7 +747,7 @@ function getProductCategoryHierarchy(response) {
         );
       }
     });
-    return category.join(",");
+    return category;
   } else {
     return null;
   }
@@ -1019,18 +1040,20 @@ export function getDigitalDataForSearchPageForNullResult(response) {
 export function setDataLayerForPlpDirectCalls(response) {
   const data = window.digitalData;
   let badge;
-  if (response.outOfStock) {
-    badge = "out of stock";
-  } else if (response.discountPercent && response.discountPercent !== "0") {
-    badge = `${response.discountPercent}% off`;
-  } else if (response.isOfferExisting) {
-    badge = "on offer";
-  } else if (response.onlineExclusive) {
-    badge = "exclusive";
-  } else if (response.newProduct) {
-    badge = "new";
+  if (response) {
+    if (response.outOfStock) {
+      badge = "out of stock";
+    } else if (response.discountPercent && response.discountPercent !== "0") {
+      badge = `${response.discountPercent}% off`;
+    } else if (response.isOfferExisting) {
+      badge = "on offer";
+    } else if (response.onlineExclusive) {
+      badge = "exclusive";
+    } else if (response.newProduct) {
+      badge = "new";
+    }
   }
-  if (badge) {
+  if (badge && data) {
     if (data.cpj && data.cpj.product) {
       Object.assign(data.cpj.product, { badge });
     } else if (data.cpj) {
@@ -1040,11 +1063,12 @@ export function setDataLayerForPlpDirectCalls(response) {
     }
     window.digitalData = data;
   }
+  window._satellite.track(ADOBE_FOR_CLICK_ON_PRODUCT_ON_PLP);
 }
 export function setDataLayerForLogin(type) {
   let userDetails = getCookie(constants.LOGGED_IN_USER_DETAILS);
   const data = {};
-  if (ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
+  if (type === ADOBE_DIRECT_CALL_FOR_LOGIN_SUCCESS) {
     if (userDetails) {
       if (userDetails.loginType === LOGIN_WITH_EMAIL) {
         Object.assign(data, {
@@ -1143,7 +1167,7 @@ export function setDataLayerForLogin(type) {
     window.digitalData.flag = ADOBE_LOGIN_SUCCESS;
     window._satellite.track(ADOBE_LOGIN_SUCCESS);
   }
-  if (ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
+  if (type === ADOBE_DIRECT_CALL_FOR_LOGIN_FAILURE) {
     window.digitalData.flag = ADOBE_LOGIN_FAILURE;
     window._satellite.track(ADOBE_LOGIN_FAILURE);
   }
@@ -1367,9 +1391,9 @@ export function setDataLayerForMyAccountDirectCalls(
   let data = cloneDeep(window.digitalData);
   if (type === ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS) {
     data = Object.assign(data, {
-      cpj: {
-        product: {
-          id: productDetails.productcode
+      order: {
+        cancellation: {
+          reason: productDetails ? productDetails.reasonLabel : ""
         }
       }
     });
@@ -1392,7 +1416,7 @@ export function setDataLayerForMyAccountDirectCalls(
     window._satellite.track(ADOBE_ORDER_RETURN);
   }
 }
-export function getDigitalDataForMyAccount(pageTitle) {
+export function getDigitalDataForMyAccount(pageTitle, response) {
   const data = {
     page: {
       pageInfo: { pageName: pageTitle },
@@ -1400,6 +1424,29 @@ export function getDigitalDataForMyAccount(pageTitle) {
       display: { hierarchy: `home|my_tata_cliq|${pageTitle}` }
     }
   };
+  if (response) {
+    const getProductData = getProductsDigitalData(response);
+    if (getProductData) {
+      let {
+        productIdsArray,
+        productQuantityArray,
+        productPriceArray,
+        productBrandArray
+      } = getProductData;
+      Object.assign(data, {
+        cpj: {
+          product: {
+            id: productIdsArray,
+            quantity: productQuantityArray,
+            price: productPriceArray
+          },
+          brand: {
+            name: productBrandArray
+          }
+        }
+      });
+    }
+  }
   return data;
 }
 export function getDigitalDataForBLP(response) {
@@ -1546,7 +1593,10 @@ function getDigitalDataForDefaultBlpOrClp(response) {
 }
 
 function getDigitalDataForLoginAndSignup() {
-  const pageTitle = window.location.pathname.replace(/\//g, "");
+  let pageTitle = window.location.pathname.replace(/\//g, "");
+  if (pageTitle === "login") {
+    pageTitle = "login page";
+  }
   const data = {
     page: {
       pageInfo: { pageName: pageTitle },
@@ -1586,4 +1636,8 @@ function getDigitalDataForStatic(response) {
     });
   }
   return data;
+}
+
+export function setDataLayerForNotFound() {
+  window._satellite.track(ADOBE_NOT_FOUND);
 }

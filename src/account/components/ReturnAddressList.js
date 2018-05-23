@@ -45,7 +45,8 @@ export default class ReturnAddressList extends React.Component {
       selectedTime: "",
       addNewAddress: false,
       errorMessage: "",
-      error: false
+      error: false,
+      userEmailId: ""
     };
   }
 
@@ -55,11 +56,14 @@ export default class ReturnAddressList extends React.Component {
     }
   };
   componentWillReceiveProps(nextProps) {
-    if (nextProps.AddUserAddressStatus === SUCCESS) {
+    if (nextProps.addUserAddressStatus === SUCCESS) {
       if (this.state.addNewAddress === true) {
         this.setState({ addNewAddress: false });
         this.props.history.goBack();
       }
+    }
+    if (nextProps.userDetails) {
+      this.setState({ userEmailId: nextProps.userDetails.emailID });
     }
 
     if (nextProps.returnPinCodeStatus === FAILURE) {
@@ -91,9 +95,17 @@ export default class ReturnAddressList extends React.Component {
     );
 
     let productObject = {};
-    productObject.orderCode = this.props.returnProducts.orderProductWsDTO[0].sellerorderno;
-    productObject.pinCode = addressSelected[0].postalCode;
-    productObject.transactionId = this.props.returnProducts.orderProductWsDTO[0].transactionId;
+    productObject.orderCode =
+      this.props.returnProducts &&
+      this.props.returnProducts.orderProductWsDTO &&
+      this.props.returnProducts.orderProductWsDTO[0] &&
+      this.props.returnProducts.orderProductWsDTO[0].sellerorderno;
+    productObject.pinCode = addressSelected && addressSelected[0].postalCode;
+    productObject.transactionId =
+      this.props.returnProducts &&
+      this.props.returnProducts.orderProductWsDTO &&
+      this.props.returnProducts.orderProductWsDTO[0] &&
+      this.props.returnProducts.orderProductWsDTO[0].transactionId;
 
     if (this.props.returnPinCode) {
       this.props.returnPinCode(productObject);
@@ -113,6 +125,12 @@ export default class ReturnAddressList extends React.Component {
     );
   };
   renderAddress = () => {
+    let defaultAddress =
+      this.props.returnRequest &&
+      this.props.returnRequest.deliveryAddressesList &&
+      this.props.returnRequest.deliveryAddressesList.find(address => {
+        return address.defaultAddress === true;
+      });
     if (this.props.returnRequest) {
       return (
         <ReturnsFrame
@@ -127,10 +145,16 @@ export default class ReturnAddressList extends React.Component {
                   addressSelected => {
                     return {
                       addressTitle: addressSelected.addressType,
-                      addressDescription: `${addressSelected.line1} ${
-                        addressSelected.town
-                      } ${addressSelected.city}, ${addressSelected.state} ${
+                      addressDescription: `${
+                        addressSelected.line1 ? addressSelected.line1 : ""
+                      } ${addressSelected.town ? addressSelected.town : ""} ${
+                        addressSelected.city ? addressSelected.city : ""
+                      }, ${
+                        addressSelected.state ? addressSelected.state : ""
+                      } ${
                         addressSelected.postalCode
+                          ? addressSelected.postalCode
+                          : ""
                       }`,
                       value: addressSelected.id,
                       selected: addressSelected.defaultAddress
@@ -156,8 +180,9 @@ export default class ReturnAddressList extends React.Component {
       let cartDetailsLoggedInUser = Cookie.getCookie(
         CART_DETAILS_FOR_LOGGED_IN_USER
       );
+
       this.props.addUserAddress(address, true);
-      this.setState({ addNewAddress: false });
+      // this.setState({ addNewAddress: false });
     }
   };
 
@@ -175,6 +200,10 @@ export default class ReturnAddressList extends React.Component {
           resetAutoPopulateDataForPinCode={() =>
             this.props.resetAutoPopulateDataForPinCode()
           }
+          getUserDetails={() => this.props.getUserDetails()}
+          userDetails={this.props.userDetails}
+          resetAddAddressDetails={() => this.props.resetAddAddressDetails()}
+          clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
         />
       </div>
     );

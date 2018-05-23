@@ -80,19 +80,21 @@ class WriteReview extends React.Component {
           onChange={val => this.onChangeComment(val)}
           placeholder="Tell us what you think of this product"
         />
-        <div className={styles.container}>
+        <div className={styles.buttonContainer}>
           <div className={styles.cancelButton} onClick={() => this.onCancel()}>
-            cancel
+            Cancel
           </div>
-          <div className={styles.submitButton}>
-            <Button
-              className={styles.ratingBar}
-              label={"Submit"}
-              type="secondary"
-              color={buttonColor}
-              width={120}
-              onClick={this.onSubmit}
-            />
+          <div className={styles.submitButtonHolder}>
+            <div className={styles.submitButton}>
+              <Button
+                className={styles.ratingBar}
+                label={"Submit"}
+                type="secondary"
+                color={buttonColor}
+                width={120}
+                onClick={this.onSubmit}
+              />
+            </div>
           </div>
         </div>
       </div>

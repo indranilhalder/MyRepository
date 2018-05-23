@@ -35,7 +35,7 @@ export default class Input2 extends React.Component {
       this.props.onKeyPress(event);
     }
     if (this.props.onlyAlphabet) {
-      var regex = new RegExp("^[a-zA-Z]+$");
+      var regex = new RegExp("^[a-zA-Z\\s]+$");
       var charCode = event.which ? event.which : event.keyCode;
       if (
         (charCode > 64 && charCode < 91) ||
@@ -88,11 +88,13 @@ export default class Input2 extends React.Component {
               paddingRight: `${this.props.rightChildSize - 10}px`,
               height: `${this.props.height}px`,
               borderColor: `${this.props.borderColor}`,
-              borderBottom: `${this.props.borderBottom}`
+              borderBottom: `${this.props.borderBottom}`,
+              background: `${this.props.background}`
             }}
           >
             <input
               type={this.props.type}
+              id={this.props.id}
               placeholder={this.props.placeholder}
               className={styles.inputBox}
               onFocus={event => this.handleFocus(event)}
@@ -129,6 +131,7 @@ export default class Input2 extends React.Component {
   }
 }
 Input2.propTypes = {
+  id: PropTypes.string,
   hollow: PropTypes.bool,
   boxy: PropTypes.bool,
   type: PropTypes.string,
@@ -140,12 +143,14 @@ Input2.propTypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   height: PropTypes.number,
+  background: PropTypes.string,
   textStyle: PropTypes.shape({
     fontSize: PropTypes.number
   })
 };
 
 Input2.defaultProps = {
+  id: null,
   height: 40,
   type: "text",
   textStyle: {

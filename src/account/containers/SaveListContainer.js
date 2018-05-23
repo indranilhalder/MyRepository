@@ -15,7 +15,7 @@ const REMOVED_SAVELIST = "Removed Successfully";
 const mapDispatchToProps = dispatch => {
   return {
     getWishList: () => {
-      dispatch(getWishListItems());
+      dispatch(getWishListItems(true)); // true is passing for set data layer on my account save list tab
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));

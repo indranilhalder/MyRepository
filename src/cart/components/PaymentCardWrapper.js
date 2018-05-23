@@ -52,6 +52,7 @@ export default class PaymentCardWrapper extends React.Component {
       this.props.getCODEligibility();
     }
   };
+
   binValidationForPaytm(val) {
     if (this.props.binValidationForPaytm) {
       this.props.binValidationForPaytm(PAYTM, "", val);
@@ -91,6 +92,7 @@ export default class PaymentCardWrapper extends React.Component {
     return (
       <CheckoutSavedCard
         currentPaymentMode={this.props.currentPaymentMode}
+        selectedSavedCardDetails={this.props.selectedSavedCardDetails}
         onSelectPaymentsMode={currentPaymentMode =>
           this.props.onChange({ currentPaymentMode })
         }
@@ -120,7 +122,7 @@ export default class PaymentCardWrapper extends React.Component {
   };
 
   renderBankOffers = () => {
-    let offerMinCartValue, offerTitle, offerCode;
+    let offerDescription, offerTitle, offerCode;
     if (
       this.props.cart.paymentModes &&
       this.props.cart.paymentModes.paymentOffers &&
@@ -132,16 +134,16 @@ export default class PaymentCardWrapper extends React.Component {
         }
       );
       if (selectedCoupon) {
-        offerMinCartValue = selectedCoupon.offerMinCartValue;
+        offerDescription = selectedCoupon.offerDescription;
         offerTitle = selectedCoupon.offerTitle;
         offerCode = selectedCoupon.offerCode;
       } else if (localStorage.getItem(BANK_COUPON_COOKIE)) {
         offerCode = localStorage.getItem(BANK_COUPON_COOKIE);
-        offerMinCartValue = "";
+        offerDescription = "";
         offerTitle = "";
       } else {
-        offerMinCartValue = this.props.cart.paymentModes.paymentOffers
-          .coupons[0].offerMinCartValue;
+        offerDescription = this.props.cart.paymentModes.paymentOffers.coupons[0]
+          .offerDescription;
         offerTitle = this.props.cart.paymentModes.paymentOffers.coupons[0]
           .offerTitle;
         offerCode = this.props.cart.paymentModes.paymentOffers.coupons[0]
@@ -155,11 +157,11 @@ export default class PaymentCardWrapper extends React.Component {
         offset={0}
         limit={1}
         onSelect={val => this.props.applyBankCoupons(val)}
-        selected={[this.props.selectedBankOfferCode]}
+        selected={[localStorage.getItem(BANK_COUPON_COOKIE)]}
       >
         <BankOffer
           bankName={offerTitle}
-          offerText={offerMinCartValue}
+          offerText={offerDescription}
           label={SEE_ALL_BANK_OFFERS}
           applyBankOffers={() => this.props.openBankOffers()}
           value={offerCode}
@@ -196,14 +198,13 @@ export default class PaymentCardWrapper extends React.Component {
                 />
               </div>
             )}
-          {!this.props.isFromGiftCard && this.renderBankOffers()}
+          {!this.props.isFromGiftCard &&
+            !(this.props.isPaymentFailed && this.props.isCliqCashApplied) &&
+            this.renderBankOffers()}
           {this.props.isRemainingBalance && (
             <div className={styles.paymentModes}>
               <div className={styles.card}>
-                <CheckOutHeader
-                  confirmTitle="Choose payment Method"
-                  indexNumber="3"
-                />
+                <CheckOutHeader confirmTitle="Make Payment" indexNumber="3" />
               </div>
               {this.renderSavedCards()}
               {this.props.cart.paymentModes &&

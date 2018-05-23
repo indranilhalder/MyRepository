@@ -2,6 +2,7 @@ import React from "react";
 import InformationHeader from "./InformationHeader.js";
 import SearchContainer from "../../search/SearchContainer.js";
 import HollowHeader from "./HollowHeader.js";
+import { connect } from "react-redux";
 import StickyHeader from "./StickyHeader.js";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
@@ -20,14 +21,14 @@ import {
   LOGGED_IN_USER_DETAILS,
   CUSTOMER_ACCESS_TOKEN,
   MY_ACCOUNT_PAGE,
-  JUS_PAY_CHARGED,
-  JUS_PAY_PENDING,
-  JUS_PAY_AUTHENTICATION_FAILED,
   CHECKOUT_ROUTER,
   CHECKOUT_ROUTER_THANKYOU,
   APP_VIEW
 } from "../../../src/lib/constants";
-import { SIGN_UP } from "../../auth/actions/user.actions";
+import {
+  setIsGoBackFromPDP,
+  setIsNotGoBackFromPDP
+} from "../../plp/actions/plp.actions.js";
 
 const PRODUCT_CODE_REGEX = /p-(.*)/;
 class HeaderWrapper extends React.Component {
@@ -42,16 +43,35 @@ class HeaderWrapper extends React.Component {
       this.props.hideFilter();
       return;
     }
+    const url = this.props.location.pathname;
+    let productCode;
 
+    if (PRODUCT_CODE_REGEX.test(url)) {
+      productCode = PRODUCT_CODE_REGEX.exec(url);
+    }
+
+    if (productCode) {
+      if (
+        this.props.location.state &&
+        this.props.location.state.isComingFromPlp
+      ) {
+        this.props.setIsGoBackFromPDP();
+      }
+    } else {
+      this.props.setIsNotGoBackFromPDP();
+    }
+
+    // here in case of checkout page after payment  success or failure
+    // if user click on back button then we have to take user on home page
     const parsedQueryString = queryString.parse(this.props.location.search);
-    const value = parsedQueryString.status;
-
+    const paymentStatus = parsedQueryString.status;
     if (
-      value === JUS_PAY_CHARGED ||
-      value === JUS_PAY_PENDING ||
-      value === JUS_PAY_AUTHENTICATION_FAILED
+      paymentStatus ||
+      this.props.cliqCashJusPayDetails ||
+      this.props.orderConfirmationDetails
     ) {
-      window.history.go(-2);
+      this.props.history.push(HOME_ROUTER);
+      return;
     } else {
       this.props.history.goBack();
     }
@@ -208,6 +228,8 @@ class HeaderWrapper extends React.Component {
           goToWishList={this.goToWishList}
           isShowCompanyLogo={companyLogoInPdp}
           bagCount={this.props.bagCount}
+          history={this.props.history}
+          location={this.props.location}
         />
       );
     } else if (shouldRenderSearch) {
@@ -233,4 +255,15 @@ class HeaderWrapper extends React.Component {
   }
 }
 
-export default withRouter(HeaderWrapper);
+const mapDispatchToProps = dispatch => {
+  return {
+    setIsGoBackFromPDP: () => {
+      dispatch(setIsGoBackFromPDP());
+    },
+    setIsNotGoBackFromPDP: () => {
+      dispatch(setIsNotGoBackFromPDP());
+    }
+  };
+};
+
+export default withRouter(connect(null, mapDispatchToProps)(HeaderWrapper));

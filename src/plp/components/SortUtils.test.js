@@ -161,3 +161,69 @@ it("should work with custom sku pages, or pages that look like /custom/:slug", (
     `/search/?q=:${ARRAY_OF_SORTS[2]}:collectionIds:test-page`
   );
 });
+
+it("should work with a CATEGORY_PRODUCT_LISTINGS_WITH_PAGE with query", () => {
+  let endUrl = applySortToUrl(
+    ":relevance:inStockFlag:true:isLuxuryProduct:false",
+    "/footwear-men/c-msh1311/page-1",
+    ARRAY_OF_SORTS[2]
+  );
+
+  expect(endUrl).toEqual(
+    `/search/?q=:${
+      ARRAY_OF_SORTS[2]
+    }:category:MSH1311:inStockFlag:true:isLuxuryProduct:false`
+  );
+});
+
+it("should work with a CATEGORY_LISTINGS_WITH_PAGE with no sort and no text", () => {
+  let endUrl = applySortToUrl(
+    ":category:MSH1211:inStockFlag:true:isLuxuryProduct:false",
+    "/footwear-men/c-msh1311/page-1",
+    ARRAY_OF_SORTS[2]
+  );
+  expect(
+    `/search/?q=:${
+      ARRAY_OF_SORTS[2]
+    }:category:MSH1211:inStockFlag:true:isLuxuryProduct:false`
+  );
+});
+
+it("should work with a CATEGORY_LISTINGS_WITH_PAGE with text in the q, but no sort", () => {
+  let endUrl = applySortToUrl(
+    "text:category:MSH1211:inStockFlag:true:isLuxuryProduct:false",
+    "/footwear-men/c-msh1311/page-1",
+    ARRAY_OF_SORTS[2]
+  );
+  expect(
+    `/search/?q=text:${
+      ARRAY_OF_SORTS[2]
+    }:category:MSH1211:inStockFlag:true:isLuxuryProduct:false`
+  );
+});
+
+it("should work with a CATEGORY_LISTINGS_WITH_PAGE with no text in the q, but with sort", () => {
+  let endUrl = applySortToUrl(
+    "relevance:category:MSH1211:inStockFlag:true:isLuxuryProduct:false",
+    "/footwear-men/c-msh1311/page-1",
+    ARRAY_OF_SORTS[2]
+  );
+  expect(
+    `/search/?q=text:${
+      ARRAY_OF_SORTS[2]
+    }:category:MSH1211:inStockFlag:true:isLuxuryProduct:false`
+  );
+});
+
+it("should work with a CATEGORY_LISTINGS_WITH_PAGE with text in the q, but with sort", () => {
+  let endUrl = applySortToUrl(
+    "text:relevance:category:MSH1211:inStockFlag:true:isLuxuryProduct:false",
+    "/footwear-men/c-msh1311/page-1",
+    ARRAY_OF_SORTS[2]
+  );
+  expect(
+    `/search/?q=text:${
+      ARRAY_OF_SORTS[2]
+    }:category:MSH1211:inStockFlag:true:isLuxuryProduct:false`
+  );
+});

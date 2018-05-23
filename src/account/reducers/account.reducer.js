@@ -163,7 +163,8 @@ const account = (
         cancelProductError: null,
         verifyWalletError: null,
         wishlistError: null,
-        updateProfileError: null
+        updateProfileError: null,
+        changePasswordError: null
       });
     case accountActions.GET_RETURN_REQUEST:
     case accountActions.RETURN_PRODUCT_DETAILS_REQUEST:
@@ -201,7 +202,7 @@ const account = (
       return Object.assign({}, state, {
         status: action.status,
         loading: true,
-        error: action.error
+        error: null
       });
     case accountActions.QUICK_DROP_STORE_SUCCESS:
       currentReturnRequest = cloneDeep(state.returnRequest);
@@ -217,7 +218,8 @@ const account = (
     case accountActions.QUICK_DROP_STORE_FAILURE:
       return Object.assign({}, state, {
         loading: false,
-        status: action.status
+        status: action.status,
+        error: action.error
       });
 
     case accountActions.GET_GIFTCARD_REQUEST:
@@ -365,8 +367,14 @@ const account = (
       });
 
     case accountActions.GET_ALL_ORDERS_SUCCESS:
-      let currentOrderDetailObj = cloneDeep(state.orderDetails);
-      if (action.isPaginated) {
+      let currentOrderDetailObj = state.orderDetails
+        ? cloneDeep(state.orderDetails)
+        : {};
+      if (
+        action.isPaginated &&
+        currentOrderDetailObj &&
+        currentOrderDetailObj.orderData
+      ) {
         currentOrderDetailObj.orderData = currentOrderDetailObj.orderData.concat(
           action.orderDetails.orderData
         );
@@ -686,7 +694,8 @@ const account = (
       return Object.assign({}, state, {
         cliqCashVoucherDetailsStatus: action.status,
         cliqCashVoucherDetailsError: action.error,
-        loading: false
+        loading: false,
+        error: action.error
       });
 
     case accountActions.NEW_RETURN_INITIATE_REQUEST:
@@ -847,6 +856,18 @@ const account = (
       return Object.assign({}, state, {
         addUserAddressStatus: null,
         addUserAddressError: null
+      });
+    }
+    case accountActions.CLEAR_CHANGE_PASSWORD_DETAILS: {
+      return Object.assign({}, state, {
+        changePasswordStatus: null,
+        changePasswordError: null
+      });
+    }
+    case accountActions.CLEAR_PIN_CODE_STATUS: {
+      return Object.assign({}, state, {
+        getPinCodeStatus: null,
+        getPinCodeError: null
       });
     }
 

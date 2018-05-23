@@ -27,19 +27,31 @@
 .ratingBar {
   width: auto;
   height: auto;
-  width: 60%;
+  width: 55%;
   display: inline-block;
 }
 
-.container {
-  padding: 15px;
+.buttonContainer {
+  width: 100%;
+  height: auto;
+  padding: 15px 0px;
 }
 .cancelButton {
   display: inline-block;
-  width: 40%;
+  width: 50%;
+  text-align: left;
+  color: #8d8d8d;
+  font-size: 14px;
+  font-family: regular;
+}
+.submitButtonHolder {
+  display: inline-block;
+  width: 50%;
+  height: auto;
+  text-align: right;
 }
 .submitButton {
+  width: auto;
   display: inline-block;
-  width: 40%;
-  text-align: right;
+  height: auto;
 }

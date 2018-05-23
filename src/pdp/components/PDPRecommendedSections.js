@@ -2,14 +2,12 @@ import React from "react";
 import DumbCarousel from "../../general/components/DumbCarousel.js";
 import ProductModule from "../../general/components/ProductModule.js";
 import { transformData } from "../../home/components/utils.js";
-import Logo from "../../general/components/Logo.js";
 import Button from "../../general/components/Button.js";
 import { withRouter } from "react-router-dom";
 import Observer from "@researchgate/react-intersection-observer";
 
 import {
   ABOUT_THE_BRAND_WIDGET_KEY,
-  RECOMMENDED_PRODUCTS_WIDGET_KEY,
   SIMILAR_PRODUCTS_WIDGET_KEY
 } from "../actions/pdp.actions.js";
 import { FollowUnFollowButtonContainer } from "../containers/FollowUnFollowButtonContainer";
@@ -37,17 +35,6 @@ class PDPRecommendedSections extends React.Component {
   }
   renderAboutTheBrand() {
     let brandId;
-    if (!this.props.aboutTheBrand) {
-      const options = {
-        onChange: this.handleIntersection,
-        rootMargin: "0% 0% -25%"
-      };
-      return (
-        <Observer {...options}>
-          <div />
-        </Observer>
-      );
-    }
 
     if (this.props.aboutTheBrand) {
       brandId = this.props.aboutTheBrand.id;
@@ -55,47 +42,49 @@ class PDPRecommendedSections extends React.Component {
 
     return (
       this.props.aboutTheBrand && (
-        <React.Fragment>
-          <div className={styles.brandSection}>
-            <h3 className={styles.brandHeader}>About the Brand</h3>
-            <div className={styles.brandLogoSection}>
-              {this.props.aboutTheBrand.brandLogo && (
-                <div className={styles.brandLogoHolder}>
-                  <Logo image={this.props.aboutTheBrand.brandLogo} />
-                </div>
-              )}
-              {brandId && (
-                <div className={styles.followButton}>
-                  <FollowUnFollowButtonContainer
-                    brandId={brandId}
-                    isFollowing={this.props.aboutTheBrand.isFollowing}
-                    pageType={PDP_FOLLOW_AND_UN_FOLLOW}
-                  />
-                </div>
-              )}
-            </div>
-            {this.props.aboutTheBrand.description && (
-              <h3 className={styles.brandDescription}>
-                {this.props.aboutTheBrand.description}
-              </h3>
+        <div className={styles.brandSection}>
+          <h3 className={styles.brandHeader}>About the Brand</h3>
+          <div className={styles.brandLogoSection}>
+            {this.props.aboutTheBrand.brandLogo && (
+              <div
+                className={styles.brandLogoHolder}
+                style={{
+                  backgroundImage: `url(${this.props.aboutTheBrand.brandLogo})`
+                }}
+              />
             )}
-
-            {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
-              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
-              this.renderCarousel(
-                this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
-              )}
             {brandId && (
-              <div className={styles.visitBrandButton}>
-                <Button
-                  type="secondary"
-                  label="Visit Brand Store"
-                  onClick={() => this.visitBrand()}
+              <div className={styles.followButton}>
+                <FollowUnFollowButtonContainer
+                  color="#212121"
+                  brandId={brandId}
+                  isFollowing={this.props.aboutTheBrand.isFollowing}
+                  pageType={PDP_FOLLOW_AND_UN_FOLLOW}
                 />
               </div>
             )}
           </div>
-        </React.Fragment>
+          {this.props.aboutTheBrand.description && (
+            <h3 className={styles.brandDescription}>
+              {this.props.aboutTheBrand.description}
+            </h3>
+          )}
+
+          {this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY] &&
+            this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY].length > 0 &&
+            this.renderCarousel(
+              this.props.msdItems[ABOUT_THE_BRAND_WIDGET_KEY]
+            )}
+          {brandId && (
+            <div className={styles.visitBrandButton}>
+              <Button
+                type="secondary"
+                label="Visit Brand Store"
+                onClick={() => this.visitBrand()}
+              />
+            </div>
+          )}
+        </div>
       )
     );
   }
@@ -125,32 +114,46 @@ class PDPRecommendedSections extends React.Component {
   }
 
   renderProductModuleSection(title, key) {
-    return (
-      <div className={styles.brandSection}>
-        <h3 className={styles.brandHeader}>{title}</h3>
-        {this.props.msdItems[key] &&
-          this.renderCarousel(this.props.msdItems[key])}
-      </div>
-    );
+    if (this.props.msdItems) {
+      return this.props.msdItems[key] ? (
+        <div className={styles.brandSection}>
+          <h3 className={styles.brandHeader}>{title}</h3>
+          {this.props.msdItems[key] &&
+            this.renderCarousel(this.props.msdItems[key])}
+        </div>
+      ) : null;
+    } else {
+      return null;
+    }
   }
 
   handleIntersection = event => {
-    if (event.isIntersecting && !this.props.aboutTheBrand) {
-      if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
-        this.props.getMsdRequest(this.props.match.params[0]);
-        this.props.pdpAboutBrand(this.props.match.params[0]);
-      } else if (
-        this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
-      ) {
-        this.props.getMsdRequest(this.props.match.params[1]);
-        this.props.pdpAboutBrand(this.props.match.params[1]);
+    if (event.isIntersecting) {
+      if (this.props.visitedNewProduct) {
+        if (this.props.match.path === PRODUCT_DESCRIPTION_PRODUCT_CODE) {
+          this.props.setToOld();
+          this.props.getMsdRequest(this.props.match.params[0]);
+          this.props.pdpAboutBrand(this.props.match.params[0]);
+        } else if (
+          this.props.match.path === PRODUCT_DESCRIPTION_SLUG_PRODUCT_CODE
+        ) {
+          this.props.setToOld();
+          this.props.getMsdRequest(this.props.match.params[1]);
+          this.props.pdpAboutBrand(this.props.match.params[1]);
+        }
       }
     }
   };
 
   render() {
+    const options = {
+      onChange: this.handleIntersection
+    };
     return (
       <React.Fragment>
+        <Observer {...options}>
+          <div className={styles.observer} />
+        </Observer>
         {this.renderAboutTheBrand()}
         {this.renderProductModuleSection(
           "Similar Products",

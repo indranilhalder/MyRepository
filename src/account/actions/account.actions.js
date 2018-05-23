@@ -7,7 +7,8 @@ import {
   FAILURE,
   HOME_FEED_FOLLOW_AND_UN_FOLLOW,
   PDP_FOLLOW_AND_UN_FOLLOW,
-  MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW
+  MY_ACCOUNT_FOLLOW_AND_UN_FOLLOW,
+  STORE_NOT_AVAILABLE_TEXT
 } from "../../lib/constants";
 import * as Cookie from "../../lib/Cookie";
 import findIndex from "lodash.findindex";
@@ -47,7 +48,8 @@ import {
   AODBE_MY_ACCOUNT_SETTINGS,
   ADOBE_MY_ACCOUNT_ORDER_DETAILS,
   setDataLayerForFollowAndUnFollowBrand,
-  ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS
+  ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
+  ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS
 } from "../../lib/adobeUtils";
 import {
   showSecondaryLoader,
@@ -202,6 +204,8 @@ export const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 export const CHANGE_PASSWORD_FAILURE = "CHANGE_PASSWORD_FAILURE";
 export const Clear_ORDER_DATA = "Clear_ORDER_DATA";
 export const RE_SET_ADD_ADDRESS_DETAILS = "RE_SET_ADD_ADDRESS_DETAILS";
+export const CLEAR_CHANGE_PASSWORD_DETAILS = "CLEAR_CHANGE_PASSWORD_DETAILS";
+export const CLEAR_PIN_CODE_STATUS = "CLEAR_PIN_CODE_STATUS";
 export const CURRENT_PAGE = 0;
 export const PAGE_SIZE = 10;
 export const PLATFORM_NUMBER = 2;
@@ -341,7 +345,12 @@ export function cancelProduct(cancelProductDetails) {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
+
       dispatch(displayToast(SUCCESS_MESSAGE_IN_CANCELING_ORDER));
+      setDataLayerForMyAccountDirectCalls(
+        ADOBE_MY_ACCOUNT_CANCEL_ORDER_SUCCESS,
+        cancelProductDetails
+      );
       return dispatch(cancelProductSuccess(resultJson));
     } catch (e) {
       return dispatch(cancelProductFailure(e.message));
@@ -616,12 +625,20 @@ export function quickDropStore(pincode, ussId) {
 
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-      if (resultJsonStatus.status) {
-        throw new Error(resultJsonStatus.message);
+      if (
+        resultJsonStatus.status ||
+        resultJson.status === "Store Not available"
+      ) {
+        let errorMessage = resultJsonStatus.message;
+        if (resultJson.status === "Store Not available") {
+          errorMessage = "Store Not available";
+        }
+
+        throw new Error(errorMessage);
       }
-      dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
+      return dispatch(quickDropStoreSuccess(resultJson.returnStoreDetailsList));
     } catch (e) {
-      dispatch(quickDropStoreFailure(e.message));
+      return dispatch(quickDropStoreFailure(e.message));
     }
   };
 }
@@ -649,11 +666,14 @@ export function giftCardFailure(error) {
 }
 export function getGiftCardDetails() {
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+  const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   return async (dispatch, getState, { api }) => {
     dispatch(giftCardRequest());
     try {
       const result = await api.get(
-        `${PRODUCT_PATH}/egvProductInfo?access_token=${
+        `${USER_PATH}/${
+          JSON.parse(userDetails).userName
+        }/giftCard/egvProductInfo?access_token=${
           JSON.parse(customerCookie).access_token
         }`
       );
@@ -762,7 +782,7 @@ export function getOtpToActivateWallet(customerDetails, isFromCliqCash) {
           JSON.parse(userDetails).userName
         }/checkWalletMobileNumber?access_token=${
           JSON.parse(customerCookie).access_token
-        }&isUpdateProfile=0`,
+        }&isUpdateProfile=false`,
         customerDetails
       );
       const resultJson = await result.json();
@@ -818,8 +838,11 @@ export function verifyWallet(customerDetailsWithOtp, isFromCliqCash) {
           JSON.parse(userDetails).userName
         }/verifyWalletOtp?access_token=${
           JSON.parse(customerCookie).access_token
-        }&otp=${customerDetailsWithOtp.otp}`,
-        customerDetailsWithOtp
+        }&otp=${customerDetailsWithOtp.otp}&firstName=${
+          customerDetailsWithOtp.firstName
+        }&lastName=${customerDetailsWithOtp.lastName}&mobileNumber=${
+          customerDetailsWithOtp.mobileNumber
+        }`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -1186,6 +1209,7 @@ export function getUserCoupons() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
+    dispatch(showSecondaryLoader());
     dispatch(getUserCouponsRequest());
     try {
       const result = await api.get(
@@ -1202,7 +1226,10 @@ export function getUserCoupons() {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserCouponsSuccess(resultJson));
+      dispatch(hideSecondaryLoader());
     } catch (e) {
+      dispatch(hideSecondaryLoader());
+
       dispatch(getUserCouponsFailure(e.message));
     }
   };
@@ -1233,8 +1260,11 @@ export function getUserAlertsFailure(error) {
 export function getUserAlerts() {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+
   return async (dispatch, getState, { api }) => {
     dispatch(getUserAlertsRequest());
+    dispatch(showSecondaryLoader());
+
     try {
       const result = await api.get(
         `${USER_PATH}/${
@@ -1250,7 +1280,9 @@ export function getUserAlerts() {
         throw new Error(resultJsonStatus.message);
       }
       dispatch(getUserAlertsSuccess(resultJson));
+      dispatch(hideSecondaryLoader());
     } catch (e) {
+      dispatch(hideSecondaryLoader());
       dispatch(getUserAlertsFailure(e.message));
     }
   };
@@ -1534,18 +1566,31 @@ export function updateProfile(accountDetails, otp) {
   return async (dispatch, getState, { api }) => {
     dispatch(updateProfileRequest());
     let updateProfileUrl;
+    let requestUrl = `isPwa=true&access_token=${
+      JSON.parse(customerCookie).access_token
+    }&ProfileDataRequired=true`;
+    if (accountDetails.firstName) {
+      requestUrl = requestUrl + `&firstName=${accountDetails.firstName}`;
+    }
+    if (accountDetails.lastName) {
+      requestUrl = requestUrl + `&lastName=${accountDetails.lastName}`;
+    }
+    if (accountDetails.dateOfBirth) {
+      requestUrl = requestUrl + `&dateOfBirth=${dateOfBirth}`;
+    }
+    if (accountDetails.mobileNumber) {
+      requestUrl = requestUrl + `&mobilenumber=${accountDetails.mobileNumber}`;
+    }
+    if (accountDetails.gender) {
+      requestUrl = requestUrl + `&gender=${accountDetails.gender}`;
+    }
+    if (accountDetails.emailId) {
+      requestUrl = requestUrl + `&emailid=${accountDetails.emailId}`;
+    }
     try {
       updateProfileUrl = `${USER_PATH}/${
         JSON.parse(userDetails).userName
-      }/updateprofile?isPwa=true&access_token=${
-        JSON.parse(customerCookie).access_token
-      }&ProfileDataRequired=true&firstName=${
-        accountDetails.firstName
-      }&lastName=${accountDetails.lastName}&dateOfBirth=${dateOfBirth}&gender=${
-        accountDetails.gender
-      }&mobilenumber=${accountDetails.mobileNumber}&emailid=${
-        accountDetails.emailId
-      }`;
+      }/updateprofile?${requestUrl}`;
       if (otp) {
         updateProfileUrl = `${updateProfileUrl}&otp=${otp}`;
       }
@@ -1608,7 +1653,7 @@ export function getFollowedBrandsFailure(error) {
   };
 }
 
-export function getFollowedBrands() {
+export function getFollowedBrands(isSetDataLayer) {
   return async (dispatch, getState, { api }) => {
     const mcvId = await getMcvId();
 
@@ -1627,7 +1672,9 @@ export function getFollowedBrands() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-
+      if (isSetDataLayer) {
+        setDataLayer(ADOBE_MY_ACCOUNT_BRANDS);
+      }
       dispatch(getFollowedBrandsSuccess(resultJson.data[0]));
     } catch (e) {
       dispatch(getFollowedBrandsFailure(e.message));
@@ -1728,13 +1775,13 @@ export function followAndUnFollowBrand(
         // here we are hitting call for update follow brand on p2 and we don;t have to
         // wait for this response . we just need to wait for msd follow and un follow brand
         // api response if it success then we have to update our reducer with success
-
-        const followInCommerceApiResult = await api.post(
-          `${PRODUCT_PATH}/${
-            JSON.parse(customerCookie).access_token
-          }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
-        );
-
+        if (customerCookie) {
+          await api.post(
+            `${PRODUCT_PATH}/${
+              JSON.parse(customerCookie).access_token
+            }/updateFollowedBrands?brands=${brandId}&follow=${updatedFollowedStatus}&isPwa=true`
+          );
+        }
         // dispatch success for following brand on the basis of page type
         if (pageType === HOME_FEED_FOLLOW_AND_UN_FOLLOW) {
           const clonedComponent = getState().feed.homeFeed[positionInFeed];
@@ -1760,7 +1807,6 @@ export function followAndUnFollowBrand(
             ADOBE_ON_FOLLOW_AND_UN_FOLLOW_BRANDS,
             { followStatus: updatedFollowedStatus, brandName }
           );
-
           return dispatch(
             followAndUnFollowBrandSuccessForPdp(brandId, updatedFollowedStatus)
           );
@@ -1938,13 +1984,12 @@ export function redeemCliqVoucher(cliqCashDetails, fromCheckout) {
       }
       if (fromCheckout) {
         dispatch(hideModal(GIFT_CARD_MODAL));
-        let guIdObject = new FormData();
-        guIdObject.append(CART_GU_ID, JSON.parse(cartDetails).guid);
-        dispatch(getPaymentModes(guIdObject));
+
+        dispatch(getPaymentModes(JSON.parse(cartDetails).guid));
       }
-      dispatch(redeemCliqVoucherSuccess(resultJson));
+      return dispatch(redeemCliqVoucherSuccess(resultJson));
     } catch (e) {
-      dispatch(redeemCliqVoucherFailure(e.message));
+      return dispatch(redeemCliqVoucherFailure(e.message));
     }
   };
 }
@@ -1974,5 +2019,16 @@ export function clearOrderDetails() {
 export function resetAddAddressDetails() {
   return {
     type: RE_SET_ADD_ADDRESS_DETAILS
+  };
+}
+export function clearChangePasswordDetails() {
+  return {
+    type: CLEAR_CHANGE_PASSWORD_DETAILS
+  };
+}
+
+export function clearPinCodeStatus() {
+  return {
+    type: CLEAR_PIN_CODE_STATUS
   };
 }

@@ -4,9 +4,21 @@ import PropTypes from "prop-types";
 import Input2 from "../../general/components/Input2.js";
 import styles from "./SavedCard.css";
 export default class SavedCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cvv: ""
+    };
+  }
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.selected) {
+      this.setState({ cvv: "" });
+    }
+  }
   onChangeCvv(val) {
     if (this.props.onChangeCvv) {
       this.props.onChangeCvv(val, this.props.cardNumber);
+      this.setState({ cvv: val });
     }
   }
   render() {
@@ -37,6 +49,7 @@ export default class SavedCard extends React.Component {
           </div>
           <div className={styles.cvvInput}>
             <Input2
+              value={this.state.cvv}
               placeholder="Cvv"
               height={33}
               type="password"
@@ -47,6 +60,8 @@ export default class SavedCard extends React.Component {
               onFocus={() => {
                 this.props.onFocusInput();
               }}
+              onlyNumber={true}
+              maxLength="4"
               onChange={val => this.onChangeCvv(val)}
             />
           </div>

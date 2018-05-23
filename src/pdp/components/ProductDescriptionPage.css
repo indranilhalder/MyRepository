@@ -16,6 +16,7 @@
 .whiteBackground {
   composes: base;
   background: #fff;
+  padding-bottom: 15px;
 }
 .info {
   width: 100%;
@@ -145,10 +146,16 @@
   composes: sideHeader;
   width: 100%;
 }
+.details:empty {
+  margin: 0;
+}
 .blankSeparator {
   width: 100%;
   height: auto;
   margin-top: 30px;
+}
+.blankSeparator:empty {
+  margin: 0;
 }
 .monogrammingText {
   width: 100%;

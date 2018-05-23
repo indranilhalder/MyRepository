@@ -5,6 +5,7 @@ import OrderCard from "../../account/components/OrderCard";
 import PriceAndLink from "../../account/components/PriceAndLink";
 import styles from "./OrderDetailsCard.css";
 import { COLLECT } from "../../lib/constants";
+const NO_SIZE = "NO SIZE";
 export default class OrderDetailsCard extends React.Component {
   onViewDetails() {
     if (this.props.trackOrder) {
@@ -45,14 +46,15 @@ export default class OrderDetailsCard extends React.Component {
               </div>
             </div>
           )}
-          {this.props.productDetails.size && (
-            <div className={styles.quantityHolder}>
-              <div className={styles.quantityLabel}>Size :</div>
-              <div className={styles.quantityAmount}>
-                {this.props.productDetails.size}
+          {this.props.productDetails.size &&
+            this.props.productDetails.size.toUpperCase() !== NO_SIZE && (
+              <div className={styles.quantityHolder}>
+                <div className={styles.quantityLabel}>Size :</div>
+                <div className={styles.quantityAmount}>
+                  {this.props.productDetails.size}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {this.props.productDetails.productColour && (
             <div className={styles.quantityHolder}>
               <div className={styles.quantityLabel}>Color :</div>
@@ -66,58 +68,61 @@ export default class OrderDetailsCard extends React.Component {
           isEgvOrder={this.props.orderDetails.isEgvOrder}
           onViewDetails={() => this.onViewDetails()}
           price={this.props.orderDetails.finalAmount}
+          status={this.props.orderDetails.status}
         />
-        <div className={styles.informationDataHolder}>
-          {this.props.orderDetails.shippingAddress && (
-            <div className={styles.addressHolder}>
-              <div className={styles.deliveredTo}>Delivery Address: </div>
-              <div className={styles.address}>
-                {`${
-                  this.props.orderDetails.shippingAddress.addressLine1
-                    ? this.props.orderDetails.shippingAddress.addressLine1
-                    : ""
-                } ${
-                  this.props.orderDetails.shippingAddress.addressLine2
-                    ? this.props.orderDetails.shippingAddress.addressLine2
-                    : ""
-                } ${
-                  this.props.orderDetails.shippingAddress.state
-                    ? this.props.orderDetails.shippingAddress.state
-                    : ""
-                } ${
-                  this.props.orderDetails.shippingAddress.postalcode
-                    ? this.props.orderDetails.shippingAddress.postalcode
-                    : ""
-                }`}
+        {!this.props.orderDetails.isEgvOrder && (
+          <div className={styles.informationDataHolder}>
+            {this.props.orderDetails.shippingAddress && (
+              <div className={styles.addressHolder}>
+                <div className={styles.deliveredTo}>Delivery Address: </div>
+                <div className={styles.address}>
+                  {`${
+                    this.props.orderDetails.shippingAddress.addressLine1
+                      ? this.props.orderDetails.shippingAddress.addressLine1
+                      : ""
+                  } ${
+                    this.props.orderDetails.shippingAddress.addressLine2
+                      ? this.props.orderDetails.shippingAddress.addressLine2
+                      : ""
+                  } ${
+                    this.props.orderDetails.shippingAddress.state
+                      ? this.props.orderDetails.shippingAddress.state
+                      : ""
+                  } ${
+                    this.props.orderDetails.shippingAddress.postalcode
+                      ? this.props.orderDetails.shippingAddress.postalcode
+                      : ""
+                  }`}
+                </div>
               </div>
-            </div>
-          )}
-          {this.props.productDetails.selectedDeliveryMode && (
-            <div className={styles.addressHolder}>
-              <div className={styles.deliveredTo}>
-                {`${
-                  deliveryOption.name === "Home Delivery"
-                    ? "Standard Shipping"
-                    : deliveryOption.name === "Express Delivery"
-                      ? "Express Shipping"
-                      : deliveryOption.name
-                } `}
+            )}
+            {this.props.productDetails.selectedDeliveryMode && (
+              <div className={styles.addressHolder}>
+                <div className={styles.deliveredTo}>
+                  {`${
+                    deliveryOption.name === "Home Delivery"
+                      ? "Standard Shipping"
+                      : deliveryOption.name === "Express Delivery"
+                        ? "Express Shipping"
+                        : deliveryOption.name
+                  } `}
+                </div>
+                <div className={styles.address}>
+                  {this.props.productDetails.selectedDeliveryMode.desc}
+                </div>
               </div>
-              <div className={styles.address}>
-                {this.props.productDetails.selectedDeliveryMode.desc}
-              </div>
-            </div>
-          )}
+            )}
 
-          {this.props.orderDetails.sellerName && (
-            <div className={styles.orderSoldBy}>
-              <div className={styles.labelText}>Sold by:</div>
-              <div className={styles.infoText}>
-                {this.props.orderDetails.sellerName}
+            {this.props.orderDetails.sellerName && (
+              <div className={styles.orderSoldBy}>
+                <div className={styles.labelText}>Sold by:</div>
+                <div className={styles.infoText}>
+                  {this.props.orderDetails.sellerName}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

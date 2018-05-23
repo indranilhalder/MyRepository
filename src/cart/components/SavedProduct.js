@@ -26,6 +26,13 @@ export default class SavedProduct extends React.Component {
     }
     return (
       <div className={styles.base}>
+        <div className={styles.applyCoupon}>
+          <Coupon
+            heading={couponText}
+            onClick={() => this.onApplyCoupon()}
+            couponButtonText={couponButtonText}
+          />
+        </div>
         <div className={styles.buttonHolder}>
           <div className={styles.button}>
             <Button
@@ -37,13 +44,6 @@ export default class SavedProduct extends React.Component {
               onClick={() => this.handleClick()}
             />
           </div>
-        </div>
-        <div className={styles.applyCoupon}>
-          <Coupon
-            heading={couponText}
-            onClick={() => this.onApplyCoupon()}
-            couponButtonText={couponButtonText}
-          />
         </div>
       </div>
     );

@@ -253,11 +253,26 @@ export default class PdpElectronics extends React.Component {
     if (productData) {
       let price = "";
       let discountPrice = "";
-      if (productData.mrpPrice) {
+      let seoDoublePrice = 0;
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.doubleValue
+      ) {
+        seoDoublePrice = productData.winningSellerPrice.doubleValue;
+      } else if (productData.mrpPrice && productData.mrpPrice.doubleValue) {
+        seoDoublePrice = productData.mrpPrice.doubleValue;
+      }
+      if (
+        productData.mrpPrice &&
+        productData.mrpPrice.formattedValueNoDecimal
+      ) {
         price = productData.mrpPrice.formattedValueNoDecimal;
       }
 
-      if (productData.winningSellerPrice) {
+      if (
+        productData.winningSellerPrice &&
+        productData.winningSellerPrice.formattedValueNoDecimal
+      ) {
         discountPrice = productData.winningSellerPrice.formattedValueNoDecimal;
       }
       return (
@@ -317,10 +332,11 @@ export default class PdpElectronics extends React.Component {
                   productName={productData.productName}
                   brandUrl={productData.brandURL}
                   history={this.props.history}
+                  doublePrice={seoDoublePrice}
                   price={price}
                   discountPrice={discountPrice}
                   averageRating={productData.averageRating}
-                  onClick={this.goToReviewPage}
+                  goToReviewPage={this.goToReviewPage}
                   discount={productData.discount}
                 />
               )}
@@ -331,8 +347,10 @@ export default class PdpElectronics extends React.Component {
                   brandUrl={productData.brandURL}
                   history={this.props.history}
                   price={discountPrice}
+                  doublePrice={seoDoublePrice}
                   discountPrice={price}
                   averageRating={productData.averageRating}
+                  goToReviewPage={this.goToReviewPage}
                   discount={productData.discount}
                 />
               )}
@@ -380,10 +398,7 @@ export default class PdpElectronics extends React.Component {
           )}
           {this.props.productDetails.isServiceableToPincode &&
           this.props.productDetails.isServiceableToPincode.status === NO ? (
-            <Overlay
-              labelText="Not serviceable in you pincode,
-please try another pincode"
-            >
+            <Overlay labelText="This item can't be delivered to your PIN code">
               <PdpDeliveryModes
                 eligibleDeliveryModes={productData.eligibleDeliveryModes}
                 deliveryModesATP={productData.deliveryModesATP}

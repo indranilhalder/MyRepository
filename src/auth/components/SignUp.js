@@ -43,22 +43,22 @@ class SignUp extends Component {
   }
   onSubmit() {
     if (!this.state.phoneNumberValue) {
-      this.props.displayToast("Please fill mobile number ");
+      this.props.displayToast("Please enter a valid phone number ");
       return false;
     }
     if (!MOBILE_PATTERN.test(this.state.phoneNumberValue)) {
-      this.props.displayToast("Please fill valid mobile number");
+      this.props.displayToast("Please enter a valid phone number");
       return false;
     }
     if (this.state.emailValue) {
       if (!EMAIL_REGULAR_EXPRESSION.test(this.state.emailValue)) {
-        this.props.displayToast("Please fill valid emailId");
+        this.props.displayToast("Please enter a valid email address");
         return false;
       }
     }
 
     if (!this.state.passwordValue) {
-      this.props.displayToast("Please fill password");
+      this.props.displayToast("Please enter your password");
       return false;
     }
     if (this.state.passwordValue.length < "8") {

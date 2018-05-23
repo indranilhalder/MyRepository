@@ -39,9 +39,13 @@ export default class ProductGrid extends React.Component {
     }
   }
 
-  goToProductDescription = (url, productObj) => {
+  goToProductDescription = (url, productObj, productModuleId) => {
+    // change this
     setDataLayerForPlpDirectCalls(productObj);
-    this.props.history.push(url);
+    this.props.setProductModuleRef(productModuleId);
+    this.props.history.push(url, {
+      isComingFromPlp: true
+    });
   };
 
   renderComponent = data => {
@@ -62,19 +66,30 @@ export default class ProductGrid extends React.Component {
         isPlp={true}
         productImage={data.imageURL}
         title={data.brandname}
-        price={data.price.mrpPrice.formattedValueNoDecimal}
-        discountPrice={data.price.sellingPrice.formattedValueNoDecimal}
+        price={
+          data.price.mrpPrice
+            ? data.price.mrpPrice.formattedValueNoDecimal
+            : null
+        }
+        discountPrice={
+          data.price.sellingPrice
+            ? data.price.sellingPrice.formattedValueNoDecimal
+            : null
+        }
         description={data.productname}
         discountPercent={data.discountPercent}
         isOfferExisting={data.isOfferExisting}
         onlineExclusive={data.onlineExclusive}
+        webURL={data.webURL}
         outOfStock={!data.cumulativeStockLevel}
         onOffer={data.isOfferExisting}
         newProduct={data.newProduct}
         averageRating={data.averageRating}
         totalNoOfReviews={data.totalNoOfReviews}
         view={this.state.view}
-        onClick={url => this.goToProductDescription(url, data)}
+        onClick={(url, data, ref) =>
+          this.goToProductDescription(url, data, ref)
+        }
         productCategory={data.productCategoryType}
         productId={data.productId}
         showWishListButton={false}

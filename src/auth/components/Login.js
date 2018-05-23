@@ -39,7 +39,16 @@ class Login extends Component {
     };
   }
   componentDidMount() {
-    setDataLayer(ADOBE_LOGIN_AND_SIGN_UP_PAGE);
+    const digitalData = window.digitalData;
+    if (
+      digitalData &&
+      digitalData.page &&
+      digitalData.page &&
+      digitalData.page.pageInfo &&
+      digitalData.page.pageInfo.pageName !== "login"
+    ) {
+      setDataLayer(ADOBE_LOGIN_AND_SIGN_UP_PAGE);
+    }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.authCallsIsSucceed) {
@@ -73,22 +82,24 @@ class Login extends Component {
       userDetails.username = this.state.emailValue;
       userDetails.password = this.state.passwordValue;
       if (!userDetails.username) {
-        this.props.displayToast("Please fill emailId or number");
+        this.props.displayToast(
+          "Please enter a valid email address or a phone number"
+        );
         return false;
       }
       if (userDetails.username.indexOf("@") !== -1) {
         if (!EMAIL_REGULAR_EXPRESSION.test(userDetails.username)) {
-          this.props.displayToast("Please fill valid emailId");
+          this.props.displayToast("Please enter a valid email address");
           return false;
         }
       } else {
         if (!MOBILE_PATTERN.test(userDetails.username)) {
-          this.props.displayToast("Please fill valid mobile number");
+          this.props.displayToast("Please enter a valid phone number");
           return false;
         }
       }
       if (!userDetails.password) {
-        this.props.displayToast("Please fill password");
+        this.props.displayToast("Please enter your password");
         return false;
       }
       if (userDetails.password.length < MINIMUM_PASSWORD_LENGTH) {

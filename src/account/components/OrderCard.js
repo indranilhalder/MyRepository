@@ -4,6 +4,7 @@ import ProductImage from "../../general/components/ProductImage.js";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./OrderCard.css";
 import { RUPEE_SYMBOL, NO } from "../../lib/constants";
+import * as NumberFormatter from "../../lib/NumberFormatter.js";
 export default class OrderCard extends React.Component {
   onClick() {
     if (this.props.onClick) {
@@ -33,17 +34,25 @@ export default class OrderCard extends React.Component {
             )}
             {this.props.productName}
           </div>
-          {this.props.isGiveAway === NO ? (
+          {this.props.isGiveAway === NO || !this.props.isGiveAway ? (
             <div className={styles.priceHolder}>
               <div className={styles.price}>
                 {this.props.isEgvOrder && this.props.egvCardNumber
                   ? this.props.egvCardNumber
-                  : `${RUPEE_SYMBOL} ${this.props.price}`}
+                  : this.props.isGiveAway === NO &&
+                    !this.props.isEgvOrder &&
+                    this.props.productName === "Gift Card"
+                    ? "Gift card detail will be sent you on your specified email id shortly."
+                    : `${RUPEE_SYMBOL} ${NumberFormatter.convertNumber(
+                        this.props.price
+                      )}`}
               </div>
               {this.props.discountPrice &&
                 this.props.discountPrice !== this.props.price && (
                   <div className={styles.discountPrice}>
-                    {`${RUPEE_SYMBOL} ${this.props.discountPrice}`}
+                    {`${RUPEE_SYMBOL} ${NumberFormatter.convertNumber(
+                      this.props.price
+                    )}`}
                   </div>
                 )}
             </div>
@@ -52,11 +61,20 @@ export default class OrderCard extends React.Component {
               <div className={styles.price}>Free</div>
             </div>
           )}
-          {this.props.children && (
-            <div className={styles.additionalContent}>
-              {this.props.children}
+          {this.props.quantity && (
+            <div className={styles.quantityHolder}>
+              <div className={styles.price}>Qty</div>
+              <div className={styles.quantity}>
+                {this.props.numberOfQuantity}
+              </div>
             </div>
           )}
+          {this.props.children &&
+            this.props.productName !== "Gift Card" && (
+              <div className={styles.additionalContent}>
+                {this.props.children}
+              </div>
+            )}
         </div>
       </div>
     );
@@ -68,4 +86,8 @@ OrderCard.propTypes = {
   price: PropTypes.number,
   discountPrice: PropTypes.string,
   isSelect: PropTypes.bool
+};
+OrderCard.defaultProps = {
+  quantity: false,
+  numberOfQuantity: 1
 };

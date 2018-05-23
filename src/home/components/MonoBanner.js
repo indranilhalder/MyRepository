@@ -5,11 +5,26 @@ import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
 export default class MonoBanner extends React.Component {
   handleClick() {
-    const urlSuffix = this.props.feedComponentData.items[0].webURL.replace(
-      TATA_CLIQ_ROOT,
-      "$1"
-    );
-    this.props.history.push(urlSuffix);
+    if (
+      this.props.feedComponentData.items &&
+      this.props.feedComponentData.items[0] &&
+      this.props.feedComponentData.items[0].webURL
+    ) {
+      const urlSuffix = this.props.feedComponentData.items[0].webURL.replace(
+        TATA_CLIQ_ROOT,
+        "$1"
+      );
+      if (this.props.feedComponentData.items[0].webURL.includes("/que")) {
+        window.open(urlSuffix, "_blank");
+        window.focus();
+      }
+      if (this.props.feedComponentData.items[0].webURL.includes("/luxury")) {
+        window.open(urlSuffix, "_blank");
+        window.focus();
+      } else {
+        this.props.history.push(urlSuffix);
+      }
+    }
   }
 
   render() {

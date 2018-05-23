@@ -33,6 +33,36 @@ export const SET_PAGE = "SET_PAGE";
 export const FILTER_HAS_BEEN_CLICKED = "FILTER_HAS_BEEN_CLICKED";
 export const SORT_HAS_BEEN_CLICKED = "SORT_HAS_BEEN_CLICKED";
 
+export const IS_GO_BACK_FROM_PDP = "IS_GO_BACK_FROM_PDP";
+export const IS_NOT_GO_BACK_FROM_PDP = "IS_NOT_GO_BACK_FROM_PDP";
+
+export const SET_PRODUCT_MODULE_REF = "SET_PRODUCT_MODULE_REF";
+export const CLEAR_PRODUCT_MODULE_REF = "CLEAR_PRODUCT_MODULE_REF";
+
+export function setProductModuleRef(ref) {
+  return {
+    type: SET_PRODUCT_MODULE_REF,
+    ref
+  };
+}
+
+export function clearProductModuleRef() {
+  return {
+    type: CLEAR_PRODUCT_MODULE_REF
+  };
+}
+export function setIsGoBackFromPDP() {
+  return {
+    type: IS_GO_BACK_FROM_PDP
+  };
+}
+
+export function setIsNotGoBackFromPDP() {
+  return {
+    type: IS_NOT_GO_BACK_FROM_PDP
+  };
+}
+
 export function setIfSortHasBeenClicked() {
   return {
     type: SORT_HAS_BEEN_CLICKED
@@ -92,11 +122,11 @@ export function getProductListingsPaginatedSuccess(productListings) {
     productListings
   };
 }
-export function getProductListingsRequest(paginated: false) {
+export function getProductListingsRequest(paginated: false, isFilter: false) {
   return {
     type: PRODUCT_LISTINGS_REQUEST,
     status: REQUESTING,
-
+    isFilter,
     isPaginated: paginated
   };
 }
@@ -124,14 +154,15 @@ export function getProductListings(
   isFilter: false
 ) {
   return async (dispatch, getState, { api }) => {
-    dispatch(getProductListingsRequest(paginated));
+    dispatch(getProductListingsRequest(paginated, isFilter));
     dispatch(showSecondaryLoader());
     try {
       const searchState = getState().search;
       const pageNumber = getState().productListings.pageNumber;
-      const encodedString = searchState.string.includes("%3A")
-        ? searchState.string
-        : encodeURI(searchState.string);
+      const encodedString =
+        searchState.string.includes("%3A") || searchState.string.includes("%20")
+          ? searchState.string
+          : encodeURI(searchState.string);
 
       let queryString = `${PRODUCT_LISTINGS_PATH}/?searchText=${encodedString}`;
 
@@ -140,7 +171,7 @@ export function getProductListings(
       }
       queryString = `${queryString}&page=${pageNumber}`;
       queryString = `${queryString}${PRODUCT_LISTINGS_SUFFIX}`;
-      const result = await api.get(queryString);
+      const result = await api.getMiddlewareUrl(queryString);
       const resultJson = await result.json();
       if (resultJson.error) {
         if (
@@ -169,12 +200,19 @@ export function getProductListings(
           getState().icid.icidType
         );
       } else {
-        setDataLayer(
-          ADOBE_PLP_TYPE,
-          resultJson,
-          getState().icid.value,
-          getState().icid.icidType
-        );
+        if (
+          window.digitalData &&
+          window.digitalData.page &&
+          window.digitalData.page.pageInfo &&
+          window.digitalData.page.pageInfo.pageName !== "product grid"
+        ) {
+          setDataLayer(
+            ADOBE_PLP_TYPE,
+            resultJson,
+            getState().icid.value,
+            getState().icid.icidType
+          );
+        }
       }
       if (paginated) {
         if (resultJson.searchresult) {

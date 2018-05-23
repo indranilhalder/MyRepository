@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  let headerMessage = "Welcome Guest";
+  let headerMessage = "Welcome to Tata CLiQ";
   let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
 
   if (userDetails) {

@@ -17,7 +17,7 @@ import {
 } from "../../lib/constants";
 const REG_X_FOR_STORE_PICKUP = /storePick/i;
 const REG_X_FOR_FINAL_SUBMIT = /submit/i;
-const defaultPincode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
+
 export default class ReturnToStore extends React.Component {
   constructor(props) {
     super(props);
@@ -25,8 +25,29 @@ export default class ReturnToStore extends React.Component {
     this.state = {
       currentActive: 0,
       storeId: null,
-      pincode: defaultPincode
+      pincode:
+        this.props.returnRequest.deliveryAddressesList &&
+        this.props.returnRequest.deliveryAddressesList[0] &&
+        this.props.returnRequest.deliveryAddressesList[0].postalCode
+          ? this.props.returnRequest.deliveryAddressesList &&
+            this.props.returnRequest.deliveryAddressesList[0] &&
+            this.props.returnRequest.deliveryAddressesList[0].postalCode
+          : ""
     };
+  }
+
+  componentDidMount() {
+    if (
+      this.props.returnRequest.deliveryAddressesList &&
+      this.props.returnRequest.deliveryAddressesList[0] &&
+      this.props.returnRequest.deliveryAddressesList[0].postalCode
+    ) {
+      this.quickDropStore(
+        this.props.returnRequest.deliveryAddressesList &&
+          this.props.returnRequest.deliveryAddressesList[0] &&
+          this.props.returnRequest.deliveryAddressesList[0].postalCode
+      );
+    }
   }
 
   selectStore(storeId) {
@@ -49,6 +70,10 @@ export default class ReturnToStore extends React.Component {
       this.props.quickDropStore(this.state.pincode, ussId);
     }
   }
+
+  cancel = () => {
+    this.props.history.goBack();
+  };
 
   finalSubmit() {
     // submit form here
@@ -157,6 +182,7 @@ export default class ReturnToStore extends React.Component {
         {...this.props}
         orderDetails={this.props.orderDetails}
         onContinue={() => this.finalSubmit()}
+        cancel={() => this.cancel()}
       />
     );
     return (

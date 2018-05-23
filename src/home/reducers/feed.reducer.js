@@ -4,6 +4,7 @@ import { FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS } from "../../account/
 import cloneDeep from "lodash.clonedeep";
 import map from "lodash.map";
 import findIndex from "lodash.findindex";
+import { HOME_FEED_TYPE } from "../../lib/constants";
 import { transformFetchingItemsOrder } from "./utils";
 const feed = (
   state = {
@@ -13,12 +14,13 @@ const feed = (
     error: null,
     loading: false,
     msdIndex: 0,
-    feedType: null,
+    feedType: HOME_FEED_TYPE,
     productCapsules: null,
     productCapsulesStatus: null,
     productCapsulesLoading: null,
     backUpLoading: false,
-    useBackUpData: false
+    useBackUpData: false,
+    useBackUpHomeFeed: false
   },
   action
 ) => {
@@ -50,24 +52,30 @@ const feed = (
     case homeActions.HOME_FEED_BACK_UP_REQUEST:
       return Object.assign({}, state, {
         loading: true,
-        useBackUpData: true,
+        useBackUpHomeFeed: true,
         status: action.status
       });
     case homeActions.HOME_FEED_BACK_UP_SUCCESS:
-      homeFeedClonedData = cloneDeep(action.data);
-      homeFeedData = map(homeFeedClonedData, subData => {
-        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
-        return {
-          ...subData[subData.componentName],
+      if (state.useBackUpHomeFeed) {
+        homeFeedClonedData = cloneDeep(action.data);
+
+        homeFeedData = map(homeFeedClonedData, subData => {
+          // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+          return {
+            ...subData[subData.componentName],
+            loading: false,
+            status: ""
+          };
+        });
+        return Object.assign({}, state, {
+          homeFeed: homeFeedData,
+          status: action.status,
           loading: false,
-          status: ""
-        };
-      });
-      return Object.assign({}, state, {
-        homeFeed: homeFeedData,
-        status: action.status,
-        loading: false
-      });
+          useBackUpHomeFeed: false
+        });
+      }
+      return state;
+
     case homeActions.GET_PRODUCT_CAPSULES_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
@@ -99,7 +107,7 @@ const feed = (
       });
 
     case homeActions.HOME_FEED_SUCCESS:
-      if (!state.useBackUpData) {
+      if (!state.useBackUpHomeFeed) {
         homeFeedClonedData = cloneDeep(action.data);
 
         homeFeedData = map(homeFeedClonedData, subData => {
@@ -120,11 +128,10 @@ const feed = (
       return state;
 
     case homeActions.HOME_FEED_FAILURE:
-      if (!state.useBackUpData) {
+      if (!state.useBackUpHomeFeed) {
         return Object.assign({}, state, {
           status: action.status,
-          error: action.error,
-          loading: false
+          error: action.error
         });
       }
       return state;

@@ -4,12 +4,14 @@
   display: inline-block;
   vertical-align: middle;
   color: #000;
-  padding: 0px 15px;
+  padding: 0px 10px;
   font-size: 14px;
   font-family: semibold;
   opacity: 0.5;
   position: relative;
   transition: 300ms;
+  min-width: 25%;
+  text-align: center;
 }
 .base::before {
   content: "";
@@ -25,6 +27,7 @@
 .active {
   composes: base;
   color: #ff1744;
+  opacity: 1;
 }
 .active::before {
   content: "";

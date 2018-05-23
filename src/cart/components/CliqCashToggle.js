@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Toggle from "../../general/components/Toggle";
 import styles from "./CliqCashToggle.css";
@@ -15,11 +16,17 @@ export default class CliqCashToggle extends React.Component {
       this.props.addGiftCard();
     }
   }
+  componentDidMount() {
+    const clikCashRefNode = ReactDOM.findDOMNode(this.refs.clikCashRef);
+    setTimeout(() => {
+      window.scrollTo(0, clikCashRefNode.offsetTop - 100);
+    }, 0);
+  }
   render() {
     let toggleDisable = this.props.value === 0 ? true : false;
 
     return (
-      <div className={styles.base}>
+      <div className={styles.base} ref="clikCashRef">
         <div className={styles.cashBalanceTextHolder}>
           <div className={styles.casBalanceText}>{this.props.cashText}</div>
           <div className={styles.cashRupyText}>{`${RUPEE_SYMBOL}${

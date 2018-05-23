@@ -5,7 +5,12 @@ import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import styles from "./CartPage.css";
 import PropTypes from "prop-types";
 import SecondaryLoader from "../../general/components/SecondaryLoader";
-import { SUCCESS, HOME_ROUTER, NO } from "../../lib/constants";
+import {
+  SUCCESS,
+  HOME_ROUTER,
+  NO,
+  BANK_COUPON_COOKIE
+} from "../../lib/constants";
 import SavedProduct from "./SavedProduct";
 import filter from "lodash.filter";
 import { Redirect } from "react-router-dom";
@@ -88,6 +93,11 @@ class CartPage extends React.Component {
           JSON.parse(globalCookie).access_token
         );
       }
+    }
+    // delete bank coupon localstorage if it is exits.
+    // because we user can not have bank offer cookie on cart page
+    if (localStorage.getItem(BANK_COUPON_COOKIE)) {
+      localStorage.removeItem(BANK_COUPON_COOKIE);
     }
   }
 
@@ -189,7 +199,23 @@ class CartPage extends React.Component {
     this.props.showCouponModal(couponDetails);
   };
 
+  navigateToLogin() {
+    const url = this.props.location.pathname;
+    this.props.setUrlToRedirectToAfterAuth(url);
+    this.props.history.replace(LOGIN_PATH);
+  }
+  onClickImage(productCode) {
+    if (productCode) {
+      this.props.history.push(`/p-${productCode.toLowerCase()}`);
+    }
+  }
   renderToCheckOutPage() {
+    let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    let userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
+
+    if (!customerCookie || !userDetails) {
+      return this.navigateToLogin();
+    }
     let pinCode = localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE);
 
     if (pinCode && this.state.isServiceable === true) {
@@ -340,26 +366,14 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <TextWithUnderLine
-              heading={
-                defaultPinCode && defaultPinCode !== "undefined"
-                  ? defaultPinCode
-                  : "Enter Pincode"
-              }
-              boxShadow={
-                defaultPinCode && defaultPinCode !== "undefined" ? true : false
-              }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
+              checkPinCodeAvailability={pinCode =>
+                this.checkPinCodeAvailability(pinCode)
+              }
             />
           </div>
-
-          <div
-            className={
-              !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-                ? styles.disabled
-                : styles.content
-            }
-          >
+          <div className={styles.content}>
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
@@ -380,9 +394,8 @@ class CartPage extends React.Component {
                       productName={product.productName}
                       color={product.color}
                       size={product.size}
-                      price={
-                        product.offerPrice ? product.offerPrice : product.price
-                      }
+                      price={product.price}
+                      offerPrice={product.offerPrice}
                       isGiveAway={product.isGiveAway}
                       index={i}
                       entryNumber={product.entryNumber}
@@ -406,6 +419,9 @@ class CartPage extends React.Component {
                       isOutOfStock={product.isOutOfStock}
                       qtySelectedByUser={product.qtySelectedByUser}
                       isClickable={false}
+                      onClickImage={() =>
+                        this.onClickImage(product.productcode)
+                      }
                     />
                   </div>
                 );

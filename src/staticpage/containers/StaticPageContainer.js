@@ -22,9 +22,10 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    data: state.feed.homeFeed,
+    data: state.feed.secondaryFeed,
     loading: state.feed.loading,
-    feedType: SECONDARY_FEED_TYPE
+    feedType: SECONDARY_FEED_TYPE,
+    status: state.feed.status
   };
 };
 

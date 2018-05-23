@@ -39,6 +39,7 @@ const cart = (
     cartDetailsCNC: null,
     cartDetailsCNCStatus: null,
     cartDetailsCNCError: null,
+    cartDetailsCNCLoader: false,
 
     couponStatus: null,
     couponError: null,
@@ -188,7 +189,7 @@ const cart = (
   },
   action
 ) => {
-  let updatedCartDetailsCNC, cartDetails;
+  let updatedCartDetailsCNC, cloneCartDetailCNC, cartDetails;
   switch (action.type) {
     case CLEAR_ERROR:
       return Object.assign({}, state, {
@@ -359,7 +360,8 @@ const cart = (
     case cartActions.CART_DETAILS_CNC_REQUEST:
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
-        loading: true
+        loading: true,
+        cartDetailsCNCLoader: true
       });
     case cartActions.CART_DETAILS_CNC_SUCCESS: {
       return Object.assign({}, state, {
@@ -367,14 +369,16 @@ const cart = (
         setAddress: action.setAddress,
         userAddress: action.cartDetailsCnc.addressDetailsList,
         cartDetailsCNC: action.cartDetailsCnc,
-        loading: false
+        loading: false,
+        cartDetailsCNCLoader: false
       });
     }
     case cartActions.CART_DETAILS_CNC_FAILURE:
       return Object.assign({}, state, {
         cartDetailsCNCStatus: action.status,
         cartDetailsCNCError: action.error,
-        loading: false
+        loading: false,
+        cartDetailsCNCLoader: false
       });
 
     case cartActions.NET_BANKING_DETAILS_REQUEST:
@@ -644,10 +648,19 @@ const cart = (
       });
     case cartActions.APPLY_BANK_OFFER_SUCCESS:
       const currentCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      const paymentFailureOrderDetails = cloneDeep(
+        state.paymentFailureOrderDetails
+      );
       currentCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
+      if (paymentFailureOrderDetails) {
+        paymentFailureOrderDetails.cliqCashPaidAmount =
+          action.bankOffer.cliqCashPaidAmount;
+      }
+
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
         cartDetailsCNC: currentCartDetailCNC,
+        paymentFailureOrderDetails,
         bankOffer: action.bankOffer,
         loading: false
       });
@@ -663,8 +676,20 @@ const cart = (
         loading: true
       });
     case cartActions.RELEASE_BANK_OFFER_SUCCESS:
-      const cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
-      cloneCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
+      cloneCartDetailCNC = cloneCartDetailCNC
+        ? cloneDeep(state.cartDetailsCNC)
+        : {};
+      if (
+        cloneCartDetailCNC &&
+        cloneCartDetailCNC.cartAmount &&
+        action.bankOffer
+      ) {
+        cloneCartDetailCNC.cartAmount = action.bankOffer.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.bankOffer.cartAmount
+        });
+      }
       return Object.assign({}, state, {
         bankOfferStatus: action.status,
         cartDetailsCNC: cloneCartDetailCNC,
@@ -685,7 +710,20 @@ const cart = (
       });
 
     case cartActions.APPLY_CLIQ_CASH_SUCCESS: {
+      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      if (
+        cloneCartDetailCNC.cartAmount &&
+        action.paymentDetails &&
+        action.paymentDetails.cartAmount
+      ) {
+        cloneCartDetailCNC.cartAmount = action.paymentDetails.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.paymentDetails.cartAmount
+        });
+      }
       return Object.assign({}, state, {
+        cartDetailsCNC: cloneCartDetailCNC,
         cliqCashPaymentStatus: action.status,
         cliqCashPaymentDetails: action.paymentDetails,
         loading: false
@@ -706,7 +744,20 @@ const cart = (
       });
 
     case cartActions.REMOVE_CLIQ_CASH_SUCCESS: {
+      cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      if (
+        cloneCartDetailCNC.cartAmount &&
+        action.paymentDetails &&
+        action.paymentDetails.cartAmount
+      ) {
+        cloneCartDetailCNC.cartAmount = action.paymentDetails.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.paymentDetails.cartAmount
+        });
+      }
       return Object.assign({}, state, {
+        cartDetailsCNC: cloneCartDetailCNC,
         cliqCashPaymentStatus: action.status,
         cliqCashPaymentDetails: action.paymentDetails,
         loading: false
@@ -1219,7 +1270,8 @@ const cart = (
         noCostEmiStatus: action.status,
         noCostEmiDetails: action.noCostEmiResult,
         cartDetailsCNC: carDetailsCopy,
-        loading: false
+        loading: false,
+        cliqCashPaymentDetails: null
       });
 
     case cartActions.APPLY_NO_COST_EMI_FAILURE:
@@ -1247,7 +1299,8 @@ const cart = (
         noCostEmiStatus: action.status,
         noCostEmiDetails: action.noCostEmiResult,
         cartDetailsCNC: carDetailsCopy,
-        loading: false
+        loading: false,
+        cliqCashPaymentDetails: null
       });
 
     case cartActions.REMOVE_NO_COST_EMI_FAILURE:
@@ -1284,8 +1337,26 @@ const cart = (
       });
 
     case cartActions.PAYMENT_FAILURE_ORDER_DETAILS_SUCCESS:
+      if (state.cartDetailsCNC) {
+        cloneCartDetailCNC = cloneDeep(state.cartDetailsCNC);
+      } else {
+        cloneCartDetailCNC = {};
+      }
+      if (
+        cloneCartDetailCNC.cartAmount &&
+        action.paymentFailureOrderDetails &&
+        action.paymentFailureOrderDetails.cartAmount
+      ) {
+        cloneCartDetailCNC.cartAmount =
+          action.paymentFailureOrderDetails.cartAmount;
+      } else {
+        Object.assign(cloneCartDetailCNC, {
+          cartAmount: action.paymentFailureOrderDetails.cartAmount
+        });
+      }
       return Object.assign({}, state, {
         paymentFailureOrderDetailsStatus: action.status,
+        cartDetailsCNC: cloneCartDetailCNC,
         paymentFailureOrderDetails: action.paymentFailureOrderDetails,
         loading: false
       });

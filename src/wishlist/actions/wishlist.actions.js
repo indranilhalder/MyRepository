@@ -19,7 +19,9 @@ import {
   setDataLayerForPdpDirectCalls,
   ADOBE_DIRECT_CALL_FOR_SAVE_ITEM_ON_CART,
   setDataLayerForCartDirectCalls,
-  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP
+  SET_DATA_LAYER_FOR_SAVE_PRODUCT_EVENT_ON_PDP,
+  setDataLayer,
+  ADOBE_MY_ACCOUNT_SAVED_LIST
 } from "../../lib/adobeUtils";
 
 export const GET_WISH_LIST_ITEMS_REQUEST = "GET_WISH_LIST_ITEMS_REQUEST";
@@ -69,7 +71,7 @@ export function getWishListItemsFailure(error) {
   };
 }
 
-export function getWishListItems() {
+export function getWishListItems(isSetDataLayer) {
   const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
   const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
   return async (dispatch, getState, { api }) => {
@@ -90,10 +92,15 @@ export function getWishListItems() {
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
-      const currentWishlist = resultJson.wishList.filter(wishlist => {
-        return wishlist.name === MY_WISH_LIST;
-      });
-
+      let currentWishlist = [];
+      if (resultJson.wishList) {
+        currentWishlist = resultJson.wishList.filter(wishlist => {
+          return wishlist.name === MY_WISH_LIST;
+        });
+      }
+      if (isSetDataLayer) {
+        setDataLayer(ADOBE_MY_ACCOUNT_SAVED_LIST, currentWishlist[0]);
+      }
       return dispatch(getWishListItemsSuccess(currentWishlist[0]));
     } catch (e) {
       return dispatch(getWishListItemsFailure(e.message));

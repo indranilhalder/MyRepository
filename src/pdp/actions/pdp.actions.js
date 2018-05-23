@@ -113,7 +113,7 @@ export const GET_ALL_STORES_FOR_CLIQ_AND_PIQ_FAILURE =
 export const SHOW_PDP_PIQ_PAGE = "showPdpPiqPage";
 export const HIDE_PDP_PIQ_PAGE = "hidePdpPiqPage";
 const ALL_STORES_FOR_CLIQ_AND_PIQ_PATH = "v2/mpl/allStores";
-
+export const SET_TO_OLD = "SET_TO_OLD";
 const MY_WISH_LIST = "MyWishList";
 const PRODUCT_SPECIFICATION_PATH = "/v2/mpl/products/productDetails";
 const PRODUCT_DESCRIPTION_PATH = "v2/mpl/products/productDetails";
@@ -153,7 +153,7 @@ export function getProductDescription(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductDescriptionRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_DESCRIPTION_PATH}/${productCode}?isPwa=true`
       );
       const resultJson = await result.json();
@@ -162,12 +162,19 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        setDataLayer(
-          ADOBE_PDP_TYPE,
-          resultJson,
-          getState().icid.value,
-          getState().icid.icidType
-        );
+        if (
+          !window.digitalData ||
+          !window.digitalData.cpj ||
+          !window.digitalData.cpj.product ||
+          window.digitalData.cpj.product.id !== resultJson.productListingId
+        ) {
+          setDataLayer(
+            ADOBE_PDP_TYPE,
+            resultJson,
+            getState().icid.value,
+            getState().icid.icidType
+          );
+        }
         return dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
@@ -177,7 +184,11 @@ export function getProductDescription(productCode) {
     }
   };
 }
-
+export function setToOld() {
+  return {
+    type: SET_TO_OLD
+  };
+}
 export function getProductPinCodeRequest() {
   return {
     type: CHECK_PRODUCT_PIN_CODE_REQUEST,
@@ -333,8 +344,8 @@ export function getProductSizeGuide(productCode) {
   return async (dispatch, getState, { api }) => {
     dispatch(getProductSizeGuideRequest());
     try {
-      const result = await api.get(
-        `${PRODUCT_SIZE_GUIDE_PATH}/${productCode}/sizeGuide?isPwa=true`
+      const result = await api.getMiddlewareUrl(
+        `${PRODUCT_SIZE_GUIDE_PATH}${productCode}/sizeGuide?isPwa=true`
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
@@ -459,7 +470,7 @@ export function getProductSpecification(productId) {
   return async (dispatch, getState, { api }) => {
     dispatch(ProductSpecificationRequest());
     try {
-      const result = await api.get(
+      const result = await api.getMiddlewareUrl(
         `${PRODUCT_SPECIFICATION_PATH}/${productId}`
       );
       const resultJson = await result.json();
@@ -823,7 +834,6 @@ export function pdpAboutBrand(productCode) {
       );
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
-
       if (resultJsonStatus.status) {
         throw new Error(resultJsonStatus.message);
       }
@@ -872,7 +882,7 @@ export function getPdpItems(itemIds, widgetKey) {
         productCodes = `${itemId},${productCodes}`;
       });
       const url = `v2/mpl/cms/page/getProductInfo?isPwa=true&productCodes=${productCodes}`;
-      const result = await api.get(url);
+      const result = await api.getMiddlewareUrl(url);
       const resultJson = await result.json();
       const resultJsonStatus = ErrorHandling.getFailureResponse(resultJson);
 

@@ -5,7 +5,7 @@ import React from "react";
 import delay from "lodash.delay";
 import keys from "lodash.keys";
 import each from "lodash.foreach";
-
+const FAILED_TO_FETCH = "Failed to fetch";
 const CLEAR_ERROR_DELAY = TOAST_DELAY + 1000;
 
 // The errors for user, pdp and plp are universal errors
@@ -16,7 +16,7 @@ const mapStateToProps = state => {
   return {
     loginError: state.auth.error,
     userError: state.user.error,
-    pdpError: state.productDescription.error,
+    // pdpError: state.productDescription.error, // commented for  reusing this error state
     plpError: state.productListings.error,
     userCartError: state.cart.userCartError,
     cartDetailsError: state.cart.cartDetailsError,
@@ -30,7 +30,8 @@ const mapStateToProps = state => {
     orderConfirmationDetailsError: state.cart.orderConfirmationDetailsError,
     jusPayPaymentDetailsError: state.cart.jusPayPaymentDetailsError,
     binValidationCODError: state.cart.binValidationCODError,
-    wishlistError: state.wishlistItems.error,
+    addItemToWishlistError: state.wishlistItems.addItemError,
+    removeWishlistError: state.wishlistItems.removeItemError,
     reviewsError: state.productDescription.reviewsError,
     orderDetailsError: state.profile.orderDetailsError,
     fetchOrderDetailsError: state.profile.fetchOrderDetailsError,
@@ -44,7 +45,7 @@ const mapStateToProps = state => {
     addUserAddressError: state.profile.addUserAddressError,
     followedBrandsError: state.profile.followedBrandsError,
     cliqCashUserDetailsError: state.profile.cliqCashUserDetailsError,
-    cliqCashVoucherDetailsError: state.profile.cliqCashUserDetailsError,
+    cliqCashVoucherDetailsError: state.profile.cliqCashVoucherDetailsError,
     returnPinCodeError: state.profile.returnPinCodeError,
     giftCardsError: state.profile.giftCardsError,
     giftCardDetailsError: state.profile.giftCardDetailsError,
@@ -95,17 +96,29 @@ class ErrorDisplay extends React.Component {
     const errorKeys = keys(this.props);
     let seenError = false;
 
-    if (this.props.userError !== "" && this.props.userError !== null) {
+    if (
+      this.props.userError !== "" &&
+      this.props.userError !== null &&
+      this.props.userError !== undefined
+    ) {
       this.displayError(this.props.userError);
       return;
     }
 
-    if (this.props.plpError !== "" && this.props.plpError !== null) {
+    if (
+      this.props.plpError !== "" &&
+      this.props.plpError !== null &&
+      this.props.plpError !== undefined
+    ) {
       this.displayError(this.props.plpError);
       return;
     }
 
-    if (this.props.pdpError !== "" && this.props.pdpError !== null) {
+    if (
+      this.props.pdpError !== "" &&
+      this.props.pdpError !== null &&
+      this.props.pdpError !== undefined
+    ) {
       this.displayError(this.props.pdpError);
       return;
     }
@@ -114,6 +127,7 @@ class ErrorDisplay extends React.Component {
       const currentError = this.props[key];
 
       if (
+        currentError !== undefined &&
         currentError !== "" &&
         currentError !== null &&
         !seenError &&
@@ -126,8 +140,10 @@ class ErrorDisplay extends React.Component {
   }
 
   displayError(message) {
-    this.props.displayToast(message);
-    delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
+    if (message !== FAILED_TO_FETCH) {
+      this.props.displayToast(message);
+      delay(() => this.props.clearError(), CLEAR_ERROR_DELAY);
+    }
   }
 
   render() {

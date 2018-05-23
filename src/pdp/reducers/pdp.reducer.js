@@ -30,7 +30,8 @@ const productDescription = (
     storeStatus: null,
     storeError: null,
     showPiqPage: false,
-    loadingForCliqAndPiq: false
+    loadingForCliqAndPiq: false,
+    visitedNewProduct: false
   },
   action
 ) => {
@@ -69,21 +70,28 @@ const productDescription = (
     case pdpActions.PRODUCT_DESCRIPTION_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
-        loading: true
+        loading: true,
+        productDetails: null
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_SUCCESS:
       return Object.assign({}, state, {
         status: action.status,
         productDetails: action.productDescription,
-        loading: false
+        loading: false,
+        visitedNewProduct: true
       });
 
     case pdpActions.PRODUCT_DESCRIPTION_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
         error: action.error,
-        loading: false
+        loading: false,
+        visitedNewProduct: true
+      });
+    case pdpActions.SET_TO_OLD:
+      return Object.assign({}, state, {
+        visitedNewProduct: false
       });
 
     case pdpActions.CHECK_PRODUCT_PIN_CODE_REQUEST:
@@ -339,6 +347,7 @@ const productDescription = (
     case pdpActions.PRODUCT_MSD_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
+        msdItems: {},
         error: action.error,
         loading: false
       });
@@ -360,6 +369,7 @@ const productDescription = (
     case pdpActions.GET_PDP_ITEMS_FAILURE:
       return Object.assign({}, state, {
         status: action.status,
+        msdItems: {},
         loading: false
       });
     case pdpActions.PDP_ABOUT_BRAND_SUCCESS:
@@ -368,7 +378,12 @@ const productDescription = (
         aboutTheBrand: action.brandDetails,
         loading: false
       });
-
+    case pdpActions.PDP_ABOUT_BRAND_FAILURE:
+      return Object.assign({}, state, {
+        status: action.status,
+        aboutTheBrand: null,
+        loading: false
+      });
     case pdpActions.FOLLOW_UN_FOLLOW_BRAND_REQUEST:
       return Object.assign({}, state, {
         status: action.status

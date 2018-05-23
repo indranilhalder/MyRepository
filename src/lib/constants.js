@@ -125,7 +125,7 @@ export const MY_ACCOUNT_ADDRESS_ADD_PAGE = "/address-book/add";
 export const CLIQ_AND_PIQ = "/select-stores";
 export const PRODUCT_CART_DELIVERY_MODES = "/deliveryModes";
 export const PRODUCT_DELIVERY_ADDRESSES = "/deliveryAddress";
-export const DEFAULT_BRANDS_LANDING_PAGE = "/defaultBrandsLanding";
+export const DEFAULT_BRANDS_LANDING_PAGE = "/brands";
 export const PRICE_TEXT = "Price";
 export const OFFER_AVAILABLE = "Offer Available";
 export const EMI_AVAILABLE = "EMI Available";
@@ -208,10 +208,12 @@ export const CHECKOUT = "Checkout";
 export const THANK_YOU = "Thank You";
 export const EDIT_YOUR_ADDRESS = "Edit Your Address";
 export const ERROR_MESSAGE_FOR_VERIFY_OTP = "Please Enter an Valid OTP";
+export const HELP = "Help";
 
 // COPY
 //STATIC PAGE
 export const STATIC_PAGE = "/:slug";
+export const NOT_FOUND = "/404-not-found";
 export const REVIEW_SUBMIT_TOAST_TEXT =
   "Your review has been submitted and will be displayed after moderation";
 
@@ -219,12 +221,13 @@ export const CDN_URL_ROOT =
   "https://assets.tatacliq.com/medias/sys_master/pwaImg/";
 export const QUE_MAGAZINE = "https://www.tatacliq.com/que";
 
-export const TERMS_AND_CONDITION_URL = "/tncPayment";
+export const TERMS_AND_CONDITION_URL = "/terms-of-use";
 export const ABOUT_US_URL = "/aboutus";
 export const PRIVACY_POLICY_URL = "/privacy-policy";
-export const CANCEL_URL = "/cancellation";
-export const RETURN_URL = "/returns";
-export const FAQ_URL = "/faq";
+export const CANCEL_URL = "/cancellation-faq";
+export const RETURN_URL = "/returns-faq";
+export const FAQ_URL = "/faq-page";
+export const HELP_URL = "/help";
 
 // constants for payments method
 export const EASY_MONTHLY_INSTALLMENTS = "Easy monthly installments";
@@ -287,4 +290,9 @@ export const SELECT_ADDRESS_TYPE = "please select address type";
 export const ISO_CODE = "IN";
 export const OTHER_LANDMARK = "other";
 export const OTP_VERIFICATION_REQUIRED_CODE = "NU0002";
+export const RESET_PASSWORD_SUCCESS_MESSAGE =
+  "Password reset successfully. Kindly login with your new password";
 export const OTP_VERIFICATION_REQUIRED_TEXT = "OTP VERIFICATION REQUIRED";
+export const STORE_NOT_AVAILABLE_TEXT = "Store Not available";
+export const BACK_END_ISSUE_ERROR_MESSAGE =
+  "An exception occurred at back-end.";
