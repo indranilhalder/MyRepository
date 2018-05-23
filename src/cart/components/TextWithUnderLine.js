@@ -1,9 +1,10 @@
 import React from "react";
 import styles from "./TextWithUnderLine.css";
+
 import SearchAndUpdate from "../../pdp/components/SearchAndUpdate";
 import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
-
+import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 export default class TextWithUnderLine extends React.Component {
   onClick() {
     if (this.props.onClick) {
@@ -17,26 +18,29 @@ export default class TextWithUnderLine extends React.Component {
   }
 
   render() {
+    const defaultPinCode =
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) &&
+      localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) !== "undefined"
+        ? localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
+        : null;
+
     return (
-      <div
-        className={this.props.defaultPinCode ? styles.base : styles.noOffset}
-      >
-        {this.props.defaultPinCode && (
-          <div className={styles.headingText}>{this.props.defaultPinCode}</div>
+      <div className={defaultPinCode ? styles.base : styles.noOffset}>
+        {defaultPinCode && (
+          <div className={styles.headingText}>{defaultPinCode}</div>
         )}
-        {!this.props.defaultPinCode && (
+        {!defaultPinCode && (
           <SearchAndUpdate
             id="searchAndUpdateInput"
             focused={true}
             checkPinCodeAvailability={pincode =>
               this.checkPinCodeAvailability(pincode)
             }
-            hasAutofocus={true}
             labelText="Update"
           />
         )}
 
-        {this.props.defaultPinCode && (
+        {defaultPinCode && (
           <React.Fragment>
             <div className={styles.button}>
               <UnderLinedButton label={this.props.buttonLabel} />
@@ -52,7 +56,6 @@ export default class TextWithUnderLine extends React.Component {
   }
 }
 TextWithUnderLine.propTypes = {
-  defaultPinCode: PropTypes.string,
   onClick: PropTypes.func,
   buttonLabel: PropTypes.string,
   heading: PropTypes.string
