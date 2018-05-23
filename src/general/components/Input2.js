@@ -97,7 +97,7 @@ export default class Input2 extends React.Component {
               id={this.props.id}
               placeholder={this.props.placeholder}
               className={styles.inputBox}
-              focus={this.props.focused}
+              onFocus={event => this.handleFocus(event)}
               onBlur={event => this.handleBlur(event)}
               onChange={event => this.handleChange(event)}
               style={{ ...this.props.textStyle }}
