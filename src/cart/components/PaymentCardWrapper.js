@@ -50,13 +50,6 @@ export default class PaymentCardWrapper extends React.Component {
     this.myRef = React.createRef();
   }
   componentDidMount = () => {
-    // window.scrollTo(0, this.myTextInput.offsetTop);
-    setTimeout(() => {
-      const cliqCashWrapperId = document.getElementById("cliqCashWrapperId");
-      console.log(cliqCashWrapperId);
-    }, 100);
-
-    // cliqCashWrapperId.scrollIntoView();
     if (
       this.props.getCODEligibility &&
       !this.props.cart.codEligibilityDetails
