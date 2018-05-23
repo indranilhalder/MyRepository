@@ -1491,7 +1491,10 @@ class CheckOutPage extends React.Component {
     if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
+    if(!this.state.isNoCostEmiApplied)
+    {
     this.onChangePaymentMode({ currentPaymentMode: null });
+    }
   };
   handleSubmit = () => {
     localStorage.setItem(
@@ -1620,7 +1623,11 @@ class CheckOutPage extends React.Component {
         this.setState({ isNoCostEmiProceeded: true });
       }
     }
-    this.onChangePaymentMode({ currentPaymentMode: null });
+    if(!this.state.isNoCostEmiApplied)
+    {
+      this.onChangePaymentMode({ currentPaymentMode: null });
+    }
+
   };
 
   addAddress = address => {
