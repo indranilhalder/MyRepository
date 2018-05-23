@@ -72,7 +72,6 @@ class ProductListingsPage extends Component {
   }
 
   componentDidMount() {
-    console.log("Component did mount");
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
@@ -172,7 +171,6 @@ class ProductListingsPage extends Component {
   }
 
   componentDidUpdate() {
-    console.log("Component did update");
     let page = null;
     if (this.props.isGoBackFromPdpPage) {
       if (this.props.clickedProductModuleRef) {
@@ -254,7 +252,6 @@ class ProductListingsPage extends Component {
   }
 
   render() {
-    console.log(this.props);
     let isFilter = false;
     if (this.props.location.state && this.props.location.state.isFilter) {
       isFilter = true;
