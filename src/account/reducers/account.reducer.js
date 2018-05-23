@@ -367,8 +367,14 @@ const account = (
       });
 
     case accountActions.GET_ALL_ORDERS_SUCCESS:
-      let currentOrderDetailObj = cloneDeep(state.orderDetails);
-      if (action.isPaginated) {
+      let currentOrderDetailObj = state.orderDetails
+        ? cloneDeep(state.orderDetails)
+        : {};
+      if (
+        action.isPaginated &&
+        currentOrderDetailObj &&
+        currentOrderDetailObj.orderData
+      ) {
         currentOrderDetailObj.orderData = currentOrderDetailObj.orderData.concat(
           action.orderDetails.orderData
         );
