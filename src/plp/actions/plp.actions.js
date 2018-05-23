@@ -200,12 +200,19 @@ export function getProductListings(
           getState().icid.icidType
         );
       } else {
-        setDataLayer(
-          ADOBE_PLP_TYPE,
-          resultJson,
-          getState().icid.value,
-          getState().icid.icidType
-        );
+        if (
+          window.digitalData &&
+          window.digitalData.page &&
+          window.digitalData.page.pageInfo &&
+          window.digitalData.page.pageInfo.pageName !== "product grid"
+        ) {
+          setDataLayer(
+            ADOBE_PLP_TYPE,
+            resultJson,
+            getState().icid.value,
+            getState().icid.icidType
+          );
+        }
       }
       if (paginated) {
         if (resultJson.searchresult) {

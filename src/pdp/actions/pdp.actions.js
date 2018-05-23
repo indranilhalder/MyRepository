@@ -162,12 +162,19 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_UPPERCASE ||
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
-        setDataLayer(
-          ADOBE_PDP_TYPE,
-          resultJson,
-          getState().icid.value,
-          getState().icid.icidType
-        );
+        if (
+          !window.digitalData ||
+          !window.digitalData.cpj ||
+          !window.digitalData.cpj.product ||
+          window.digitalData.cpj.product.id !== resultJson.productListingId
+        ) {
+          setDataLayer(
+            ADOBE_PDP_TYPE,
+            resultJson,
+            getState().icid.value,
+            getState().icid.icidType
+          );
+        }
         return dispatch(getProductDescriptionSuccess(resultJson));
       } else {
         throw new Error(`${resultJson.error}`);
