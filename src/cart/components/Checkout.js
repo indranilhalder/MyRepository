@@ -146,7 +146,6 @@ export default class Checkout extends React.Component {
             {!this.props.hasPinCode && (
               <div className={styles.checkoutButtonHolder}>
                 <Button
-                  // disabled={this.props.disabled}
                   type="primary"
                   backgroundColor="#ff1744"
                   height={40}
