@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import filter from "lodash.filter";
 import find from "lodash.find";
 import CliqCashToggle from "./CliqCashToggle";
@@ -45,10 +44,6 @@ const typeComponentMapping = {
 };
 
 export default class PaymentCardWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.myRef = React.createRef();
-  }
   componentDidMount = () => {
     if (
       this.props.getCODEligibility &&
