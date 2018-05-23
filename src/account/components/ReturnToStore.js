@@ -71,6 +71,10 @@ export default class ReturnToStore extends React.Component {
     }
   }
 
+  cancel = () => {
+    this.props.history.goBack();
+  };
+
   finalSubmit() {
     // submit form here
     const product = this.props.returnProductDetails.orderProductWsDTO[0];
@@ -178,6 +182,7 @@ export default class ReturnToStore extends React.Component {
         {...this.props}
         orderDetails={this.props.orderDetails}
         onContinue={() => this.finalSubmit()}
+        cancel={() => this.cancel()}
       />
     );
     return (
