@@ -56,7 +56,8 @@ const home = (
         return Object.assign({}, state, {
           homeFeed: homeFeedData,
           status: action.status,
-          loading: false
+          loading: false,
+          useBackUpHomeFeed: false
         });
       }
       return state;
