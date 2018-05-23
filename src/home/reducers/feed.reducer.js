@@ -20,7 +20,8 @@ const feed = (
     productCapsulesLoading: null,
     backUpLoading: false,
     useBackUpData: false,
-    useBackUpHomeFeed: false
+    useBackUpHomeFeed: false,
+    secondaryFeedStatus: null
   },
   action
 ) => {
@@ -28,19 +29,32 @@ const feed = (
     toUpdate,
     componentData,
     homeFeedClonedData,
+    secondaryFeedClonedData,
     secondaryFeedData,
     clonedComponent;
   switch (action.type) {
     case homeActions.SECONDARY_FEED_SUCCESS:
+      secondaryFeedClonedData = cloneDeep(action.data);
+
+      secondaryFeedData = map(secondaryFeedClonedData, subData => {
+        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+        return {
+          ...subData[subData.componentName],
+          loading: false,
+          status: ""
+        };
+      });
+      console.log("SECONDARY FEED SUCCESS");
+      console.log(secondaryFeedData);
       return Object.assign({}, state, {
         loading: false,
-        status: action.status,
-        secondaryFeed: action.data
+        secondaryFeedStatus: action.status,
+        secondaryFeed: secondaryFeedData
       });
     case homeActions.SECONDARY_FEED_FAILURE:
       return Object.assign({}, state, {
         loading: false,
-        status: action.status,
+        secondaryFeedStatus: action.status,
         secondaryFeed: []
       });
     case homeActions.HOME_FEED_BACK_UP_FAILURE:
@@ -179,12 +193,12 @@ const feed = (
 
     case homeActions.SECONDARY_FEED_COMPONENT_DATA_REQUEST:
       secondaryFeedData = state.secondaryFeed;
-      clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
+      clonedComponent = cloneDeep(secondaryFeedData[action.positionInFeed]);
       clonedComponent.loading = true;
       secondaryFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
+        secondaryFeedStatus: action.status,
+        secondaryFeed: homeFeedData
       });
     case homeActions.COMPONENT_DATA_REQUEST:
       homeFeedData = state.homeFeed;
@@ -206,7 +220,7 @@ const feed = (
       secondaryFeedData[action.positionInFeed] = clonedComponent;
       return Object.assign({}, state, {
         secondaryFeed: secondaryFeedData,
-        status: action.status
+        secondaryFeedStatus: action.status
       });
 
     case homeActions.GET_ITEMS_SUCCESS:
@@ -250,7 +264,7 @@ const feed = (
       secondaryFeedData = state.secondaryFeed;
       componentData = {
         loading: false,
-        status: action.status
+        secondaryFeedStatus: action.status
       };
       if (!action.isMsd) {
         toUpdate = action.data[action.data.componentName];
@@ -315,7 +329,7 @@ const feed = (
       secondaryFeedData[action.positionInFeed] = clonedComponent;
 
       return Object.assign({}, state, {
-        status: action.status,
+        secondaryFeedStatus: action.status,
         secondaryFeed: secondaryFeedData
       });
 

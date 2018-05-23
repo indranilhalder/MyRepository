@@ -447,13 +447,13 @@ class App extends Component {
             />
             <Route exact path={HELP_URL} component={HelpDetailsContainer} />
             <Route exact path={SKU_PAGE} component={ProductListingsContainer} />
-            <Route
+            {/* <Route
               exact
               path={NOT_FOUND}
               render={() => <NoResultPage {...this.props} />}
-            />
+            /> */}
             <Route exact path={STATIC_PAGE} component={StaticPageContainer} />
-            <Route render={() => <NoResultPage {...this.props} />} />
+            {/* <Route render={() => <NoResultPage {...this.props} />} /> */}
           </Switch>
           <SecondaryLoaderContainer />
           <MobileFooter />

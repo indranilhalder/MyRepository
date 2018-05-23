@@ -327,17 +327,17 @@ export function getFeed(pageId: null) {
             `v2/mpl/cms/defaultpage?pageId=${pageId}`
           );
         } catch (e) {
-          dispatch(homeFeedSuccess([], feedTypeRequest));
+          dispatch(secondaryFeedSuccess([], feedTypeRequest));
         }
 
         resultJson = await result.json();
         if (resultJson.errors) {
-          dispatch(homeFeedSuccess([], feedTypeRequest));
+          dispatch(secondaryFeedSuccess([], feedTypeRequest));
         } else {
           if (resultJson.pageName) {
             dispatch(setHeaderText(resultJson.pageName));
           }
-          dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
+          dispatch(secondaryFeedSuccess(resultJson.items, feedTypeRequest));
           if (CATEGORY_REGEX.test(pageId)) {
             setDataLayer(
               ADOBE_CLP_PAGE_LOAD,

@@ -256,15 +256,6 @@ class Feed extends Component {
   componentWillMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    console.log("FEED TYPE");
-    console.log(this.props.feedType);
-    console.log(this.props.homeFeedData.length);
-    console.log(this.props.history);
-    console.log(HOME_FEED_TYPE);
-    console.log(
-      this.props.feedType === HOME_FEED_TYPE &&
-        this.props.homeFeedData.length === 0
-    );
     if (
       this.props.feedType === HOME_FEED_TYPE &&
       this.props.homeFeedData.length === 0

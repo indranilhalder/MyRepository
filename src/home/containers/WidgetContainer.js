@@ -3,6 +3,7 @@ import { getComponentData, getItems } from "../actions/home.actions";
 import { withRouter } from "react-router-dom";
 import Widget from "../components/Widget";
 import { showModal, STORY_MODAL } from "../../general/modal.actions";
+import { SECONDARY_FEED_TYPE } from "../../lib/constants";
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getComponentData: (
@@ -35,7 +36,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const mapStateToProps = (state, ownProps) => {
   const positionInFeed = ownProps.positionInFeed;
-  const feedComponentData = state.feed.homeFeed[ownProps.positionInFeed];
+
+  let feedComponentData = state.feed.homeFeed[ownProps.positionInFeed];
+  if (ownProps.feedType === SECONDARY_FEED_TYPE) {
+    feedComponentData = state.feed.secondaryFeed[ownProps.positionInFeed];
+  }
   return {
     feedComponentData: feedComponentData,
     positionInFeed,

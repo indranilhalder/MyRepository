@@ -21,6 +21,8 @@ export default class StaticPage extends Component {
     return <Redirect to={NOT_FOUND} />;
   }
   render() {
+    console.log("AM I DEALING WITH A STATIC PAGE");
+    console.log(this.props.data);
     if (
       this.props.feedType === SECONDARY_FEED_TYPE &&
       this.props.data &&

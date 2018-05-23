@@ -25,7 +25,7 @@ const mapStateToProps = state => {
     data: state.feed.secondaryFeed,
     loading: state.feed.loading,
     feedType: SECONDARY_FEED_TYPE,
-    status: state.feed.status
+    status: state.feed.secondaryFeedStatus
   };
 };
 
