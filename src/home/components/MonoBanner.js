@@ -14,7 +14,11 @@ export default class MonoBanner extends React.Component {
         TATA_CLIQ_ROOT,
         "$1"
       );
-      if (this.props.feedComponentData.items[0].webURL.indexOf("/que") > -1) {
+      if (this.props.feedComponentData.items[0].webURL.includes("/que")) {
+        window.open(urlSuffix, "_blank");
+        window.focus();
+      }
+      if (this.props.feedComponentData.items[0].webURL.includes("/luxury")) {
         window.open(urlSuffix, "_blank");
         window.focus();
       } else {
