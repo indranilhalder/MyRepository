@@ -52,6 +52,7 @@ export default class PaymentCardWrapper extends React.Component {
       this.props.getCODEligibility();
     }
   };
+
   binValidationForPaytm(val) {
     if (this.props.binValidationForPaytm) {
       this.props.binValidationForPaytm(PAYTM, "", val);
