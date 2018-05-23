@@ -56,12 +56,14 @@ export default class SearchAndUpdate extends React.Component {
           <div className={styles.inputHolder}>
             <Input2
               boxy={true}
+              id={this.props.id}
               value={this.state.pinCode}
               type="number"
               placeholder="Enter your PIN code"
               onChange={val => this.getValue(val)}
               textStyle={{ fontSize: 14 }}
               height={35}
+              autoFocus={this.props.hasAutoFocus}
               rightChildSize={35}
             />
           </div>
@@ -74,9 +76,11 @@ SearchAndUpdate.propTypes = {
   getValue: PropTypes.func,
   getLocation: PropTypes.func,
   onUpdate: PropTypes.func,
-  errorMessage: PropTypes.string
+  errorMessage: PropTypes.string,
+  hasAutoFocus: PropTypes.bool
 };
 
 SearchAndUpdate.defaultProps = {
-  labelText: "Check"
+  labelText: "Check",
+  hasAutoFocus: false
 };

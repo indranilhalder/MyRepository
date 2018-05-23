@@ -366,26 +366,28 @@ class CartPage extends React.Component {
         <div className={styles.base}>
           <div className={styles.content}>
             <TextWithUnderLine
-              heading={
+              // heading={
+              //   defaultPinCode && defaultPinCode !== "undefined"
+              //     ? defaultPinCode
+              //     : "Enter Pincode"
+              // }
+              // boxShadow={
+              //   defaultPinCode && defaultPinCode !== "undefined" ? true : false
+              // }
+              defaultPinCode={
                 defaultPinCode && defaultPinCode !== "undefined"
                   ? defaultPinCode
-                  : "Enter Pincode"
-              }
-              boxShadow={
-                defaultPinCode && defaultPinCode !== "undefined" ? true : false
+                  : null
               }
               onClick={() => this.changePinCode()}
               buttonLabel="Change"
+              checkPinCodeAvailability={pinCode =>
+                this.checkPinCodeAvailability(pinCode)
+              }
             />
           </div>
-
-          <div
-            className={
-              !localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE)
-                ? styles.disabled
-                : styles.content
-            }
-          >
+          {/* localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) */}
+          <div className={styles.content}>
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {
                 let serviceable = false;
@@ -449,6 +451,7 @@ class CartPage extends React.Component {
               cartDetails.cartAmount && (
                 <Checkout
                   disabled={!this.state.isServiceable}
+                  hasPinCode={defaultPinCode && defaultPinCode !== "undefined"}
                   amount={
                     cartDetails.cartAmount.paybleAmount.value
                       ? Math.round(
