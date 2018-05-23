@@ -1087,12 +1087,13 @@ class CheckOutPage extends React.Component {
         this.props.getEmiBankDetails(
           this.props.cart.paymentFailureOrderDetails &&
             this.props.cart.paymentFailureOrderDetails.cartAmount &&
-            this.props.cart.paymentFailureOrderDetails.cartAmount.bagTotal.value
+            this.props.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
+              .value
         );
       } else {
         this.props.getEmiBankDetails(
           this.props.cart.cartDetailsCNC.cartAmount &&
-            this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+            this.props.cart.cartDetailsCNC.cartAmount.paybleAmount.value
         );
       }
     }
