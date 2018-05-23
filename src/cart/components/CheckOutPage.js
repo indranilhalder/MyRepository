@@ -1083,17 +1083,19 @@ class CheckOutPage extends React.Component {
   }
 
   getEmiBankDetails = () => {
+    console.log(this.props);
     if (this.props.getEmiBankDetails) {
       if (this.state.isPaymentFailed) {
         this.props.getEmiBankDetails(
           this.props.cart.paymentFailureOrderDetails &&
             this.props.cart.paymentFailureOrderDetails.cartAmount &&
-            this.props.cart.paymentFailureOrderDetails.cartAmount.bagTotal.value
+            this.props.cart.paymentFailureOrderDetails.cartAmount.paybleAmount
+              .value
         );
       } else {
         this.props.getEmiBankDetails(
           this.props.cart.cartDetailsCNC.cartAmount &&
-            this.props.cart.cartDetailsCNC.cartAmount.bagTotal.value
+            this.props.cart.cartDetailsCNC.cartAmount.paybleAmount.value
         );
       }
     }
@@ -1491,9 +1493,8 @@ class CheckOutPage extends React.Component {
     if (this.state.binValidationCOD && !this.state.isCliqCashApplied) {
       this.props.updateTransactionDetailsForCOD(CASH_ON_DELIVERY, "");
     }
-    if(!this.state.isNoCostEmiApplied)
-    {
-    this.onChangePaymentMode({ currentPaymentMode: null });
+    if (!this.state.isNoCostEmiApplied) {
+      this.onChangePaymentMode({ currentPaymentMode: null });
     }
   };
   handleSubmit = () => {
@@ -1623,11 +1624,9 @@ class CheckOutPage extends React.Component {
         this.setState({ isNoCostEmiProceeded: true });
       }
     }
-    if(!this.state.isNoCostEmiApplied)
-    {
+    if (!this.state.isNoCostEmiApplied) {
       this.onChangePaymentMode({ currentPaymentMode: null });
     }
-
   };
 
   addAddress = address => {
