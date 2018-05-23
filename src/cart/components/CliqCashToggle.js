@@ -19,7 +19,7 @@ export default class CliqCashToggle extends React.Component {
   componentDidMount() {
     const clikCashRefNode = ReactDOM.findDOMNode(this.refs.clikCashRef);
     setTimeout(() => {
-      window.scrollTo(-80, clikCashRefNode.offsetTop - 100);
+      window.scrollTo(0, clikCashRefNode.offsetTop - 100);
     }, 0);
   }
   render() {
