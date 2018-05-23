@@ -163,7 +163,7 @@ export function getProductDescription(productCode) {
         resultJson.status === SUCCESS_CAMEL_CASE
       ) {
         if (
-          window.digitalData ||
+          !window.digitalData ||
           !window.digitalData.cpj ||
           !window.digitalData.cpj.product ||
           window.digitalData.cpj.product.id !== resultJson.productListingId
