@@ -378,7 +378,6 @@ class CartPage extends React.Component {
               }
             />
           </div>
-          {/* localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) */}
           <div className={styles.content}>
             {cartDetails.products &&
               cartDetails.products.map((product, i) => {

@@ -32,7 +32,6 @@ export default class TextWithUnderLine extends React.Component {
               this.checkPinCodeAvailability(pincode)
             }
             hasAutofocus={true}
-            // labelText={this.props.labelText}
             labelText="Update"
           />
         )}
