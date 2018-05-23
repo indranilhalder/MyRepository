@@ -38,8 +38,9 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
       categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
-      this.props.homeFeed(categoryOrBrandId);
+      this.props.getFeed(categoryOrBrandId);
     } catch (e) {
+      console.log(e);
       this.props.history.replace(NOT_FOUND);
     }
   }
@@ -113,8 +114,11 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       return this.renderLoader();
     }
 
+    console.log("PLP BRAND CATEGORY WRAPPER");
+    console.log(this.props.homeFeedData.secondaryFeed);
+
     if (this.props.homeFeedData.feedType === SECONDARY_FEED_TYPE) {
-      if (this.props.homeFeedData.homeFeed.length > 0) {
+      if (this.props.homeFeedData.secondaryFeed.length > 0) {
         return <BrandLandingPageContainer />;
       } else {
         return (

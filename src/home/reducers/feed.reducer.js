@@ -64,12 +64,14 @@ const feed = (
         error: action.error
       });
     case homeActions.HOME_FEED_BACK_UP_REQUEST:
+      console.log("HOME FEED BACK UP REQUEST");
       return Object.assign({}, state, {
         loading: true,
         useBackUpHomeFeed: true,
         status: action.status
       });
     case homeActions.HOME_FEED_BACK_UP_SUCCESS:
+      console.log("HOME FEED BACK UP SUCCESS");
       if (state.useBackUpHomeFeed) {
         homeFeedClonedData = cloneDeep(action.data);
 

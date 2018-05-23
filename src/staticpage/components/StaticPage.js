@@ -27,7 +27,7 @@ export default class StaticPage extends Component {
       this.props.data.length === 0 &&
       this.props.status === SUCCESS
     ) {
-      return this.navigateTo404();
+      // return this.navigateTo404();
     }
     if (this.props.loading || !this.props.data) {
       return <SecondaryLoader />;
