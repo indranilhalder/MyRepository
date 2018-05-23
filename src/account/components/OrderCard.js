@@ -4,6 +4,7 @@ import ProductImage from "../../general/components/ProductImage.js";
 import CheckBox from "../../general/components/CheckBox.js";
 import styles from "./OrderCard.css";
 import { RUPEE_SYMBOL, NO } from "../../lib/constants";
+import * as NumberFormatter from "../../lib/NumberFormatter.js";
 export default class OrderCard extends React.Component {
   onClick() {
     if (this.props.onClick) {
@@ -42,20 +43,16 @@ export default class OrderCard extends React.Component {
                     !this.props.isEgvOrder &&
                     this.props.productName === "Gift Card"
                     ? "Gift card detail will be sent you on your specified email id shortly."
-                    : `${RUPEE_SYMBOL} ${
+                    : `${RUPEE_SYMBOL} ${NumberFormatter.convertNumber(
                         this.props.price
-                          ? Math.round(this.props.price * 100) / 100
-                          : "0.00"
-                      }`}
+                      )}`}
               </div>
               {this.props.discountPrice &&
                 this.props.discountPrice !== this.props.price && (
                   <div className={styles.discountPrice}>
-                    {`${RUPEE_SYMBOL} ${
-                      this.props.discountPrice
-                        ? Math.round(this.props.discountPrice * 100) / 100
-                        : "0.00"
-                    }`}
+                    {`${RUPEE_SYMBOL} ${NumberFormatter.convertNumber(
+                      this.props.price
+                    )}`}
                   </div>
                 )}
             </div>
