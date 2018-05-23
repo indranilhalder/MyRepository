@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import filter from "lodash.filter";
 import find from "lodash.find";
 import CliqCashToggle from "./CliqCashToggle";
@@ -44,7 +45,18 @@ const typeComponentMapping = {
 };
 
 export default class PaymentCardWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+  }
   componentDidMount = () => {
+    // window.scrollTo(0, this.myTextInput.offsetTop);
+    setTimeout(() => {
+      const cliqCashWrapperId = document.getElementById("cliqCashWrapperId");
+      console.log(cliqCashWrapperId);
+    }, 100);
+
+    // cliqCashWrapperId.scrollIntoView();
     if (
       this.props.getCODEligibility &&
       !this.props.cart.codEligibilityDetails
@@ -52,6 +64,7 @@ export default class PaymentCardWrapper extends React.Component {
       this.props.getCODEligibility();
     }
   };
+
   binValidationForPaytm(val) {
     if (this.props.binValidationForPaytm) {
       this.props.binValidationForPaytm(PAYTM, "", val);
