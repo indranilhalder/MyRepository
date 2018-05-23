@@ -2154,7 +2154,6 @@ class CheckOutPage extends React.Component {
             this.state.isGiftCard) && (
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
-                id="element"
                 applyBankCoupons={val => this.applyBankCoupons(val)}
                 isCliqCashApplied={this.state.isCliqCashApplied}
                 isRemainingBalance={this.state.isRemainingAmount}
