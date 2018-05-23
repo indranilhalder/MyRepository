@@ -71,8 +71,8 @@ const MY_ACCOUNT_OVERVIEW = "myaccount_overview";
 const MY_ACCOUNT_SAVED_LIST = "myaccount_default_wishlist";
 const MY_ACCOUNT_ADDRESS_BOOK = "myaccount_address_book";
 const MY_ACCOUNT_BRANDS = "myaccount_brands";
-const MY_ACCOUNT_ORDER_HISTORY = "myaccount_order_history";
-const MY_ACCOUNT_ORDER_DETAIL = "myaacount_order_details_page";
+const MY_ACCOUNT_ORDER_HISTORY = "order history page";
+const MY_ACCOUNT_ORDER_DETAIL = "order details page";
 const MY_ACCOUNT_SAVED_PAYMENTS = "myaccount_payment_details";
 const MY_ACCOUNT_ALERTS = "myaccount_alerts";
 const MY_ACCOUNT_COUPONS = "myaccount_coupons";
@@ -546,7 +546,7 @@ function getDigitalDataForCart(type, cartResponse) {
         primaryCategory: "cart"
       },
       pageInfo: {
-        pageName: "cart"
+        pageName: "cart page"
       }
     }
   };
@@ -639,7 +639,7 @@ function getDigitalDataForOrderConfirmation(type, response) {
         primaryCategory: "orderconfirmation"
       },
       pageInfo: {
-        pageName: "order confirmation page"
+        pageName: "order confirmation"
       }
     }
   };
@@ -1593,7 +1593,10 @@ function getDigitalDataForDefaultBlpOrClp(response) {
 }
 
 function getDigitalDataForLoginAndSignup() {
-  const pageTitle = window.location.pathname.replace(/\//g, "");
+  let pageTitle = window.location.pathname.replace(/\//g, "");
+  if (pageTitle === "login") {
+    pageTitle = "login page";
+  }
   const data = {
     page: {
       pageInfo: { pageName: pageTitle },
