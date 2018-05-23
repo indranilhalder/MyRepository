@@ -181,7 +181,6 @@ class ProductListingsPage extends Component {
           delay(() => clickedElement.scrollIntoView(), 50);
         }
       }
-      return;
     }
 
     if (this.props.match.path === SKU_PAGE) {
@@ -232,10 +231,12 @@ class ProductListingsPage extends Component {
     ) {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+
       if (pageMatch) {
         page = pageMatch[1] ? pageMatch[1] : 1;
         page = page - 1;
       }
+
       this.props.getProductListings(searchText, SUFFIX, page);
     }
 
