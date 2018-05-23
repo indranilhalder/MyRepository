@@ -40,9 +40,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
       this.props.homeFeed(categoryOrBrandId);
     } catch (e) {
-      console.log("COMPONENT WILL MOUNT CATCH");
-      console.log(e);
-      // this.props.history.replace(NOT_FOUND);
+      this.props.history.replace(NOT_FOUND);
     }
   }
 
@@ -70,9 +68,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
         this.props.getFeed(categoryOrBrandId);
       }
     } catch (e) {
-      console.log("COMPONENT WILL MOUNT CATCH");
-      console.log(e);
-      // this.props.history.replace(NOT_FOUND);
+      this.props.history.replace(NOT_FOUND);
     }
   }
   renderLoader() {

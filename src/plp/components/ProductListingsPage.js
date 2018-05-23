@@ -181,7 +181,6 @@ class ProductListingsPage extends Component {
           delay(() => clickedElement.scrollIntoView(), 50);
         }
       }
-      return;
     }
 
     if (this.props.match.path === SKU_PAGE) {
@@ -230,6 +229,18 @@ class ProductListingsPage extends Component {
       this.props.location.state &&
       this.props.location.state.isFilter === false
     ) {
+      const searchText = this.getSearchTextFromUrl();
+      const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+
+      if (pageMatch) {
+        page = pageMatch[1] ? pageMatch[1] : 1;
+        page = page - 1;
+      }
+
+      this.props.getProductListings(searchText, SUFFIX, page);
+    }
+
+    if (!this.props.location.state) {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
       if (pageMatch) {
