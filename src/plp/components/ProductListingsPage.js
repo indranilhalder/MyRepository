@@ -72,6 +72,7 @@ class ProductListingsPage extends Component {
   }
 
   componentDidMount() {
+    console.log("Component did mount");
     if (
       this.props.location.state &&
       this.props.location.state.disableSerpSearch === true
@@ -171,6 +172,7 @@ class ProductListingsPage extends Component {
   }
 
   componentDidUpdate() {
+    console.log("Component did update");
     let page = null;
     if (this.props.isGoBackFromPdpPage) {
       if (this.props.clickedProductModuleRef) {
@@ -181,7 +183,6 @@ class ProductListingsPage extends Component {
           delay(() => clickedElement.scrollIntoView(), 50);
         }
       }
-      return;
     }
 
     if (this.props.match.path === SKU_PAGE) {
@@ -232,10 +233,12 @@ class ProductListingsPage extends Component {
     ) {
       const searchText = this.getSearchTextFromUrl();
       const pageMatch = PAGE_REGEX.exec(this.props.location.pathname);
+
       if (pageMatch) {
         page = pageMatch[1] ? pageMatch[1] : 1;
         page = page - 1;
       }
+
       this.props.getProductListings(searchText, SUFFIX, page);
     }
 
@@ -251,6 +254,7 @@ class ProductListingsPage extends Component {
   }
 
   render() {
+    console.log(this.props);
     let isFilter = false;
     if (this.props.location.state && this.props.location.state.isFilter) {
       isFilter = true;
