@@ -1083,7 +1083,6 @@ class CheckOutPage extends React.Component {
   }
 
   getEmiBankDetails = () => {
-    console.log(this.props);
     if (this.props.getEmiBankDetails) {
       if (this.state.isPaymentFailed) {
         this.props.getEmiBankDetails(
