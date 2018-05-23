@@ -28,7 +28,6 @@ const home = (
     componentData,
     homeFeedClonedData,
     clonedComponent;
-  console.log(action);
   switch (action.type) {
     case homeActions.HOME_FEED_BACK_UP_FAILURE:
       return Object.assign({}, state, {
