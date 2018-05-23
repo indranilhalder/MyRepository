@@ -438,8 +438,6 @@ class CheckOutPage extends React.Component {
           onNewAddress={() => this.addNewAddress()}
           onSelectAddress={address => this.onSelectAddress(address)}
         />
-        <DummyTab title="Delivery Mode" number={2} />
-        <DummyTab title="Payment Method" number={3} />
       </div>
     );
   };
@@ -617,8 +615,6 @@ class CheckOutPage extends React.Component {
           userDetails={this.props.userDetails}
           clearPinCodeStatus={() => this.props.clearPinCodeStatus()}
         />
-        <DummyTab title="Delivery Mode" number={2} />
-        <DummyTab title="Payment Method" number={3} />
       </div>
     );
   }
@@ -2158,6 +2154,7 @@ class CheckOutPage extends React.Component {
             this.state.isGiftCard) && (
             <div className={styles.paymentCardHolderπp}>
               <PaymentCardWrapper
+                id="element"
                 applyBankCoupons={val => this.applyBankCoupons(val)}
                 isCliqCashApplied={this.state.isCliqCashApplied}
                 isRemainingBalance={this.state.isRemainingAmount}
