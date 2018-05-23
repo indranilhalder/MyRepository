@@ -82,7 +82,8 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE=p2 node -r dotenv/config scripts/start.js",
+    "start":
+      "REACT_APP_STAGE=production node -r dotenv/config scripts/start.js",
     "stage": " REACT_APP_STAGE=stage node scripts/build.js",
     "tmpprod": " REACT_APP_STAGE=tmpprod node scripts/build.js",
     "local": " REACT_APP_STAGE=local node scripts/build.js",
