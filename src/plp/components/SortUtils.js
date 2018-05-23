@@ -7,6 +7,8 @@ import {
   BRAND_CATEGORY_PREFIX
 } from "./PlpBrandCategoryWrapper";
 
+const SEARCH_TEXT_CATEGORY_REGEX = /MSH[A-Z0-9]+/;
+
 /*
 What do I want to do?
   I have a url. I apply a sort.
@@ -18,8 +20,9 @@ What do I want to do?
 
   1. There is no q.
     If there is no q, this means that we are dealing with a brand or category page that fell back to a PLP.
-    So we need to display a q=:<SORT_VALUE>:category:${}
+    So we need to Sorlay a q=:<SORT_VALUE>:category:${}
     q=:<SORT_VALUE>:brand:{<BRAND_VALUE}
+
   2. There is q
   There is already a sort
     If there is already a sort, life is easy, we simply replace the sort.
@@ -35,6 +38,46 @@ What do I want to do?
 
       if there is no category or brand, then we know there is text and we need to append.
 */
+
+export function getSearchTextFromUrlForCategoryProductListings(
+  searchText,
+  categoryValue
+) {
+  if (searchText) {
+    if (!SEARCH_TEXT_CATEGORY_REGEX.test(searchText)) {
+      // there is no category in the query --> this is an assumption.
+      const sort = getSortFromQuery(searchText);
+      if (sort) {
+        searchText = searchText.replace(
+          `:${sort}`,
+          `:${sort}:category:${categoryValue.toUpperCase()}`
+        );
+      } else {
+        // no sort
+        if (searchText.charAt(0) === ":") {
+          // there is no sort, but there is a :, so this starts with a facet.
+          // there is no sort, there is no text, so we need to prepend
+          searchText = `:relevance:category:${categoryValue}${searchText}`;
+        } else {
+          // there is no sort, but there is a text
+          // we need to put :relevance:category after the text
+          // text:somethingElse
+          // we want
+          // text:relevance:category:${categoryCode}
+          const indexOfFirstColon = searchText.indexOf(":");
+          searchText = insertSubStringAt(
+            searchText,
+            `:relevance:${categoryValue.toUpperCase()}`,
+            indexOfFirstColon + 1
+          );
+        }
+      }
+    }
+  } else {
+    searchText = `:relevance:category:${categoryValue.toUpperCase()}`;
+  }
+  return searchText;
+}
 
 export function applySortToUrl(query, url, sortValue, icid2, cid) {
   let newQuery = "";
@@ -58,6 +101,12 @@ export function applySortToUrl(query, url, sortValue, icid2, cid) {
       newQuery = `:${sortValue}:collectionIds:${slug}`;
     }
   } else {
+    if (CATEGORY_REGEX.test(url)) {
+      match = CATEGORY_CAPTURE_REGEX.exec(url.toLowerCase())[0];
+      match = match.replace(BRAND_CATEGORY_PREFIX, "");
+
+      query = getSearchTextFromUrlForCategoryProductListings(query, match);
+    }
     const existingSort = getSortFromQuery(query);
 
     if (existingSort) {
