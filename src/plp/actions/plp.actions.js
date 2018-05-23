@@ -227,7 +227,6 @@ export function getProductListings(
         dispatch(hideSecondaryLoader());
       }
     } catch (e) {
-      console.log(e.message);
       dispatch(getProductListingsFailure(e.message, paginated));
       dispatch(hideSecondaryLoader());
     }

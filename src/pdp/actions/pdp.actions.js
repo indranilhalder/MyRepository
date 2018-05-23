@@ -180,7 +180,6 @@ export function getProductDescription(productCode) {
         throw new Error(`${resultJson.error}`);
       }
     } catch (e) {
-      console.log(e.message);
       return dispatch(getProductDescriptionFailure(e.message));
     }
   };
