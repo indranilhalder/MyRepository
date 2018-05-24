@@ -14,6 +14,7 @@ export default class TopCategories extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
+    console.log(this.props.feedComponentData);
     if (this.props.feedComponentData.items.length < 3) {
       return null;
     }
@@ -41,7 +42,7 @@ export default class TopCategories extends React.Component {
           <div className={styles.leftSection}>
             <div
               className={styles.oneImageHolder}
-              onClick={() => this.handleClick(TOP_RIGHT_PRODUCT_INDEX)}
+              onClick={() => this.handleClick(TOP_PRODUCT_INDEX)}
             >
               <div className={styles.bigImageHolder}>
                 <div className={styles.labelText}>{topProduct.title}</div>
