@@ -27,6 +27,7 @@
   .left {
     float: left;
     display: inline-block;
+    padding-top: 5px;
   }
   .span {
     color: #ff1744;

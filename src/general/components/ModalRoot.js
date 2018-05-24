@@ -215,6 +215,7 @@ export default class ModalRoot extends React.Component {
     this.props.otpVerification(otpDetails, this.props.ownProps);
   }
   resendOTP(userObj) {
+    this.props.hideModal();
     this.props.resendOTP(userObj);
   }
   resetPassword(userDetails) {
@@ -296,6 +297,7 @@ export default class ModalRoot extends React.Component {
 
   resendOtp = () => {
     if (this.props.getOtpToActivateWallet) {
+      this.props.hideModal();
       let kycDetails = {};
       kycDetails.firstName = this.state.firstName;
       kycDetails.lastName = this.state.lastName;
@@ -335,6 +337,7 @@ export default class ModalRoot extends React.Component {
     this.props.getOtpToActivateWallet(customerDetails);
   }
   resendOtpForUpdateProfile = () => {
+    this.handleClose();
     this.props.updateProfile(this.props.ownProps);
   };
 
