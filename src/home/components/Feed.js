@@ -224,7 +224,6 @@ class Feed extends Component {
   }
 
   renderFeedComponent = (index, key) => {
-    console.log("RENDER FEED COMPONENT");
     const feedDatum = this.props.homeFeedData[index];
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={index} />;
