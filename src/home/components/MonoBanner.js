@@ -18,7 +18,11 @@ export default class MonoBanner extends React.Component {
         window.open(urlSuffix, "_blank");
         window.focus();
       }
-      if (this.props.feedComponentData.items[0].webURL.includes("/luxury")) {
+      if (
+        this.props.feedComponentData.items[0].webURL.includes(
+          "/luxury.tatacliq.com"
+        )
+      ) {
         window.open(this.props.feedComponentData.items[0].webURL, "_blank");
         window.focus();
       } else {
