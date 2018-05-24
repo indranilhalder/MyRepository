@@ -8,6 +8,7 @@ import lockIcon from "./img/otpLock.svg";
 import ownStyles from "./OtpVerificationStyles.css";
 import { default as styles } from "./AuthPopUp.css";
 import Input from "../../general/components/Input";
+import { countdown, clearInterVal } from "../../lib/CountDownTimer";
 export default class OtpVerification extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +16,11 @@ export default class OtpVerification extends React.Component {
       otp: ""
     };
   }
+
+  componentDidMount() {
+    countdown("timer", 30);
+  }
+
   callVerify = () => {
     if (this.props.callVerify) {
       this.props.callVerify();
@@ -96,7 +102,9 @@ export default class OtpVerification extends React.Component {
               />
             </div>
 
-            <div className={ownStyles.time}>30 sec</div>
+            <div className={ownStyles.time} id="counter">
+              30 sec
+            </div>
           </div>
           {/* <div className={styles.button}>
             <div className={ownStyles.submit}>
@@ -147,15 +155,8 @@ export default class OtpVerification extends React.Component {
               />
             </div>
             <div className={ownStyles.buttonHolder}>
-              {/* <div className={ownStyles.left}>
-                <Button
-                  backgroundColor={"transparent"}
-                  height={30}
-                  textStyle={{ color: "#fff", fontSize: 14 }}
-                  label={"Call to verify"}
-                  onClick={() => this.callVerify()}
-                />
-              </div> */}
+              <div className={ownStyles.left} id="timer" />
+
               <div className={ownStyles.right}>
                 <Button
                   backgroundColor={"transparent"}
@@ -164,6 +165,7 @@ export default class OtpVerification extends React.Component {
                   label={"Resend OTP"}
                   onClick={() => this.resendOtp()}
                 />
+
                 {/* <Button
                   backgroundColor={"transparent"}
                   height={30}
@@ -177,6 +179,9 @@ export default class OtpVerification extends React.Component {
         </MediaQuery>
       </AuthPopUp>
     );
+  }
+  componentWillUnmount() {
+    clearInterVal();
   }
 }
 OtpVerification.propTypes = {
