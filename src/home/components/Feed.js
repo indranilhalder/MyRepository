@@ -252,7 +252,7 @@ class Feed extends Component {
     if (this.props.setClickedElementId) {
       props = {
         ...props,
-        setClickedElementId: this.props.setClickedElementId
+        setClickedElementId
       };
     }
     return (
