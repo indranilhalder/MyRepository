@@ -2,22 +2,28 @@ import React from "react";
 import styles from "./ReviewPage.css";
 import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating";
-import format from "date-fns/format";
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
 
 const INVALID_DATE = "Invalid Date";
 export default class ReviewPage extends React.Component {
   render() {
-    let formattedDate;
-    if (this.props.date && this.props.date.indexOf("T") > -1) {
-      let dateOfBirth = new Date(this.props.date.split("T").join());
-      formattedDate = format(dateOfBirth, "YYYY-MM-DD");
-    } else if (this.props.date) {
-      formattedDate = this.props.date
-        .split("/")
-        .reverse()
-        .join("-");
-    }
-    let date = new Date(formattedDate).toDateString();
+    var userReviewDate = this.props.date.split(" ")[0].split("-");
+    let getDate = userReviewDate[2].split("T")[0];
+    let date =
+      getDate + " " + months[userReviewDate[1] - 1] + " " + userReviewDate[0];
     return (
       <div className={styles.base}>
         {this.props.rating && (
