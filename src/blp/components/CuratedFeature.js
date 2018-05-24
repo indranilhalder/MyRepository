@@ -9,6 +9,9 @@ export default class CuratedFeature extends React.Component {
   handleClick(webURL) {
     let urlSuffix = webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   }
   render() {
     let feedComponentData = this.props.feedComponentData;

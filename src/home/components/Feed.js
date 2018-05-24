@@ -239,17 +239,25 @@ class Feed extends Component {
         this.props.setClickedElementId(`Feed-${id}`);
       };
     })(index);
+
+    let props = {
+      positionInFeed: index,
+      key: index,
+      id: `Feed-${index}`,
+      type: typeKeyMapping[feedDatum.type],
+      postData: feedDatum.postParams,
+      feedType: this.props.feedType
+    };
+
+    if (this.props.setClickedElementId) {
+      props = {
+        ...props,
+        setClickedElementId: this.props.setClickedElementId
+      };
+    }
     return (
       typeComponentMapping[feedDatum.type] && (
-        <WidgetContainer
-          positionInFeed={index}
-          key={index}
-          id={`Feed-${index}`}
-          type={typeKeyMapping[feedDatum.type]}
-          postData={feedDatum.postParams}
-          feedType={this.props.feedType}
-          setClickedElementId={setClickedElementId}
-        >
+        <WidgetContainer {...props}>
           {typeComponentMapping[feedDatum.type] &&
             typeComponentMapping[feedDatum.type]}
         </WidgetContainer>

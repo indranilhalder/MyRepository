@@ -66,6 +66,7 @@ export default class ProductCapsules extends React.Component {
     return (
       <div className={styles.base}>
         <Carousel
+          id={this.props.id}
           header={productCapsulesData.title}
           subheader={subHeader}
           buttonText={productCapsulesData.btnText}

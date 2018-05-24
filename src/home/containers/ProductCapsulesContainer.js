@@ -17,7 +17,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     productCapsulesLoading: state.feed.productCapsulesLoading,
     feedComponentData: state.feed.homeFeed[ownProps.positionInFeed],
-    positionInFeed: ownProps.positionInFeed
+    positionInFeed: ownProps.positionInFeed,
+    id: ownProps.id
   };
 };
 
