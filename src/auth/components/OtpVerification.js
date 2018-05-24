@@ -102,8 +102,8 @@ export default class OtpVerification extends React.Component {
               />
             </div>
 
-            <div className={ownStyles.time}>
-              Time left = <span id="counter" />
+            <div className={ownStyles.time} id="counter">
+              30 sec
             </div>
           </div>
           {/* <div className={styles.button}>
