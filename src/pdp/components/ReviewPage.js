@@ -3,27 +3,28 @@ import styles from "./ReviewPage.css";
 import PropTypes from "prop-types";
 import StarRating from "../../general/components/StarRating";
 const months = [
-  "January",
-  "February",
-  "March",
-  "April",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
   "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
 ];
 
 const INVALID_DATE = "Invalid Date";
 export default class ReviewPage extends React.Component {
   render() {
+    console.log(this.props.date);
     var userReviewDate = this.props.date.split(" ")[0].split("-");
     let getDate = userReviewDate[2].split("T")[0];
     let date =
-      getDate + " " + months[userReviewDate[1] - 1] + " " + userReviewDate[0];
+      getDate + " " + months[userReviewDate[1] - 1] + ", " + userReviewDate[0];
     return (
       <div className={styles.base}>
         {this.props.rating && (
@@ -42,7 +43,7 @@ export default class ReviewPage extends React.Component {
             {this.props.name &&
               this.props.name.charAt(0).toUpperCase() +
                 this.props.name.slice(1).toLowerCase()}
-            {"  "}
+            {", "}
             {date}
           </div>
         ) : (
