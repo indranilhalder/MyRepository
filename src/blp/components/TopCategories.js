@@ -14,7 +14,6 @@ export default class TopCategories extends React.Component {
     this.props.history.push(urlSuffix);
   };
   render() {
-    console.log(this.props.feedComponentData);
     if (this.props.feedComponentData.items.length < 3) {
       return null;
     }
