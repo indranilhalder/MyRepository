@@ -14,6 +14,7 @@ export default class ReviewList extends React.Component {
                 heading={data.headline}
                 text={data.comment}
                 date={data.date}
+                name={data.alias}
               />
             );
           })}
