@@ -20,8 +20,11 @@ const months = [
 const INVALID_DATE = "Invalid Date";
 export default class ReviewPage extends React.Component {
   render() {
-    var userReviewDate = this.props.date.split(" ")[0].split("-");
-    let getDate = userReviewDate[2].split("T")[0];
+    let getDate;
+    let userReviewDate = this.props.date.split(" ")[0].split("-");
+    if (userReviewDate) {
+      getDate = userReviewDate[2].split("T")[0];
+    }
     let date =
       getDate + " " + months[userReviewDate[1] - 1] + ", " + userReviewDate[0];
     return (
