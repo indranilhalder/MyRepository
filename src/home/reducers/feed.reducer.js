@@ -21,7 +21,9 @@ const feed = (
     backUpLoading: false,
     useBackUpData: false,
     useBackUpHomeFeed: false,
-    secondaryFeedStatus: null
+    secondaryFeedStatus: null,
+    clickedElementId: null,
+    pageSize: 1
   },
   action
 ) => {
@@ -33,6 +35,14 @@ const feed = (
     secondaryFeedData,
     clonedComponent;
   switch (action.type) {
+    case homeActions.SET_PAGE_FEED_SIZE:
+      return Object.assign({}, state, {
+        pageSize: action.pageSize
+      });
+    case homeActions.SET_CLICKED_ELEMENT_ID:
+      return Object.assign({}, state, {
+        clickedElementId: action.id
+      });
     case homeActions.SECONDARY_FEED_SUCCESS:
       secondaryFeedClonedData = cloneDeep(action.data);
 

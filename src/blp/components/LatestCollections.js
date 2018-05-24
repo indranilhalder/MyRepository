@@ -17,6 +17,7 @@ export default class LatestCollections extends React.Component {
         window.focus();
       } else {
         this.props.history.push(urlSuffix);
+        this.props.setClickedElementId();
       }
     }
   }

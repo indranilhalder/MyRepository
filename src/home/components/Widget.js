@@ -20,7 +20,12 @@ export default class Widget extends React.Component {
   }
 
   render() {
-    return <React.Fragment>{this.props.children(this.props)}</React.Fragment>;
+    return (
+      <React.Fragment>
+        <span id={this.props.id} />
+        {this.props.children(this.props)}
+      </React.Fragment>
+    );
   }
 }
 

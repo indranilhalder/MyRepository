@@ -29,6 +29,8 @@ export const FEED_REQUEST = "FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
 
+export const SET_CLICKED_ELEMENT_ID = "SET_CLICKED_ELEMENT_ID";
+
 export const SECONDARY_FEED_SUCCESS = "SECONDARY_FEED_SUCCESS";
 export const SECONDARY_FEED_FAILURE = "SECONDARY_FEED_FAILURE";
 
@@ -94,6 +96,20 @@ const ADOBE_TARGET_PRODUCTION_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
 const ADOBE_TARGET_P2_HOME_FEED_MBOX_NAME = "UAT_Mobile_Homepage_Mbox";
 export const CATEGORY_REGEX = /msh*/;
 export const BRAND_REGEX = /mbh*/;
+export const SET_PAGE_FEED_SIZE = "SET_PAGE_FEED_SIZE";
+export function setPageFeedSize(pageSize) {
+  return {
+    type: SET_PAGE_FEED_SIZE,
+    pageSize
+  };
+}
+
+export function setClickedElementId(id) {
+  return {
+    type: SET_CLICKED_ELEMENT_ID,
+    id
+  };
+}
 
 export function getProductCapsulesRequest() {
   return {

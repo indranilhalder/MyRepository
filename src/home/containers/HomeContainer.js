@@ -1,5 +1,9 @@
 import { connect } from "react-redux";
-import { getFeed } from "../actions/home.actions";
+import {
+  getFeed,
+  setClickedElementId,
+  setPageFeedSize
+} from "../actions/home.actions";
 import { getCartId } from "../../cart/actions/cart.actions";
 import { getWishListItems } from "../../wishlist/actions/wishlist.actions";
 import Feed from "../components/Feed";
@@ -20,6 +24,12 @@ const mapDispatchToProps = dispatch => {
     },
     setHeaderText: text => {
       dispatch(setHeaderText(text));
+    },
+    setClickedElementId: id => {
+      dispatch(setClickedElementId(id));
+    },
+    setPageFeedSize: size => {
+      dispatch(setPageFeedSize(size));
     }
   };
 };
@@ -42,7 +52,9 @@ const mapStateToProps = state => {
     type: state.cart.type,
     headerMessage,
     loginFromMyBag: state.cart.loginFromMyBag,
-    feedType: HOME_FEED_TYPE
+    feedType: HOME_FEED_TYPE,
+    clickedElementId: state.feed.clickedElementId,
+    pageSize: state.feed.pageSize
   };
 };
 

@@ -40,7 +40,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
       this.props.getFeed(categoryOrBrandId);
     } catch (e) {
-      console.log(e);
       this.props.history.replace(NOT_FOUND);
     }
   }
@@ -113,9 +112,6 @@ export default class PlpBrandCategoryWrapper extends React.Component {
     ) {
       return this.renderLoader();
     }
-
-    console.log("PLP BRAND CATEGORY WRAPPER");
-    console.log(this.props.homeFeedData.secondaryFeed);
 
     if (this.props.homeFeedData.feedType === SECONDARY_FEED_TYPE) {
       if (this.props.homeFeedData.secondaryFeed.length > 0) {

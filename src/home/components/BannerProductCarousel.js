@@ -53,6 +53,7 @@ export default class BannerProductCarousal extends React.Component {
             this.handleClick();
           }
         }}
+        setClickedElementId={this.props.setClickedElementId}
         data={data}
       />
     );
