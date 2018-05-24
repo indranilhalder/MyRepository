@@ -46,7 +46,7 @@ export default class BrandCardHeader extends React.Component {
     }
 
     return (
-      <div className={styles.base} onClick={this.itemClick} id={this.props.id}>
+      <div className={styles.base} onClick={this.itemClick}>
         <div className={styles.container}>
           <div className={styles.imageHolder}>
             <Image
