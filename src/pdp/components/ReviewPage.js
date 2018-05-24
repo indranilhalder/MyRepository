@@ -21,7 +21,8 @@ const INVALID_DATE = "Invalid Date";
 export default class ReviewPage extends React.Component {
   render() {
     let getDate;
-    let userReviewDate = this.props.date.split(" ")[0].split("-");
+    let userReviewDate =
+      this.props.date && this.props.date.split(" ")[0].split("-");
     if (userReviewDate) {
       getDate = userReviewDate[2].split("T")[0];
     }
