@@ -4,22 +4,26 @@ import { FOLLOW_AND_UN_FOLLOW_BRANDS_IN_HOME_FEED_SUCCESS } from "../../account/
 import cloneDeep from "lodash.clonedeep";
 import map from "lodash.map";
 import findIndex from "lodash.findindex";
-import { PRODUCT_RECOMMENDATION_TYPE } from "../components/Feed.js";
+import { HOME_FEED_TYPE } from "../../lib/constants";
 import { transformFetchingItemsOrder } from "./utils";
-const home = (
+const feed = (
   state = {
-    homeFeed: [], //array of objects
+    homeFeed: [], //array of objects,
+    secondaryFeed: [],
     status: null,
     error: null,
     loading: false,
     msdIndex: 0,
-    feedType: null,
+    feedType: HOME_FEED_TYPE,
     productCapsules: null,
     productCapsulesStatus: null,
     productCapsulesLoading: null,
     backUpLoading: false,
     useBackUpData: false,
-    useBackUpHomeFeed: false
+    useBackUpHomeFeed: false,
+    secondaryFeedStatus: null,
+    clickedElementId: null,
+    pageSize: 1
   },
   action
 ) => {
@@ -27,8 +31,40 @@ const home = (
     toUpdate,
     componentData,
     homeFeedClonedData,
+    secondaryFeedClonedData,
+    secondaryFeedData,
     clonedComponent;
   switch (action.type) {
+    case homeActions.SET_PAGE_FEED_SIZE:
+      return Object.assign({}, state, {
+        pageSize: action.pageSize
+      });
+    case homeActions.SET_CLICKED_ELEMENT_ID:
+      return Object.assign({}, state, {
+        clickedElementId: action.id
+      });
+    case homeActions.SECONDARY_FEED_SUCCESS:
+      secondaryFeedClonedData = cloneDeep(action.data);
+
+      secondaryFeedData = map(secondaryFeedClonedData, subData => {
+        // we do this because TCS insists on having the data that backs a component have an object that wraps the data we care about.
+        return {
+          ...subData[subData.componentName],
+          loading: false,
+          status: ""
+        };
+      });
+      return Object.assign({}, state, {
+        loading: false,
+        secondaryFeedStatus: action.status,
+        secondaryFeed: secondaryFeedData
+      });
+    case homeActions.SECONDARY_FEED_FAILURE:
+      return Object.assign({}, state, {
+        loading: false,
+        secondaryFeedStatus: action.status,
+        secondaryFeed: []
+      });
     case homeActions.HOME_FEED_BACK_UP_FAILURE:
       return Object.assign({}, state, {
         loading: false,
@@ -56,8 +92,7 @@ const home = (
         return Object.assign({}, state, {
           homeFeed: homeFeedData,
           status: action.status,
-          loading: false,
-          useBackUpHomeFeed: false
+          loading: false
         });
       }
       return state;
@@ -85,7 +120,7 @@ const home = (
         homeFeed: homeFeedData
       });
 
-    case homeActions.HOME_FEED_REQUEST:
+    case homeActions.FEED_REQUEST:
       return Object.assign({}, state, {
         status: action.status,
         loading: true,
@@ -112,6 +147,7 @@ const home = (
         });
       }
       return state;
+
     case homeActions.HOME_FEED_FAILURE:
       if (!state.useBackUpHomeFeed) {
         return Object.assign({}, state, {
@@ -120,36 +156,6 @@ const home = (
         });
       }
       return state;
-
-    case homeActions.SINGLE_SELECT_REQUEST:
-    case homeActions.MULTI_SELECT_SUBMIT_REQUEST:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].submitLoading = true;
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
-      });
-    case homeActions.SINGLE_SELECT_FAILURE:
-    case homeActions.MULTI_SELECT_SUBMIT_FAILURE:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].submitLoading = false;
-
-      return Object.assign({}, state, {
-        status: action.status,
-        error: action.error,
-        homeFeed: homeFeedData
-      });
-
-    case homeActions.SINGLE_SELECT_SUCCESS:
-    case homeActions.MULTI_SELECT_SUBMIT_SUCCESS:
-      homeFeedData = cloneDeep(state.homeFeed);
-      homeFeedData[action.positionInFeed].submitLoading = false;
-      homeFeedData[action.positionInFeed].type = PRODUCT_RECOMMENDATION_TYPE;
-      homeFeedData[action.positionInFeed].data = action.data;
-      return Object.assign({}, state, {
-        status: action.status,
-        homeFeed: homeFeedData
-      });
 
     case homeActions.COMPONENT_BACK_UP_REQUEST:
       homeFeedData = state.homeFeed;
@@ -192,6 +198,15 @@ const home = (
         homeFeed: homeFeedData
       });
 
+    case homeActions.SECONDARY_FEED_COMPONENT_DATA_REQUEST:
+      secondaryFeedData = state.secondaryFeed;
+      clonedComponent = cloneDeep(secondaryFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      secondaryFeedData[action.positionInFeed] = clonedComponent;
+      return Object.assign({}, state, {
+        secondaryFeedStatus: action.status,
+        secondaryFeed: homeFeedData
+      });
     case homeActions.COMPONENT_DATA_REQUEST:
       homeFeedData = state.homeFeed;
       clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
@@ -200,6 +215,19 @@ const home = (
       return Object.assign({}, state, {
         status: action.status,
         homeFeed: homeFeedData
+      });
+
+    case homeActions.SECONDARY_FEED_GET_ITEMS_SUCCESS:
+      secondaryFeedData = state.secondaryFeed;
+      clonedComponent = cloneDeep(secondaryFeedData[action.positionInFeed]);
+      clonedComponent.items = transformFetchingItemsOrder(
+        action.itemIds,
+        action.items
+      );
+      secondaryFeedData[action.positionInFeed] = clonedComponent;
+      return Object.assign({}, state, {
+        secondaryFeed: secondaryFeedData,
+        secondaryFeedStatus: action.status
       });
 
     case homeActions.GET_ITEMS_SUCCESS:
@@ -239,6 +267,35 @@ const home = (
         homeFeed: homeFeedData,
         status: action.status
       });
+    case homeActions.SECONDARY_FEED_COMPONENT_DATA_SUCCESS:
+      secondaryFeedData = state.secondaryFeed;
+      componentData = {
+        loading: false,
+        secondaryFeedStatus: action.status
+      };
+      if (!action.isMsd) {
+        toUpdate = action.data[action.data.componentName];
+        componentData = {
+          ...secondaryFeedData[action.positionInFeed],
+          ...toUpdate,
+          ...componentData
+        };
+      } else {
+        if (action.data.type) {
+          action.data.category = action.data.type;
+        }
+        componentData = {
+          ...action.data,
+          ...secondaryFeedData[action.positionInFeed],
+          ...componentData
+        };
+      }
+      secondaryFeedData[action.positionInFeed] = componentData;
+      return Object.assign({}, state, {
+        status: action.status,
+        secondaryFeed: secondaryFeedData
+      });
+
     case homeActions.COMPONENT_DATA_SUCCESS:
       if (!state.homeFeed[action.positionInFeed].useBackUpData) {
         homeFeedData = state.homeFeed;
@@ -271,6 +328,18 @@ const home = (
       }
       break;
 
+    case homeActions.SECONDARY_FEED_COMPONENT_DATA_FAILURE:
+      secondaryFeedData = state.secondaryFeed;
+      clonedComponent = cloneDeep(secondaryFeedData[action.positionInFeed]);
+      clonedComponent.loading = true;
+      clonedComponent.status = action.error;
+      secondaryFeedData[action.positionInFeed] = clonedComponent;
+
+      return Object.assign({}, state, {
+        secondaryFeedStatus: action.status,
+        secondaryFeed: secondaryFeedData
+      });
+
     case homeActions.COMPONENT_DATA_FAILURE:
       homeFeedData = state.homeFeed;
       clonedComponent = cloneDeep(homeFeedData[action.positionInFeed]);
@@ -288,4 +357,4 @@ const home = (
   }
 };
 
-export default home;
+export default feed;

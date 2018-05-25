@@ -17,6 +17,9 @@ export default class OfferWidget extends React.Component {
         this.props.history.push(urlSuffix);
       }
     }
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
   render() {
     let { feedComponentData, rest } = this.props;

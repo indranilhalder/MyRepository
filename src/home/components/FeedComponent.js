@@ -9,6 +9,9 @@ import { withRouter } from "react-router";
 class FeedComponent extends React.Component {
   onClick = val => {
     this.props.history.push(val);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
   render() {
     const {

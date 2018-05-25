@@ -33,6 +33,9 @@ export default class ContentWidget extends React.Component {
         this.props.history.push(urlSuffix);
       }
     }
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   }
   forward = () => {
     this.goLeft();

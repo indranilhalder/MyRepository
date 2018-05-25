@@ -41,6 +41,9 @@ export default class FlashSale extends React.Component {
   handleItemClick = url => {
     const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
 
   handleClick = () => {
@@ -49,6 +52,9 @@ export default class FlashSale extends React.Component {
       "$1"
     );
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
 
   onComplete = () => {

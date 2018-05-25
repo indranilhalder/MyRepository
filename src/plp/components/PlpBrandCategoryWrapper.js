@@ -2,7 +2,8 @@ import React from "react";
 import BrandLandingPageContainer from "../../blp/containers/BrandLandingPageContainer";
 import Loader from "../../general/components/Loader";
 import ProductListingsContainer from "../containers/ProductListingsContainer";
-import { BLP_OR_CLP_FEED_TYPE, NOT_FOUND } from "../../lib/constants";
+import { SECONDARY_FEED_TYPE, NOT_FOUND } from "../../lib/constants";
+
 import queryString from "query-string";
 
 export const CATEGORY_REGEX = /c-msh*/;
@@ -37,7 +38,7 @@ export default class PlpBrandCategoryWrapper extends React.Component {
 
       categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
-      this.props.homeFeed(categoryOrBrandId);
+      this.props.getFeed(categoryOrBrandId);
     } catch (e) {
       this.props.history.replace(NOT_FOUND);
     }
@@ -60,11 +61,11 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       categoryOrBrandId = categoryOrBrandId.replace(BRAND_CATEGORY_PREFIX, "");
 
       if (
-        this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE &&
+        this.props.homeFeedData.feedType === SECONDARY_FEED_TYPE &&
         this.pathname !== this.props.location.pathname
       ) {
         this.pathname = this.props.location.pathname;
-        this.props.homeFeed(categoryOrBrandId);
+        this.props.getFeed(categoryOrBrandId);
       }
     } catch (e) {
       this.props.history.replace(NOT_FOUND);
@@ -112,8 +113,8 @@ export default class PlpBrandCategoryWrapper extends React.Component {
       return this.renderLoader();
     }
 
-    if (this.props.homeFeedData.feedType === BLP_OR_CLP_FEED_TYPE) {
-      if (this.props.homeFeedData.homeFeed.length > 0) {
+    if (this.props.homeFeedData.feedType === SECONDARY_FEED_TYPE) {
+      if (this.props.homeFeedData.secondaryFeed.length > 0) {
         return <BrandLandingPageContainer />;
       } else {
         return (

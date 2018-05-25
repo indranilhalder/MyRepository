@@ -3,18 +3,22 @@ import { withRouter } from "react-router-dom";
 import { getProductCapsules } from "../actions/home.actions.js";
 import ProductCapsules from "../components/ProductCapsules";
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getProductCapsules: positionInFeed =>
-      dispatch(getProductCapsules(positionInFeed))
+      dispatch(getProductCapsules(positionInFeed)),
+    setClickedElementId: id => {
+      ownProps.setClickedElementId(id);
+    }
   };
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    productCapsulesLoading: state.home.productCapsulesLoading,
-    feedComponentData: state.home.homeFeed[ownProps.positionInFeed],
-    positionInFeed: ownProps.positionInFeed
+    productCapsulesLoading: state.feed.productCapsulesLoading,
+    feedComponentData: state.feed.homeFeed[ownProps.positionInFeed],
+    positionInFeed: ownProps.positionInFeed,
+    id: ownProps.id
   };
 };
 

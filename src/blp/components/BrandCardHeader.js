@@ -2,7 +2,6 @@ import React from "react";
 import Image from "../../xelpmoc-core/Image";
 import styles from "./BrandCardHeader.css";
 import Logo from "../../general/components/Logo";
-import CoreButton from "../../general/components/Button";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 
@@ -37,6 +36,9 @@ export default class BrandCardHeader extends React.Component {
         "$1"
       );
       this.props.history.push(urlSuffix);
+      if (this.props.setClickedElementId) {
+        this.props.setClickedElementId();
+      }
     }
   };
   render() {

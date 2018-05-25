@@ -1,16 +1,10 @@
 import React from "react";
 import BrandImage from "../../general/components/BrandImage";
-import Carousel from "../../general/components/Carousel";
 import styles from "./FollowingBrands.css";
 import PropTypes from "prop-types";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
 import plusButton from "../../general/components/img/plusbutton.svg";
-import * as Cookie from "../../lib/Cookie";
-import {
-  CUSTOMER_ACCESS_TOKEN,
-  LOGGED_IN_USER_DETAILS,
-  DEFAULT_BRANDS_LANDING_PAGE
-} from "../../lib/constants";
+import { DEFAULT_BRANDS_LANDING_PAGE } from "../../lib/constants";
 export default class FollowingBrands extends React.Component {
   newFollow = () => {
     if (this.props.onFollow) {
@@ -24,11 +18,17 @@ export default class FollowingBrands extends React.Component {
       "$1"
     );
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   }
 
   handleBrandImageClick = url => {
     const urlSuffix = url.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
 
   render() {

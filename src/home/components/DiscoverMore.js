@@ -8,12 +8,16 @@ export default class DiscoverMore extends React.Component {
     if (this.props.feedComponentData.data) {
       if (this.props.feedComponentData.category === "L3") {
         return (
-          <DiscoverMore500 feedComponentData={this.props.feedComponentData} />
+          <DiscoverMore500
+            feedComponentData={this.props.feedComponentData}
+            setClickedElementId={this.props.setClickedElementId}
+          />
         );
       } else {
         return (
           <DiscoverMoreCarousel
             feedComponentData={this.props.feedComponentData}
+            setClickedElementId={this.props.setClickedElementId}
           />
         );
       }

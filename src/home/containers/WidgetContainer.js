@@ -3,21 +3,30 @@ import { getComponentData, getItems } from "../actions/home.actions";
 import { withRouter } from "react-router-dom";
 import Widget from "../components/Widget";
 import { showModal, STORY_MODAL } from "../../general/modal.actions";
-const mapDispatchToProps = dispatch => {
+import { SECONDARY_FEED_TYPE } from "../../lib/constants";
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     getComponentData: (
       fetchUrl,
       positionInFeed,
       postParams,
       backUpUrl,
-      type
+      type,
+      feedType
     ) => {
       dispatch(
-        getComponentData(positionInFeed, fetchUrl, postParams, backUpUrl, type)
+        getComponentData(
+          positionInFeed,
+          fetchUrl,
+          postParams,
+          backUpUrl,
+          type,
+          feedType
+        )
       );
     },
     getItems: (positionInFeed, itemIds) => {
-      dispatch(getItems(positionInFeed, itemIds));
+      dispatch(getItems(positionInFeed, itemIds, ownProps.feedType));
     },
     showStory: (position, data) => {
       dispatch(showModal(STORY_MODAL, position, data));
@@ -27,7 +36,11 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = (state, ownProps) => {
   const positionInFeed = ownProps.positionInFeed;
-  const feedComponentData = state.home.homeFeed[ownProps.positionInFeed];
+
+  let feedComponentData = state.feed.homeFeed[ownProps.positionInFeed];
+  if (ownProps.feedType === SECONDARY_FEED_TYPE) {
+    feedComponentData = state.feed.secondaryFeed[ownProps.positionInFeed];
+  }
   return {
     feedComponentData: feedComponentData,
     positionInFeed,

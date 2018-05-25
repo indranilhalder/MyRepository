@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Image from "../../xelpmoc-core/Image";
 import styles from "./TopCategories.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";
@@ -12,6 +11,9 @@ export default class TopCategories extends React.Component {
     const itemToClick = this.props.feedComponentData.items[index];
     const urlSuffix = itemToClick.webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
   render() {
     if (this.props.feedComponentData.items.length < 3) {
