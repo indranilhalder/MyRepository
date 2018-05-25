@@ -11,7 +11,7 @@ import * as api from "../src/lib/apiRequest";
 import modal from "../src/general/modal.reducers";
 import toast from "../src/general/toast.reducers";
 import secondaryLoader from "../src/general/secondaryLoader.reducers";
-import home from "../src/home/reducers/home.reducer";
+import feed from "../src/home/reducers/feed.reducer";
 import search from "../src/search/reducers/search.reducer";
 import registerServiceWorker from "./registerServiceWorker";
 import productListings from "./plp/reducers/plp.reducer";
@@ -33,7 +33,7 @@ const rootReducer = combineReducers({
   auth,
   user,
   modal,
-  home,
+  feed,
   productListings,
   productDescription,
   search,

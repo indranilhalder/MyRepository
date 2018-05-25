@@ -1,17 +1,16 @@
 import { connect } from "react-redux";
-import { homeFeed } from "../actions/home.actions";
+import { getFeed } from "../actions/home.actions";
 import { getCartId } from "../../cart/actions/cart.actions";
 import { getWishListItems } from "../../wishlist/actions/wishlist.actions";
 import Feed from "../components/Feed";
 import { setHeaderText } from "../../general/header.actions";
 import { withRouter } from "react-router-dom";
 import * as Cookie from "../../lib/Cookie";
-import { LOGGED_IN_USER_DETAILS } from "../../lib/constants";
-
+import { LOGGED_IN_USER_DETAILS, HOME_FEED_TYPE } from "../../lib/constants";
 const mapDispatchToProps = dispatch => {
   return {
     homeFeed: () => {
-      dispatch(homeFeed());
+      dispatch(getFeed());
     },
     getCartId: () => {
       dispatch(getCartId());
@@ -38,12 +37,12 @@ const mapStateToProps = state => {
     }
   }
   return {
-    homeFeedData: state.home.homeFeed,
-    isHomeFeedPage: true,
-    loading: state.home.loading,
+    homeFeedData: state.feed.homeFeed,
+    loading: state.feed.loading,
     type: state.cart.type,
     headerMessage,
-    loginFromMyBag: state.cart.loginFromMyBag
+    loginFromMyBag: state.cart.loginFromMyBag,
+    feedType: HOME_FEED_TYPE
   };
 };
 

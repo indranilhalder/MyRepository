@@ -2,12 +2,7 @@ import React, { Component } from "react";
 import SecondaryLoader from "../../general/components/SecondaryLoader.js";
 import Feed from "../../home/components/Feed";
 import styles from "./StaticPage.css";
-import {
-  BLP_OR_CLP_FEED_TYPE,
-  NOT_FOUND,
-  REQUESTING,
-  SUCCESS
-} from "../../lib/constants";
+import { SECONDARY_FEED_TYPE, NOT_FOUND, SUCCESS } from "../../lib/constants";
 import { Redirect } from "react-router-dom";
 
 export default class StaticPage extends Component {
@@ -27,12 +22,12 @@ export default class StaticPage extends Component {
   }
   render() {
     if (
-      this.props.feedType === BLP_OR_CLP_FEED_TYPE &&
+      this.props.feedType === SECONDARY_FEED_TYPE &&
       this.props.data &&
       this.props.data.length === 0 &&
       this.props.status === SUCCESS
     ) {
-      return this.navigateTo404();
+      // return this.navigateTo404();
     }
     if (this.props.loading || !this.props.data) {
       return <SecondaryLoader />;
@@ -40,6 +35,7 @@ export default class StaticPage extends Component {
       return (
         <div className={styles.base}>
           <Feed
+            feedType={this.props.feedType}
             homeFeedData={this.props.data}
             setHeaderText={this.props.setHeaderText}
           />

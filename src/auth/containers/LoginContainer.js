@@ -2,8 +2,7 @@ import { connect } from "react-redux";
 import {
   loginUser,
   customerAccessToken,
-  refreshToken,
-  loginUserRequest
+  refreshToken
 } from "../actions/user.actions";
 import {
   mergeCartId,
@@ -13,12 +12,8 @@ import {
 import * as Cookies from "../../lib/Cookie";
 
 import { withRouter } from "react-router-dom";
-import {
-  showModal,
-  RESTORE_PASSWORD,
-  OTP_LOGIN_MODAL
-} from "../../general/modal.actions.js";
-import { homeFeed } from "../../home/actions/home.actions";
+import { showModal, RESTORE_PASSWORD } from "../../general/modal.actions.js";
+import { getFeed } from "../../home/actions/home.actions";
 import Login from "../components/Login.js";
 import {
   SUCCESS,
@@ -30,10 +25,7 @@ import {
   DEFAULT_PIN_CODE_LOCAL_STORAGE
 } from "../../lib/constants";
 import { displayToast } from "../../general/toast.actions";
-import {
-  clearUrlToRedirectToAfterAuth,
-  stopLoaderOnLoginForOTPVerification
-} from "../../auth/actions/auth.actions.js";
+import { clearUrlToRedirectToAfterAuth } from "../../auth/actions/auth.actions.js";
 
 import {
   singleAuthCallHasFailed,
@@ -60,7 +52,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(showModal(RESTORE_PASSWORD));
     },
     homeFeed: () => {
-      dispatch(homeFeed());
+      dispatch(getFeed());
     },
     clearUrlToRedirectToAfterAuth: () => {
       dispatch(clearUrlToRedirectToAfterAuth());

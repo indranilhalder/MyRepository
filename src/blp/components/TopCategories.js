@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Image from "../../xelpmoc-core/Image";
 import styles from "./TopCategories.css";
 import { TATA_CLIQ_ROOT } from "../../lib/apiRequest.js";

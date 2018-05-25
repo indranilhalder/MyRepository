@@ -25,7 +25,9 @@ import List from "@researchgate/react-intersection-list";
 import map from "lodash.map";
 import {
   LOGGED_IN_USER_DETAILS,
-  CUSTOMER_ACCESS_TOKEN
+  CUSTOMER_ACCESS_TOKEN,
+  HOME_FEED_TYPE,
+  SECONDARY_FEED_TYPE
 } from "../../lib/constants";
 import {
   renderMetaTags,
@@ -191,15 +193,22 @@ export const typeComponentMapping = {
 
 class Feed extends Component {
   componentDidMount() {
-    if (this.props.homeFeedData && !this.props.headerMessage) {
-      const titleObj =
-        this.props.homeFeedData &&
-        this.props.homeFeedData.find(data => {
-          return data.type === "Landing Page Title Component";
-        });
-
-      if (titleObj && this.props.setHeaderText) {
+    const titleObj =
+      this.props.homeFeedData &&
+      this.props.homeFeedData.find(data => {
+        return data.type === "Landing Page Title Component";
+      });
+    if (this.props.feedType === HOME_FEED_TYPE) {
+      if (titleObj) {
         this.props.setHeaderText(titleObj.title);
+      } else {
+        this.props.setHeaderText(this.props.headerMessage);
+      }
+    } else {
+      if (!this.props.headerMessage) {
+        if (titleObj && this.props.setHeaderText) {
+          this.props.setHeaderText(titleObj.title);
+        }
       }
     }
   }
@@ -233,6 +242,7 @@ class Feed extends Component {
           key={index}
           type={typeKeyMapping[feedDatum.type]}
           postData={feedDatum.postParams}
+          feedType={this.props.feedType}
         >
           {typeComponentMapping[feedDatum.type] &&
             typeComponentMapping[feedDatum.type]}
@@ -253,7 +263,12 @@ class Feed extends Component {
   componentWillMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
-    if (this.props.isHomeFeedPage) {
+    console.log("COMPONENT WILL MOUNT");
+    if (
+      this.props.feedType === HOME_FEED_TYPE &&
+      this.props.homeFeedData.length === 0
+    ) {
+      console.log("HOME FEED CALLED");
       this.props.homeFeed();
     }
     if (userDetails && customerCookie && this.props.getWishListItems) {
@@ -321,7 +336,8 @@ Feed.propTypes = {
   onChangePassword: PropTypes.func,
   emailValue: PropTypes.string,
   passwordValue: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  feedType: PropTypes.oneOf([HOME_FEED_TYPE, SECONDARY_FEED_TYPE])
 };
 
 Feed.defaultProps = {

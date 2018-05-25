@@ -3,7 +3,7 @@ import {
   REQUESTING,
   ERROR,
   FAILURE,
-  BLP_OR_CLP_FEED_TYPE,
+  SECONDARY_FEED_TYPE,
   HOME_FEED_TYPE,
   CUSTOMER_ACCESS_TOKEN,
   LOGGED_IN_USER_DETAILS
@@ -25,9 +25,26 @@ import * as ErrorHandling from "../../general/ErrorHandling.js";
 import { getMcvId } from "../../lib/adobeUtils.js";
 import { getMsdFormData } from "../../lib/msdUtils.js";
 
-export const HOME_FEED_REQUEST = "HOME_FEED_REQUEST";
+export const FEED_REQUEST = "FEED_REQUEST";
 export const HOME_FEED_SUCCESS = "HOME_FEED_SUCCESS";
 export const HOME_FEED_FAILURE = "HOME_FEED_FAILURE";
+
+export const SECONDARY_FEED_SUCCESS = "SECONDARY_FEED_SUCCESS";
+export const SECONDARY_FEED_FAILURE = "SECONDARY_FEED_FAILURE";
+
+export const SECONDARY_FEED_COMPONENT_DATA_SUCCESS =
+  "SECONDARY_FEED_COMPONENT_DATA_SUCCESS";
+export const SECONDARY_FEED_COMPONENT_DATA_FAILURE =
+  "SECONDARY_FEED_COMPONENT_DATA_FAILURE";
+export const SECONDARY_FEED_COMPONENT_DATA_REQUEST =
+  "SECONDARY_FEED_COMPONENT_DATA_REQUEST";
+
+export const SECONDARY_FEED_GET_ITEMS_REQUEST =
+  "SECONDARY_FEED_GET_ITEMS_REQUEST";
+export const SECONDARY_FEED_GET_ITEMS_FAILURE =
+  "SECONDARY_FEED_GET_ITEMS_FAILURE";
+export const SECONDARY_FEED_GET_ITEMS_SUCCESS =
+  "SECONDARY_FEED_GET_ITEMS_SUCCESS";
 
 export const HOME_FEED_BACK_UP_FAILURE = "HOME_FEED_BACK_UP_FAILURE";
 export const HOME_FEED_BACK_UP_REQUEST = "HOME_FEED_BACK_UP_REQUEST";
@@ -39,15 +56,7 @@ export const COMPONENT_DATA_FAILURE = "COMPONENT_DATA_FAILURE";
 export const COMPONENT_BACK_UP_REQUEST = "COMPONENT_BACK_UP_REQUEST";
 export const COMPONENT_BACK_UP_SUCCESS = "COMPONENT_BACK_UP_SUCCESS";
 export const COMPONENT_BACK_UP_FAILURE = "COMPONENT_BACK_UP_FAILURE";
-export const SINGLE_SELECT_REQUEST = "SINGLE_SELECT_REQUEST";
-export const SINGLE_SELECT_SUCCESS = "SINGLE_SELECT_SUCCESS";
-export const SINGLE_SELECT_FAILURE = "SINGLE_SELECT_FAILURE";
-export const MULTI_SELECT_SUBMIT_REQUEST = "MULTI_SELECT_SUBMIT_REQUEST";
-export const MULTI_SELECT_SUBMIT_SUCCESS = "MULTI_SELECT_SUBMIT_SUCCESS";
-export const MULTI_SELECT_SUBMIT_FAILURE = "MULTI_SELECT_SUBMIT_FAILURE";
 export const HOME_FEED_PATH = "homepage";
-export const SINGLE_SELECT_SUBMIT_PATH = "submitSingleSelectQuestion";
-export const MULTI_SELECT_SUBMIT_PATH = "submitMultiSelectQuestion";
 export const GET_ITEMS_REQUEST = "GET_SALE_ITEMS_REQUEST";
 export const GET_ITEMS_SUCCESS = "GET_SALE_ITEMS_SUCCESS";
 export const GET_ITEMS_FAILURE = "GET_SALE_ITEMS_FAILURE";
@@ -136,6 +145,24 @@ export function getProductCapsules(positionInFeed) {
   };
 }
 
+export function secondaryFeedGetItemsFailure(positionInFeed, error) {
+  return {
+    type: SECONDARY_FEED_GET_ITEMS_FAILURE,
+    error,
+    status: FAILURE
+  };
+}
+
+export function secondaryFeedGetItemsSuccess(positionInFeed, items, itemIds) {
+  return {
+    type: SECONDARY_FEED_GET_ITEMS_SUCCESS,
+    status: SUCCESS,
+    items,
+    positionInFeed,
+    itemIds
+  };
+}
+
 export function getItemsRequest(positionInFeed) {
   return {
     type: GET_ITEMS_REQUEST,
@@ -167,7 +194,7 @@ export function getItemsFailure(positionInFeed, errorMsg) {
     status: FAILURE
   };
 }
-export function getItems(positionInFeed, itemIds) {
+export function getItems(positionInFeed, itemIds, feedType) {
   return async (dispatch, getState, { api }) => {
     dispatch(getItemsRequest(positionInFeed));
     try {
@@ -183,90 +210,23 @@ export function getItems(positionInFeed, itemIds) {
         throw new Error(`${resultJson.message}`);
       }
 
-      dispatch(getItemsSuccess(positionInFeed, resultJson.results, itemIds));
-    } catch (e) {
-      dispatch(getItemsFailure(positionInFeed, e.message));
-    }
-  };
-}
-export function multiSelectSubmitRequest(positionInFeed) {
-  return {
-    type: MULTI_SELECT_SUBMIT_REQUEST,
-    status: REQUESTING,
-    positionInFeed
-  };
-}
-export function multiSelectSubmitFailure(positionInFeed, errorMsg) {
-  return {
-    type: MULTI_SELECT_SUBMIT_FAILURE,
-    status: ERROR,
-    error: errorMsg
-  };
-}
-export function multiSelectSubmitSuccess(resultJson, positionInFeed) {
-  return {
-    type: MULTI_SELECT_SUBMIT_SUCCESS,
-    status: SUCCESS,
-    data: resultJson,
-    positionInFeed
-  };
-}
-export function multiSelectSubmit(values, questionId, positionInFeed) {
-  return async (dispatch, getState, { api }) => {
-    dispatch(multiSelectSubmitRequest(positionInFeed));
-    try {
-      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
-        optionId: values,
-        questionId
-      });
-      const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+      if (feedType === SECONDARY_FEED_TYPE) {
+        dispatch(
+          secondaryFeedGetItemsSuccess(
+            positionInFeed,
+            resultJson.results,
+            itemIds
+          )
+        );
+      } else {
+        dispatch(getItemsSuccess(positionInFeed, resultJson.results, itemIds));
       }
-      dispatch(multiSelectSubmitSuccess(resultJson, positionInFeed));
     } catch (e) {
-      dispatch(multiSelectSubmitFailure(e.message, positionInFeed));
-    }
-  };
-}
-export function singleSelectRequest(positionInFeed) {
-  return {
-    type: SINGLE_SELECT_REQUEST,
-    status: REQUESTING,
-    positionInFeed
-  };
-}
-export function singleSelectFailure(error, positionInFeed) {
-  return {
-    type: SINGLE_SELECT_FAILURE,
-    status: ERROR,
-    error,
-    positionInFeed
-  };
-}
-export function singleSelectSuccess(resultJson, positionInFeed) {
-  return {
-    type: SINGLE_SELECT_SUCCESS,
-    status: SUCCESS,
-    data: resultJson,
-    positionInFeed
-  };
-}
-export function selectSingleSelectResponse(value, questionId, positionInFeed) {
-  return async (dispatch, getState, { api }) => {
-    dispatch(singleSelectRequest(positionInFeed));
-    try {
-      const result = await api.post(SINGLE_SELECT_SUBMIT_PATH, {
-        questionId,
-        optionId: [value]
-      });
-      const resultJson = await result.json();
-      if (resultJson.status === "FAILURE") {
-        throw new Error(`${resultJson.message}`);
+      if (feedType === SECONDARY_FEED_TYPE) {
+        dispatch(secondaryFeedGetItemsFailure(positionInFeed, e.message));
+      } else {
+        dispatch(getItemsFailure(positionInFeed, e.message));
       }
-      dispatch(singleSelectSuccess(resultJson, positionInFeed));
-    } catch (e) {
-      dispatch(singleSelectFailure(e.message, positionInFeed));
     }
   };
 }
@@ -294,9 +254,17 @@ export function homeFeedBackUpFailure(error) {
   };
 }
 
-export function homeFeedRequest(feedType) {
+export function secondaryFeedSuccess(data) {
   return {
-    type: HOME_FEED_REQUEST,
+    type: SECONDARY_FEED_SUCCESS,
+    status: SUCCESS,
+    data
+  };
+}
+
+export function feedRequest(feedType) {
+  return {
+    type: FEED_REQUEST,
     status: REQUESTING,
     feedType
   };
@@ -341,52 +309,50 @@ export function homeFeedBackUp() {
 // brand feed and category feed  . we need to rename this function name like feed
 // this is also now used for static pages, so the name brandIdOrCategoryId makes less sense
 // however there isn't a good name to replace it.
-export function homeFeed(brandIdOrCategoryId: null) {
+export function getFeed(pageId: null) {
   return async (dispatch, getState, { api }) => {
-    if (brandIdOrCategoryId) {
-      dispatch(homeFeedRequest(BLP_OR_CLP_FEED_TYPE));
+    if (pageId) {
+      dispatch(feedRequest(SECONDARY_FEED_TYPE));
     } else {
-      dispatch(homeFeedRequest());
+      dispatch(feedRequest());
     }
 
     try {
       let url, result, feedTypeRequest, resultJson;
 
-      if (brandIdOrCategoryId) {
-        feedTypeRequest = BLP_OR_CLP_FEED_TYPE;
+      if (pageId) {
+        feedTypeRequest = SECONDARY_FEED_TYPE;
         try {
           result = await api.getMiddlewareUrl(
-            `v2/mpl/cms/defaultpage?pageId=${brandIdOrCategoryId}`
+            `v2/mpl/cms/defaultpage?pageId=${pageId}`
           );
         } catch (e) {
-          dispatch(homeFeedSuccess([], feedTypeRequest));
+          dispatch(secondaryFeedSuccess([], feedTypeRequest));
         }
 
         resultJson = await result.json();
         if (resultJson.errors) {
-          dispatch(homeFeedSuccess([], feedTypeRequest));
+          dispatch(secondaryFeedSuccess([], feedTypeRequest));
         } else {
           if (resultJson.pageName) {
             dispatch(setHeaderText(resultJson.pageName));
           }
-          dispatch(homeFeedSuccess(resultJson.items, feedTypeRequest));
-          if (CATEGORY_REGEX.test(brandIdOrCategoryId)) {
+          dispatch(secondaryFeedSuccess(resultJson.items, feedTypeRequest));
+          if (CATEGORY_REGEX.test(pageId)) {
             setDataLayer(
               ADOBE_CLP_PAGE_LOAD,
               resultJson,
               getState().icid.value,
               getState().icid.icidType
             );
-          } else if (BRAND_REGEX.test(brandIdOrCategoryId)) {
+          } else if (BRAND_REGEX.test(pageId)) {
             setDataLayer(
               ADOBE_BLP_PAGE_LOAD,
               resultJson,
               getState().icid.value,
               getState().icid.icidType
             );
-          } else if (
-            brandIdOrCategoryId === window.location.pathname.replace("/", "")
-          ) {
+          } else if (pageId === window.location.pathname.replace("/", "")) {
             setDataLayer(
               ADOBE_STATIC_PAGE,
               resultJson,
@@ -405,7 +371,7 @@ export function homeFeed(brandIdOrCategoryId: null) {
         }
 
         delay(() => {
-          const isHomeFeedLoading = getState().home.loading;
+          const isHomeFeedLoading = getState().feed.loading;
           if (isHomeFeedLoading) {
             dispatch(homeFeedBackUp());
           }
@@ -500,11 +466,42 @@ export function getComponentDataBackUp(url, positionInFeed) {
   };
 }
 
+export function secondaryFeedComponentDataRequest(positionInFeed) {
+  return {
+    type: SECONDARY_FEED_COMPONENT_DATA_REQUEST,
+    status: REQUESTING,
+    positionInFeed
+  };
+}
+
 export function componentDataRequest(positionInFeed) {
   return {
     type: COMPONENT_DATA_REQUEST,
     status: REQUESTING,
     positionInFeed
+  };
+}
+
+export function secondaryFeedComponentDataSuccess(
+  data,
+  positioninFeed,
+  isMsd: false
+) {
+  return {
+    type: SECONDARY_FEED_COMPONENT_DATA_SUCCESS,
+    status: SUCCESS,
+    data,
+    positioninFeed,
+    isMsd
+  };
+}
+
+export function secondaryFeedComponentDataFailure(error, positioninFeed) {
+  return {
+    type: SECONDARY_FEED_COMPONENT_DATA_FAILURE,
+    status: FAILURE,
+    error,
+    positioninFeed
   };
 }
 
@@ -558,7 +555,8 @@ export function getComponentData(
   fetchURL,
   postParams: null,
   backUpUrl,
-  type
+  type,
+  feedType
 ) {
   return async (dispatch, getState, { api }) => {
     dispatch(componentDataRequest(positionInFeed));
@@ -606,10 +604,16 @@ export function getComponentData(
 
         resultJson.data = resultJson.data[0];
 
-        dispatch(componentDataSuccess(resultJson, positionInFeed, true));
+        if (feedType === SECONDARY_FEED_TYPE) {
+          dispatch(
+            secondaryFeedComponentDataSuccess(resultJson, positionInFeed, true)
+          );
+        } else {
+          dispatch(componentDataSuccess(resultJson, positionInFeed, true));
+        }
       } else {
         delay(() => {
-          const isFetchUrlDataLoading = getState().home.homeFeed[positionInFeed]
+          const isFetchUrlDataLoading = getState().feed.homeFeed[positionInFeed]
             .loading;
           if (isFetchUrlDataLoading && backUpUrl) {
             dispatch(getComponentDataBackUp(backUpUrl, positionInFeed));
@@ -630,10 +634,20 @@ export function getComponentData(
         }
         let parsedResultJson = JSON.parse(resultJson.content);
         parsedResultJson = parsedResultJson.items[0];
-        dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
+        if (feedType === SECONDARY_FEED_TYPE) {
+          dispatch(
+            secondaryFeedComponentDataSuccess(resultJson, positionInFeed, true)
+          );
+        } else {
+          dispatch(componentDataSuccess(parsedResultJson, positionInFeed));
+        }
       }
     } catch (e) {
-      dispatch(componentDataFailure(positionInFeed, e.message));
+      if (feedType === SECONDARY_FEED_TYPE) {
+        dispatch(secondaryFeedComponentDataFailure(positionInFeed, e.message));
+      } else {
+        dispatch(componentDataFailure(positionInFeed, e.message));
+      }
     }
   };
 }
