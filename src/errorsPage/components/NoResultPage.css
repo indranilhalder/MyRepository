@@ -19,7 +19,7 @@
   text-align: center;
   font-size: 38px;
   font-family: regular;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 .infoText {
   width: 100%;
@@ -29,6 +29,10 @@
   line-height: normal;
   font-size: 18px;
   text-align: center;
+}
+.noResultText {
+  composes: infoText;
+  padding: 0px 20px;
 }
 .buttonFooter {
   width: 100%;

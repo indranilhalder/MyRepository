@@ -16,11 +16,8 @@ export default class NoResultPage extends React.Component {
       <div className={styles.base}>
         <div className={styles.headerWithTextHolder}>
           <div className={styles.pageTitle}>404</div>
-          <div className={styles.infoText}>
-            We weren't expecting this error.
-          </div>
-          <div className={styles.infoText}>
-            Continue CLiQing as we get it fixed.
+          <div className={styles.noResultText}>
+            The page you are looking for can't be found
           </div>
         </div>
         <div className={styles.buttonFooter}>
