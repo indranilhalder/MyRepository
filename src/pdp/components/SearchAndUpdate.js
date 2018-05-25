@@ -81,6 +81,8 @@ export default class SearchAndUpdate extends React.Component {
               height={35}
               autoFocus={this.props.hasAutoFocus}
               rightChildSize={35}
+              borderColor={this.props.borderColor}
+              borderBottom={this.props.borderBottom}
               onFocus={() => {
                 this.handleOnFocusInput();
               }}
