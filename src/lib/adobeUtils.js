@@ -439,7 +439,6 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
 }
 
 function getDigitalDataForPdp(type, pdpResponse) {
-  console.log(pdpResponse);
   const data = {
     cpj: {
       product: {
