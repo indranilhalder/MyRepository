@@ -18,6 +18,7 @@ export const ADOBE_TARGET_WAIT_TIME = 2000;
 const ADOBE_SATELLITE_CODE = "virtual_page_load";
 const INTERNAL_CAMPAIGN_TRACK = "internal_campaign";
 const ADOBE_PDP_CPJ = "cpj_pdp";
+const ADOBE_OUT_OF_STOCK_PDP = "out_of_stock";
 const ADOBE_ADD_TO_CART = "cpj_add_to_cart";
 const ADOBE_SAVE_PRODUCT = "cpj_button_save";
 const ADOBE_EMI_BANK_SELECT_ON_PDP = "cpj_pdp_emi";
@@ -267,6 +268,9 @@ export function setDataLayer(type, apiResponse, icid, icidType) {
       Object.assign(digitalDataForPDP.cpj.product, { badge });
     }
     window.digitalData = digitalDataForPDP;
+    if (response && response.allOOStock) {
+      window._satellite.track(ADOBE_OUT_OF_STOCK_PDP);
+    }
     window._satellite.track(ADOBE_PDP_CPJ);
   }
   if (type === ADOBE_CHECKOUT_TYPE) {

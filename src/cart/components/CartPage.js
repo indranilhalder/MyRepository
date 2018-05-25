@@ -48,7 +48,8 @@ class CartPage extends React.Component {
       pinCode: "",
       isServiceable: false,
       changePinCode: false,
-      appliedCouponCode: null
+      appliedCouponCode: null,
+      showCheckoutSection: true
     };
   }
   navigateToHome() {
@@ -232,7 +233,11 @@ class CartPage extends React.Component {
   }
 
   checkPinCodeAvailability = val => {
-    this.setState({ pinCode: val, changePinCode: false });
+    this.setState({
+      pinCode: val,
+      changePinCode: false,
+      showCheckoutSection: true
+    });
     localStorage.setItem(DEFAULT_PIN_CODE_LOCAL_STORAGE, val);
     let customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
     let globalCookie = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
@@ -311,12 +316,21 @@ class CartPage extends React.Component {
     );
   };
 
+  onFocusInput() {
+    this.setState({ showCheckoutSection: false });
+  }
+  onBlur() {
+    this.setState({ showCheckoutSection: true });
+  }
+
+  onKeyPress() {
+    this.setState({ showCheckoutSection: true });
+  }
   render() {
     const globalAccessToken = Cookie.getCookie(GLOBAL_ACCESS_TOKEN);
     const cartDetailsForAnonymous = Cookie.getCookie(
       CART_DETAILS_FOR_ANONYMOUS
     );
-
     if (
       this.props.cart.loadingForDisplayCoupon ||
       this.props.cart.loadingForCartDetail
@@ -371,6 +385,9 @@ class CartPage extends React.Component {
               checkPinCodeAvailability={pinCode =>
                 this.checkPinCodeAvailability(pinCode)
               }
+              onFocusInput={() => this.onFocusInput()}
+              onBlur={() => this.onBlur()}
+              onKeyPress={e => this.onKeyPress()}
             />
           </div>
           <div className={styles.content}>
@@ -433,7 +450,8 @@ class CartPage extends React.Component {
                 appliedCouponCode={this.state.appliedCouponCode}
               />
             )}
-            {cartDetails.products &&
+            {this.state.showCheckoutSection &&
+              cartDetails.products &&
               cartDetails.cartAmount && (
                 <Checkout
                   disabled={!this.state.isServiceable}

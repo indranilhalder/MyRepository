@@ -23,14 +23,20 @@ export default class TextWithUnderLine extends React.Component {
       this.props.checkPinCodeAvailability(pincode);
     }
   }
-  addBorder(x) {
+  onFocusInput(x) {
     this.setState({ borderColor: "red", borderBottom: "1px solid red" });
+    if (this.props.onFocusInput) {
+      this.props.onFocusInput();
+    }
   }
-  removeBorder(x) {
+  onBlur(x) {
     this.setState({
       borderColor: "#d2d2d2",
       borderBottom: "1px solid #d2d2d2"
     });
+    if (this.props.onBlur) {
+      this.props.onBlur();
+    }
   }
   render() {
     const defaultPinCode =
@@ -51,11 +57,12 @@ export default class TextWithUnderLine extends React.Component {
             checkPinCodeAvailability={pincode =>
               this.checkPinCodeAvailability(pincode)
             }
+            onFocusInput={() => this.onFocusInput()}
+            onBlur={() => this.onBlur()}
             labelText="Update"
-            onFocus={() => this.addBorder(this)}
-            onBlur={() => this.removeBorder(this)}
             borderColor={this.state.borderColor}
             borderBottom={this.state.borderBottom}
+            onKeyPress={this.props.onKeyPress}
           />
         )}
 
