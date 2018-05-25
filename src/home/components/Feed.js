@@ -193,15 +193,22 @@ export const typeComponentMapping = {
 
 class Feed extends Component {
   componentDidMount() {
-    if (this.props.homeFeedData && !this.props.headerMessage) {
-      const titleObj =
-        this.props.homeFeedData &&
-        this.props.homeFeedData.find(data => {
-          return data.type === "Landing Page Title Component";
-        });
-
-      if (titleObj && this.props.setHeaderText) {
+    const titleObj =
+      this.props.homeFeedData &&
+      this.props.homeFeedData.find(data => {
+        return data.type === "Landing Page Title Component";
+      });
+    if (this.props.feedType === HOME_FEED_TYPE) {
+      if (titleObj) {
         this.props.setHeaderText(titleObj.title);
+      } else {
+        this.props.setHeaderText(this.props.headerMessage);
+      }
+    } else {
+      if (!this.props.headerMessage) {
+        if (titleObj && this.props.setHeaderText) {
+          this.props.setHeaderText(titleObj.title);
+        }
       }
     }
   }
@@ -256,6 +263,7 @@ class Feed extends Component {
   componentWillMount() {
     const userDetails = Cookie.getCookie(LOGGED_IN_USER_DETAILS);
     const customerCookie = Cookie.getCookie(CUSTOMER_ACCESS_TOKEN);
+    console.log("COMPONENT WILL MOUNT");
     if (
       this.props.feedType === HOME_FEED_TYPE &&
       this.props.homeFeedData.length === 0
