@@ -1109,8 +1109,13 @@ class CheckOutPage extends React.Component {
 
       //get the NoCost Emi Coupon Code to release
       let noCostEmiCouponCode = localStorage.getItem(NO_COST_EMI_COUPON);
+
+      if(noCostEmiCouponCode)
+      {
       let cartId = localStorage.getItem(OLD_CART_CART_ID);
-      //  this.props.removeNoCostEmi(noCostEmiCouponCode, carGuId, cartId);
+        this.props.removeNoCostEmi(noCostEmiCouponCode, carGuId, cartId);
+      }
+
     } else {
       let cartDetailsLoggedInUser = Cookie.getCookie(
         CART_DETAILS_FOR_LOGGED_IN_USER
