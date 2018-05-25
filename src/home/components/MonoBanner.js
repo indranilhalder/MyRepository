@@ -23,7 +23,9 @@ export default class MonoBanner extends React.Component {
         window.focus();
       } else {
         this.props.history.push(urlSuffix);
-        this.props.setClickedElementId();
+        if (this.props.setClickedElementId) {
+          this.props.setClickedElementId();
+        }
       }
     }
   }

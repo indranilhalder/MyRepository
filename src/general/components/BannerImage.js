@@ -17,7 +17,9 @@ export default class Banner extends React.Component {
         this.props.history.push(urlSuffix);
       }
     }
-    this.props.setClickedElementId();
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
   render() {
     return (

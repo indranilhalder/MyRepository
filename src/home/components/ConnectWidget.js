@@ -16,7 +16,9 @@ export default class ConnectWidget extends React.Component {
         "$1"
       );
       this.props.history.push(urlSuffix);
-      this.props.setClickedElementId();
+      if (this.props.setClickedElementId) {
+        this.props.setClickedElementId();
+      }
     }
   }
   render() {

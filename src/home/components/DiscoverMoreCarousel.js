@@ -10,7 +10,9 @@ class DiscoverMoreCarousel extends React.Component {
   handleClick = webUrl => {
     const urlSuffix = webUrl.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
-    this.props.setClickedElementId();
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
   render() {
     const discoverMoreCarouselData = this.props.feedComponentData;

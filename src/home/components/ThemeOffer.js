@@ -14,7 +14,9 @@ export default class ThemeOffer extends React.Component {
       "$1"
     );
     this.props.history.push(urlSuffix);
-    this.props.setClickedElementId();
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   }
 
   componentDidUpdate() {
