@@ -6,6 +6,13 @@ import PropTypes from "prop-types";
 import UnderLinedButton from "../../general/components/UnderLinedButton";
 import { DEFAULT_PIN_CODE_LOCAL_STORAGE } from "../../lib/constants";
 export default class TextWithUnderLine extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      borderColor: "#d2d2d2",
+      borderBottom: "1px solid #d2d2d2"
+    };
+  }
   onClick() {
     if (this.props.onClick) {
       this.props.onClick();
@@ -16,7 +23,15 @@ export default class TextWithUnderLine extends React.Component {
       this.props.checkPinCodeAvailability(pincode);
     }
   }
-
+  addBorder(x) {
+    this.setState({ borderColor: "red", borderBottom: "1px solid red" });
+  }
+  removeBorder(x) {
+    this.setState({
+      borderColor: "#d2d2d2",
+      borderBottom: "1px solid #d2d2d2"
+    });
+  }
   render() {
     const defaultPinCode =
       localStorage.getItem(DEFAULT_PIN_CODE_LOCAL_STORAGE) &&
@@ -37,6 +52,10 @@ export default class TextWithUnderLine extends React.Component {
               this.checkPinCodeAvailability(pincode)
             }
             labelText="Update"
+            onFocus={() => this.addBorder(this)}
+            onBlur={() => this.removeBorder(this)}
+            borderColor={this.state.borderColor}
+            borderBottom={this.state.borderBottom}
           />
         )}
 
