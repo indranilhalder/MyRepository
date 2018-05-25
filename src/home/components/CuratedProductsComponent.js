@@ -17,6 +17,9 @@ class CuratedProductsComponent extends React.Component {
       "$1"
     );
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   };
   render() {
     const { feedComponentData, ...rest } = this.props;

@@ -21,7 +21,9 @@ const feed = (
     backUpLoading: false,
     useBackUpData: false,
     useBackUpHomeFeed: false,
-    secondaryFeedStatus: null
+    secondaryFeedStatus: null,
+    clickedElementId: null,
+    pageSize: 1
   },
   action
 ) => {
@@ -33,6 +35,14 @@ const feed = (
     secondaryFeedData,
     clonedComponent;
   switch (action.type) {
+    case homeActions.SET_PAGE_FEED_SIZE:
+      return Object.assign({}, state, {
+        pageSize: action.pageSize
+      });
+    case homeActions.SET_CLICKED_ELEMENT_ID:
+      return Object.assign({}, state, {
+        clickedElementId: action.id
+      });
     case homeActions.SECONDARY_FEED_SUCCESS:
       secondaryFeedClonedData = cloneDeep(action.data);
 
@@ -44,8 +54,6 @@ const feed = (
           status: ""
         };
       });
-      console.log("SECONDARY FEED SUCCESS");
-      console.log(secondaryFeedData);
       return Object.assign({}, state, {
         loading: false,
         secondaryFeedStatus: action.status,
@@ -64,14 +72,12 @@ const feed = (
         error: action.error
       });
     case homeActions.HOME_FEED_BACK_UP_REQUEST:
-      console.log("HOME FEED BACK UP REQUEST");
       return Object.assign({}, state, {
         loading: true,
         useBackUpHomeFeed: true,
         status: action.status
       });
     case homeActions.HOME_FEED_BACK_UP_SUCCESS:
-      console.log("HOME FEED BACK UP SUCCESS");
       if (state.useBackUpHomeFeed) {
         homeFeedClonedData = cloneDeep(action.data);
 

@@ -11,6 +11,7 @@ export default class TopCategories extends React.Component {
     const itemToClick = this.props.feedComponentData.items[index];
     const urlSuffix = itemToClick.webURL.replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
+    this.props.setClickedElementId();
   };
   render() {
     if (this.props.feedComponentData.items.length < 3) {

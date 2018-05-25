@@ -21,6 +21,7 @@ export default class ThemeProductWidget extends React.Component {
     if (widgetData.webURL) {
       const urlSuffix = widgetData.webURL.replace(TATA_CLIQ_ROOT, "$1");
       this.props.history.push(urlSuffix);
+      this.props.setClickedElementId();
     }
   }
 
@@ -40,6 +41,7 @@ export default class ThemeProductWidget extends React.Component {
 
   handleThemeProductClick = url => {
     this.props.history.push(url);
+    this.props.setClickedElementId();
   };
 
   render() {

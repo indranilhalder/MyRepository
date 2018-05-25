@@ -34,7 +34,7 @@ import {
   renderMetaTagsWithoutSeoObject
 } from "../../lib/seoUtils";
 import Loadable from "react-loadable";
-
+import delay from "lodash.delay";
 export const PRODUCT_RECOMMENDATION_TYPE = "productRecommendationWidget";
 
 const typeKeyMapping = {
@@ -235,15 +235,35 @@ class Feed extends Component {
     if (feedDatum.type === "Product Capsules Component") {
       return <ProductCapsulesContainer positionInFeed={index} />;
     }
+
+    if (this.props.pageSize && index > this.props.pageSize) {
+      this.props.setPageFeedSize(index);
+    }
+
+    const setClickedElementId = (id => {
+      return () => {
+        this.props.setClickedElementId(`Feed-${id}`);
+      };
+    })(index);
+
+    let props = {
+      positionInFeed: index,
+      key: index,
+      id: `Feed-${index}`,
+      type: typeKeyMapping[feedDatum.type],
+      postData: feedDatum.postParams,
+      feedType: this.props.feedType
+    };
+
+    if (this.props.setClickedElementId) {
+      props = {
+        ...props,
+        setClickedElementId
+      };
+    }
     return (
       typeComponentMapping[feedDatum.type] && (
-        <WidgetContainer
-          positionInFeed={index}
-          key={index}
-          type={typeKeyMapping[feedDatum.type]}
-          postData={feedDatum.postParams}
-          feedType={this.props.feedType}
-        >
+        <WidgetContainer {...props}>
           {typeComponentMapping[feedDatum.type] &&
             typeComponentMapping[feedDatum.type]}
         </WidgetContainer>
@@ -268,11 +288,20 @@ class Feed extends Component {
       this.props.feedType === HOME_FEED_TYPE &&
       this.props.homeFeedData.length === 0
     ) {
-      console.log("HOME FEED CALLED");
       this.props.homeFeed();
     }
     if (userDetails && customerCookie && this.props.getWishListItems) {
       this.props.getWishListItems();
+    }
+    if (this.props.clickedElementId) {
+      delay(() => {
+        const clickedElement = document.getElementById(
+          this.props.clickedElementId
+        );
+        if (clickedElement) {
+          delay(() => clickedElement.scrollIntoView(true), 10);
+        }
+      });
     }
   }
 
@@ -317,7 +346,7 @@ class Feed extends Component {
         {this.renderMetaTags()}
         {this.props.homeFeedData ? (
           <List
-            pageSize={1}
+            pageSize={this.props.pageSize ? this.props.pageSize : 1}
             currentLength={this.props.homeFeedData.length}
             itemsRenderer={this.renderFeed}
           >

@@ -16,6 +16,9 @@ export default class AllBrandTypes extends React.Component {
   handleSelect(val) {
     const urlSuffix = val[0].replace(TATA_CLIQ_ROOT, "$1");
     this.props.history.push(urlSuffix);
+    if (this.props.setClickedElementId) {
+      this.props.setClickedElementId();
+    }
   }
   render() {
     let feedComponentData = this.props.feedComponentData;

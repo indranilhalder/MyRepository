@@ -11,6 +11,7 @@ export default class VideoProductCarousel extends React.Component {
       "$1"
     );
     this.props.history.push(urlSuffix);
+    this.props.setClickedElementId();
   }
 
   componentDidUpdate() {
@@ -48,6 +49,7 @@ export default class VideoProductCarousel extends React.Component {
             this.handleClick();
           }
         }}
+        setClickedElementId={this.props.setClickedElementId}
         data={data}
       />
     );

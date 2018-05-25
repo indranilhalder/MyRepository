@@ -13,6 +13,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
       "$1"
     );
     this.props.history.push(urlSuffix);
+    this.props.setClickedElementId();
   }
 
   componentDidUpdate() {
@@ -58,6 +59,7 @@ export default class AutomatedBrandProductCarousel extends React.Component {
             this.handleClick();
           }
         }}
+        setClickedElementId={this.props.setClickedElementId}
         data={carouselData}
       />
     ) : null;

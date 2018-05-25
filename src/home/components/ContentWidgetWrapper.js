@@ -27,6 +27,7 @@ export default class ContentWidgetWrapper extends React.Component {
           <ContentWidget
             allData={this.props.feedComponentData.items}
             history={this.props.history}
+            setClickedElementId={this.props.setClickedElementId}
           />
         </div>
       );
