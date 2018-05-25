@@ -92,8 +92,7 @@ const feed = (
         return Object.assign({}, state, {
           homeFeed: homeFeedData,
           status: action.status,
-          loading: false,
-          useBackUpHomeFeed: false
+          loading: false
         });
       }
       return state;
