@@ -36,8 +36,8 @@ export default class SearchAndUpdate extends React.Component {
     }
   }
 
-  handleKeyPress(e) {
-    if (e.which === 13) {
+  handleKeyUp(event) {
+    if (event.key === "Go" || event.key === "Enter") {
       this.onUpdate();
     }
   }
@@ -87,7 +87,9 @@ export default class SearchAndUpdate extends React.Component {
               onBlur={() => {
                 this.handleBlurInput();
               }}
-              onKeyPress={event => this.handleKeyPress(event)}
+              onKeyUp={event => {
+                this.handleKeyUp(event);
+              }}
             />
           </div>
         </div>
