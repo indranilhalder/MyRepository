@@ -24,7 +24,23 @@ export default class SearchAndUpdate extends React.Component {
       this.props.getLocation();
     }
   }
+  handleOnFocusInput() {
+    if (this.props.onFocusInput) {
+      this.props.onFocusInput();
+    }
+  }
 
+  handleBlurInput() {
+    if (this.props.onBlur) {
+      this.props.onBlur();
+    }
+  }
+
+  handleKeyUp(event) {
+    if (event.key === "Go" || event.key === "Enter") {
+      this.onUpdate();
+    }
+  }
   onUpdate() {
     if (this.state.pinCode && this.state.pinCode.match(/^\d{6}$/)) {
       if (this.props.checkPinCodeAvailability) {
@@ -65,6 +81,15 @@ export default class SearchAndUpdate extends React.Component {
               height={35}
               autoFocus={this.props.hasAutoFocus}
               rightChildSize={35}
+              onFocus={() => {
+                this.handleOnFocusInput();
+              }}
+              onBlur={() => {
+                this.handleBlurInput();
+              }}
+              onKeyUp={event => {
+                this.handleKeyUp(event);
+              }}
             />
           </div>
         </div>

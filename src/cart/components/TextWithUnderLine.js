@@ -36,7 +36,10 @@ export default class TextWithUnderLine extends React.Component {
             checkPinCodeAvailability={pincode =>
               this.checkPinCodeAvailability(pincode)
             }
+            onFocusInput={this.props.onFocusInput}
+            onBlur={this.props.onBlur}
             labelText="Update"
+            onKeyPress={this.props.onKeyPress}
           />
         )}
 
